@@ -152,28 +152,172 @@ tr:nth-child(even) td{background:#eff8fe7d}
 footer{color:#577c94;border-color:#c8e0ec}
 @media(max-width:740px){.diario-callout{flex-wrap:wrap;padding:18px;gap:12px}.diario-callout-mark{width:56px;height:56px;font-size:17px}.diario-callout-button{width:100%;margin:7px 0 0}.draftboard th{min-width:120px}.roster-table{overflow-x:auto}}
 
-/* PALETA DESCANSADA · celeste grisáceo y blancos ahumados */
-:root{--bg:#cedee7;--panel:#e5eef3;--panel2:#dceaf0;--line:#a9c7d8;--text:#153a52;--muted:#526f81;--gold:#a87824}
-html,body{background:#cfdee7!important}
-body{background-image:radial-gradient(ellipse at 40% 0%,#c0d8e6 0,#d3e1e9 56%,#c9d8e1 100%)!important}
-.masthead{background:linear-gradient(100deg,#075a82 0%,#14799f 67%,#288eb0 100%)!important;border-bottom:3px solid #c6a052}
-.panel{background:linear-gradient(145deg,#eaf2f6,#dceaf1)!important;border-color:#a9c7d7!important;box-shadow:0 6px 15px #27546c13!important}
-.diario-callout{background:linear-gradient(105deg,#d3e7f1,#e7eef1 60%,#f0e6cd)!important}
-.diario-callout-mark{background:#10799f}
-.draftboard th{background:#a8d3e5!important}
-th{background:#c8e2ef!important}
-.select{background:#eaf2f6!important;color:#173b55!important}
-.roster-tab{background:#dbeaf0!important}
-.teamcard{background:linear-gradient(145deg,#e8f1f5,#d5e6ef)!important}
-.stat,.recordcard{background:#e2edf3!important}
-.matchbox{background:#e0edf3!important}
-.chip{background:#f0e7d2!important}
-.storycard{background:#e8eff2!important}
-.note{background:#d5e8f1!important}
-.tablewrap tr:nth-child(even) td{background:#d4e5ed6b}
-.rivalry-hero{background:#dbeaf1!important}
-.franchise-summary>div,.franchise-section{background:#e0ecf2!important}
-.newspaper{background:#efede5!important}
-.view[data-view=noticias]>.newspaper-banner{background:#f0ede4!important}
-.playoff-panel{background:linear-gradient(150deg,#071d3a,#0b304e 60%,#172b40)!important;color:#f7fbff}
-.playoff-panel .bracket-game,.playoff-panel .contender{background:#123653!important;color:#fff}
+
+/* LFA · Identidad azul marino / celeste / dorado.
+   Fondo deliberadamente azul oscuro (no negro).
+   Papel del Diario y archivo histórico conservan su estética editorial. */
+:root{
+ --bg:#122f49;--panel:#1e405c;--panel2:#244b68;--line:#42647a;
+ --text:#f0f8fe;--muted:#b5cedd;--gold:#edc775;--blue:#73cde9;
+ --green:#83dfb6;--red:#ff9cab;
+ color-scheme:dark;
+}
+html,body{
+ background:#122f49;
+ background-image:radial-gradient(ellipse at 28% 0%,#254b68 0%,#183b56 42%,#112e48 100%);
+ color:var(--text);
+}
+.masthead{
+ background:linear-gradient(105deg,#11344e 0%,#16567a 58%,#196b91 100%);
+ border-bottom:2px solid #d8ad62;
+ box-shadow:0 8px 22px #0a263740;
+}
+.brand,.brand strong{color:#f7fbff}
+.brand small{color:#f4d28d}
+.status{background:#244e69;border-color:#5d849c;color:#f4faff}
+.tinybtn{background:#24536f;color:#fff;border:1px solid #83b9d4}
+.tinybtn:hover{background:#316b89}
+.navbutton{color:#d3e9f5}
+.navbutton:hover{color:#fff;background:#2e6383}
+.navbutton.active{color:#ffdc91;background:#255270;border-color:#edc775}
+.utilitybar{border-color:#476b84}
+.tinylabel,.eyetop,.kicker{color:#f1c97b}
+.home-heading h1,.pagetitle,.sectionhead h2{color:#f1f9ff}
+.home-today{background:#285a76;color:#e1f6ff;border-color:#6094b0}
+.intro,.field,.selector-label,.muted{color:#b5cddd}
+.textlink{color:#93def8}
+.textlink:hover{color:#fff1c4}
+.panel{
+ background:linear-gradient(148deg,#244761,#1a3a55);
+ color:#f2f8fd;
+ border:1px solid #4b6c81;
+ box-shadow:0 9px 24px #0d294035;
+}
+.panel h2,.panel h3{color:#f5f9ff}
+.empty{color:#bed0dc}
+.note{background:#214d68;color:#d8edfa;border-left-color:#8bd3ec}
+.chip{background:#4c4739;color:#ffe0a0;border:1px solid #ab8d55}
+.select,.select option{background:#214761;color:#f0f9ff;border-color:#65889d}
+table{color:#f1f9ff}
+th,.view[data-view="records"] th,.view[data-view="paternidades"] th{
+ background:#315b77;color:#d0edfb;border-bottom:1px solid #567b95;
+}
+td{color:#eff7fc;border-bottom:1px solid #41647b}
+.tablewrap tr:nth-child(even) td{background:#2a536b70}
+.rank-row{border-bottom-color:#41647b}
+.rank-row em,.matchline b{color:#f0cc81}
+.stat,.recordcard{
+ background:#254b66;border:1px solid #54738b;color:#f5faff;
+}
+.stat span,.recordcard label{color:#c2d8e8}
+.recordcard b{color:#f3cb78}
+.matchbox{background:#23465f;border-color:#54758a;color:#f1f8fd}
+.matchbox:hover{border-color:#edc775}
+.divider{background:#4f6d82}
+.match-open{color:#f1f8fd}
+.open-indicator{color:#f4d38b}
+.lineup-team{background:#1d3c55;border-color:#4e7288}
+.lineup-team td small{color:#bbd1df}
+.lineup-team td.num{color:#f3d187}
+.lineup-slot{color:#a4e2fa}
+.lineup-label{color:#f2cb7a}
+.status-tag{color:#ffb1b7}
+.teamcard{
+ background:linear-gradient(155deg,#29516c,#1d405c);
+ border:1px solid #57798f;color:#f7fbff;
+ box-shadow:inset 0 1px 0 #ffffff16;
+}
+.teamcard:hover,.teamcard.selected{
+ background:linear-gradient(155deg,#356480,#254d68);
+ border-color:#edc775;
+ box-shadow:0 0 0 1px #edc77535;
+}
+.teamcard b{color:#fff}
+.teamcard span{color:#d5eaf6}
+.teamcard img{
+ background:radial-gradient(ellipse at center,#426f8a 0%,#2d58735c 45%,transparent 74%);
+ border-radius:14px;
+ filter:drop-shadow(0 8px 11px #0b243c7a);
+}
+.cellteam img,.inline-logo img,.draft-owner img{
+ filter:drop-shadow(0 2px 4px #0a25375a);
+}
+.detail-head,.detail-metrics,.detail-metrics div{color:#f2f9ff}
+.detail-head p,.franchise-profile-head p{color:#bed5e5}
+.franchise-summary>div,.franchise-section{
+ background:#244b66;border:1px solid #53758b;color:#edf7ff;
+}
+.franchise-summary span{color:#c4ddec}
+.franchise-summary strong,.franchise-section h3{color:#f1cd83}
+.champ-row,.market-entry,.market-side{
+ background:#234760;color:#e9f4fc;border-color:#53738a;
+}
+.champ-row strong,.market-side b{color:#fff}
+.champ-row small,.market-entry small,.market-side p{color:#bed5e4}
+.meter{background:#244458}
+.meter i{background:#e2bb6c}
+.storycard{background:#244760;border:1px solid #4b728c;color:#edf6fc}
+.storycard h3{color:#fff}
+.storycard p{color:#d2e5f0}
+.storycard .overline{color:#efc77a}
+.roster-tab{
+ background:#244d69;color:#ebf8ff;border:1px solid #547d97;
+}
+.roster-tab:hover,.roster-tab.selected{
+ background:#35647f;color:#fff;border-color:#edc775;
+}
+.roster-header{border-bottom-color:#50738b}
+.roster-table td:nth-child(2),.roster-table td:nth-child(6){color:#f0cd85}
+.projection-note{color:#f1c974}
+.projection-note small{color:#bbd0df}
+.mapping-tools{color:#d2e9f7;border-color:#537b93}
+.draftboard th{background:#2d5a79;color:#e4f5ff;border:1px solid #628aa1}
+.draftboard td:first-child{background:#315c76;color:#f4d182}
+.draftboard td{background:transparent;border:0}
+.pick{background:#28506b;color:#f5fbff;border-color:#557d97}
+.pick .player{color:#fff}
+.pick .draft-owner,.draft-owner{color:#f0d18d}
+.pick .nfl-team,.nfl-team{color:#c2d9e6}
+.pick .nfl-team b{color:#edc775}
+.draft-slot-owner .cellteam span{color:#eff9ff}
+.unpicked{color:#a9c6d9}
+.rivalry-hero{background:#274d68;color:#f1f9ff;border:1px solid #5a7a90}
+.rivalry-hero>span{color:#f2ca7a}
+.rivalry-foot,.ranking-foot{color:#c4d9e7}
+#legacyRanks td:nth-child(3){color:#f0c878}
+#legacyRanks tr:nth-child(even),#seasonRecords tr:nth-child(even),#h2hResult tr:nth-child(even){background:#2a536b60}
+.ranking-feature{
+ background:linear-gradient(120deg,#294d67,#203d55 75%);
+ border:2px solid #c49c59;
+}
+.diario-callout{
+ background:linear-gradient(105deg,#28516d,#1e405d 66%,#3d4d5c);
+ border-color:#c99f58;border-left:6px solid #edc775;
+ box-shadow:0 12px 28px #102b4150;
+}
+.diario-callout-mark{background:#1d7399;border-color:#e9c77d}
+.diario-callout h2{color:#fff}
+.diario-callout p{color:#c8dce9}
+.diario-callout-button{background:#167eaa;color:#fff;box-shadow:0 4px 0 #0b496e}
+.diario-callout-button:hover{background:#2097c0}
+.rivalry-hero img,.franchise-profile-head>img{filter:drop-shadow(0 8px 12px #0a25365c)}
+/* Papel destacado sin iluminar toda la interfaz */
+.newspaper{background:#e9e3d5;border-color:#b79a6b}
+.view[data-view="noticias"]>.newspaper-banner{background:#e9e3d5;border-color:#af915d}
+.view[data-view="noticias"]>.newspaper-banner h2{color:#254e64!important}
+.paper-story.paper-satire{background:#c7dddf75}
+.oldpaper{background:#dfcda9;border-color:#a68655}
+.playoff-panel{
+ background:linear-gradient(155deg,#152f49,#1a3650 65%,#2a3950);
+ border:1px solid #b9995f;color:#f4fbff;
+}
+.playoff-panel h3{color:#ffe0a0}
+.playoff-panel .bracket-game,.playoff-panel .contender{
+ background:#204461;color:#f4faff;border-color:#ab925e;
+}
+.playoff-panel .cellteam span{color:#fff}
+footer{color:#acc8da;border-color:#4d7087}
+@media(max-width:750px){
+ .panel,.teamcard{box-shadow:none}
+ .teamcard img{background:radial-gradient(ellipse,#476f88 0%,transparent 74%)}
+}
