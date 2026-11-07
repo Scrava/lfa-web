@@ -8,9 +8,9 @@
   'use strict';
   const n=v=>Number.isFinite(Number(v))?Number(v):0;
   function history(entries,a,b){
+    const key=[String(a).trim(),String(b).trim()].sort().join('|');
     const h=(Array.isArray(entries)?entries:[]).find(x=>
-      (x.franchise_a_id===a&&x.franchise_b_id===b)||
-      (x.franchise_a_id===b&&x.franchise_b_id===a));
+      [String(x.franchise_a_id).trim(),String(x.franchise_b_id).trim()].sort().join('|')===key);
     if(!h)return null;
     const flipped=h.franchise_a_id!==a;
     const reg=[n(h.regular_wins_a),n(h.regular_wins_b)];
