@@ -1,0 +1,29 @@
+name: Validar web LFA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app.js'
+      - 'enhancements.js'
+      - 'index.html'
+      - 'styles.css'
+      - '.github/workflows/validar-web.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validar sintaxis JavaScript
+        run: |
+          node --check app.js
+          node --check enhancements.js
+      - name: Verificar recursos principales
+        run: |
+          test -f index.html
+          test -f styles.css
+          test -f data/bootstrap.js
+          test -f data/live_snapshot.json
+          test -f data/player_catalog.json
