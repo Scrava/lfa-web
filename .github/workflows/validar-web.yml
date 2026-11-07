@@ -8,6 +8,8 @@ on:
       - 'edition.js'
       - 'mobile.js'
       - 'rivalries.js'
+      - 'rivalry-core.js'
+      - 'scripts/test-rivalries.cjs'
       - 'data/live_bootstrap.js'
       - 'index.html'
       - 'styles.css'
@@ -27,6 +29,8 @@ jobs:
           node --check edition.js
           node --check mobile.js
           node --check rivalries.js
+          node --check rivalry-core.js
+          node --check scripts/test-rivalries.cjs
           node --check data/live_bootstrap.js
       - name: Verificar recursos principales
         run: |
@@ -34,6 +38,8 @@ jobs:
           test -f styles.css
           test -f mobile.js
           test -f rivalries.js
+          test -f rivalry-core.js
+          test -f scripts/test-rivalries.cjs
           test -f data/bootstrap.js
           test -f data/live_snapshot.json
           test -f data/player_catalog.json
@@ -60,3 +66,5 @@ jobs:
           if(!css.includes('.mobile-compact-table')||!css.includes('.paper-grid'))throw Error('Faltan tablas compactas');
           console.log('Navegación móvil, 28 cruces y estilos compactos verificados.');
           NODE
+      - name: Probar consistencia del cuadro y buscador de paternidades
+        run: node scripts/test-rivalries.cjs
