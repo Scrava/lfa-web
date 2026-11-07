@@ -16,7 +16,7 @@ for(const a of teams)for(const b of teams){
  const x=core.history(hist,a.id,b);
  const y=core.history(hist,b.id,a.id);
  if(!x){
-   console.error('DEBUG HISTÓRICO',JSON.stringify({a:a.id,b:b.id,exact:hist.find(z=>(z.franchise_a_id===a.id&&z.franchise_b_id===b.id)||(z.franchise_a_id===b.id&&z.franchise_b_id===a.id)),type:typeof core.history,first:hist[0]}));
+   console.error('DEBUG HISTÓRICO',JSON.stringify({a:a.id,b:b.id,exact:hist.find(z=>(z.franchise_a_id===a.id&&z.franchise_b_id===b.id)||(z.franchise_a_id===b.id&&z.franchise_b_id===a.id)),type:typeof core.history,fn:core.history.toString().slice(0,400),isArray:Array.isArray(hist),first:hist[0]}));
  }
  assert.ok(x,'Falta cruce '+a.name+' vs '+b.name);
  assert.equal(x.wins,y.losses,'Victorias y derrotas asimétricas');
