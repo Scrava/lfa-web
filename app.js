@@ -190,30 +190,114 @@ async function fetchPlayers(){
  renderTransactions();renderNews();renderDraft();
  }catch(e){console.warn('[LFA] El catálogo de jugadores no estuvo disponible',e.message)}
 }
-async function connect(force=false){$('refresh').disabled=true;setStatus(false,'Conectando…');
- try{
-  const [league,users,rosters,nfl]=await Promise.all([api(`league/${LIVE_ID}`),api(`league/${LIVE_ID}/users`),api(`league/${LIVE_ID}/rosters`),api('state/nfl')]);
-  if(!league?.league_id||String(league.season)!=='2026'||!Array.isArray(users)||!Array.isArray(rosters))throw Error('Liga ausente o temporada no coincidente');
-  live={...live,ready:true,league,users,rosters,nfl,currentWeek:Math.max(1,Math.min(18,Number(nfl.week||1))),snapshot:false,syncedAt:new Date().toISOString(),matchups:{},transactions:{},news:[],bracket:[]};
-  live.selectedWeek=live.currentWeek;$('weekSelect').value=String(live.currentWeek);$('transactionWeek').value=String(live.currentWeek);setStatus(true,'Sleeper 2026 conectado');renderStandings();
-  const tasks=[...Array(live.currentWeek)].map((_,i)=>i+1);await Promise.allSettled(tasks.map(async w=>{
-    try{live.matchups[w]=await api(`league/${LIVE_ID}/matchups/${w}`)}catch{live.matchups[w]=[]}
-    try{live.transactions[w]=await api(`league/${LIVE_ID}/transactions/${w}`)}catch{live.transactions[w]=[]}
-  }));
-  const [drafts,bracket]=await Promise.allSettled([api(`league/${LIVE_ID}/drafts`),api(`league/${LIVE_ID}/winners_bracket`)]);
-  if(bracket.status==='fulfilled')live.bracket=bracket.value||[];
-  if(drafts.status==='fulfilled'){const dd=drafts.value||[];live.draft=dd.find(x=>String(x.draft_id)===String(league.draft_id))||dd.find(x=>String(x.season)==='2026')||null;if(live.draft){try{live.picks=await api(`draft/${live.draft.draft_id}/picks`);for(const p of live.picks)if(p.player_id&&p.metadata?.first_name)live.players[String(p.player_id)]={name:`${p.metadata.first_name} ${p.metadata.last_name||''}`.trim(),position:p.metadata.position}}catch{live.picks=[]}}}
-  renderMapping();renderAll();fetchPlayers();
- }catch(e){console.warn('[LFA] No se pudo verificar Sleeper:',e.message);await fallbackSnapshot()}
- finally{$('refresh').disabled=false;}
+
+/* Prioridad: Sleeper en vivo; ante fallo, JSON publicado; si no se puede leer,
+   respaldo incrustado que viene del mismo último corte validado en GitHub. */
+function snapshotIsValid(snap){
+ return !!(snap&&String(snap.league_id)===String(LIVE_ID)&&String(snap.league?.league_id)===String(LIVE_ID)
+ &&Array.isArray(snap.rosters)&&snap.rosters.length===8&&Array.isArray(snap.users));
 }
-async function fallbackSnapshot(){try{const snap=await jsonLocal('data/live_snapshot.json');if(!snap||snap.league_id!==LIVE_ID||!snap.league?.league_id)throw Error('No hay snapshot publicado');
- live={...live,ready:true,snapshot:true,syncedAt:snap.generated_at,league:snap.league,users:snap.users||[],rosters:snap.rosters||[],nfl:snap.nfl||null,currentWeek:Math.min(18,Math.max(1,Number(snap.week||1))),matchups:snap.matchups||{},transactions:snap.transactions||{},bracket:snap.bracket||[],draft:snap.draft||null,picks:snap.picks||[],players:{...live.players,...(snap.players||{})}};
- live.selectedWeek=live.currentWeek;$('weekSelect').value=String(live.currentWeek);$('transactionWeek').value=String(live.currentWeek);
- try{live.news=await jsonLocal('data/auto_news.json')}catch{live.news=[]}
- setStatus(true,'Snapshot 2026 disponible',true);renderMapping();renderAll();
- if(live.syncedAt&&Date.now()-new Date(live.syncedAt).getTime()>12*3600e3)$('sourceDetails').textContent='Advertencia: último snapshot hace más de 12 horas. No se deben confundir datos archivados con marcadores en vivo.';
- }catch{live.ready=false;setStatus(false,'Sleeper sin acceso');for(const el of ['homeLive','homeGames','homeMoves','standingsLive','matchupsLive','transactionData','draftData','currentRecords','ranking2026','h2h2026'])$(el).innerHTML='<div class="empty">No se pudieron verificar los datos de 2026 en este navegador.</div>';renderNews();}}
-renderHistory();populateWeeks();connect();
+function useSnapshot(snap){
+ if(!snapshotIsValid(snap))return false;
+ live={...live,ready:true,snapshot:true,syncedAt:snap.generated_at,league:snap.league,
+ users:snap.users||[],rosters:snap.rosters||[],nfl:snap.nfl||null,
+ currentWeek:Math.max(1,Math.min(18,Number(snap.week||1))),
+ matchups:snap.matchups||{},transactions:snap.transactions||{},bracket:snap.bracket||[],
+ draft:snap.draft||null,picks:snap.picks||[],
+ players:{...live.players,...(snap.players||{})},news:live.news||[]};
+ live.selectedWeek=live.currentWeek;
+ $('weekSelect').value=String(live.currentWeek);
+ // El filtro de mercado sigue en "todas" si el usuario lo había elegido.
+ if($('transactionWeek').value!=='all')$('transactionWeek').value=String(live.currentWeek);
+ setStatus(true,'Datos guardados de Sleeper',true);
+ renderLiveSafely();
+ return true;
+}
+function renderLiveSafely(){
+ try{renderMapping()}catch(e){console.warn('[LFA] Ajuste de equipos:',e)}
+ try{renderAll();return}catch(e){console.error('[LFA] Error de presentación, recuperando módulos:',e)}
+ // Una sección secundaria nunca debe impedir que se vean las posiciones y partidos.
+ for(const [label,fn] of [['posiciones',renderStandings],['partidos',renderMatchups],
+ ['mercado',renderTransactions],['draft',renderDraft],['playoffs',renderBracket],
+ ['récords',renderCurrentRecords],['noticias',renderNews]]){
+  try{fn()}catch(e){console.warn('[LFA] No se pudo dibujar '+label,e)}
+ }
+}
+async function fallbackSnapshot(){
+ const previous=live.ready;
+ let snap=null;
+ try{snap=await jsonLocal('data/live_snapshot.json')}catch(e){console.warn('[LFA] JSON no disponible:',e)}
+ if(!snapshotIsValid(snap))snap=window.LFA_INITIAL_SNAPSHOT||null;
+ if(snapshotIsValid(snap)){
+  try{live.news=await jsonLocal('data/auto_news.json')}catch{live.news=live.news||[]}
+  useSnapshot(snap);
+  return;
+ }
+ if(previous){
+  setStatus(true,'Últimos datos disponibles',!!live.snapshot);
+  renderLiveSafely();
+  return;
+ }
+ live.ready=false;
+ setStatus(false,'Sin datos de Sleeper');
+ for(const key of ['homeLive','homeGames','homeMoves','standingsLive','matchupsLive','transactionData',
+ 'draftData','currentRecords','ranking2026','h2h2026']){
+  const node=$(key);if(node)node.innerHTML='<div class="empty">No hay datos disponibles para mostrar.</div>';
+ }
+ try{renderNews()}catch{}
+}
+async function connect(force=false){
+ $('refresh').disabled=true;
+ if(!live.ready)setStatus(false,'Conectando con Sleeper…');
+ try{
+  const [league,users,rosters,nfl]=await Promise.all([
+   api('league/'+LIVE_ID),api('league/'+LIVE_ID+'/users'),
+   api('league/'+LIVE_ID+'/rosters'),api('state/nfl')
+  ]);
+  if(!league?.league_id||String(league.season)!=='2026'||!Array.isArray(users)||!Array.isArray(rosters))
+   throw Error('Sleeper no confirmó la temporada 2026');
+  const week=Math.max(1,Math.min(18,Number(nfl.week||1)));
+  const old=live;
+  live={...old,ready:true,league,users,rosters,nfl,currentWeek:week,
+   snapshot:false,syncedAt:new Date().toISOString(),
+   matchups:{...old.matchups},transactions:{...old.transactions},news:[],bracket:old.bracket||[]};
+  live.selectedWeek=Number($('weekSelect').value)||week;
+  // No reiniciar la selección de semana que hizo el usuario.
+  if(!old.ready||force){
+   live.selectedWeek=week;$('weekSelect').value=String(week);
+   if($('transactionWeek').value!=='all')$('transactionWeek').value=String(week);
+  }
+  setStatus(true,'Sleeper en vivo');
+  renderStandings();
+  const weeks=Array.from({length:week},(_,i)=>i+1);
+  await Promise.allSettled(weeks.map(async w=>{
+   try{const x=await api('league/'+LIVE_ID+'/matchups/'+w);if(Array.isArray(x))live.matchups[w]=x}
+   catch(e){console.warn('[LFA] Partido semana '+w,e)}
+   try{const x=await api('league/'+LIVE_ID+'/transactions/'+w);if(Array.isArray(x))live.transactions[w]=x}
+   catch(e){console.warn('[LFA] Mercado semana '+w,e)}
+  }));
+  const [drafts,bracket]=await Promise.allSettled([api('league/'+LIVE_ID+'/drafts'),api('league/'+LIVE_ID+'/winners_bracket')]);
+  if(bracket.status==='fulfilled'&&Array.isArray(bracket.value))live.bracket=bracket.value;
+  if(drafts.status==='fulfilled'){
+   const dd=drafts.value||[];
+   live.draft=dd.find(x=>String(x.draft_id)===String(league.draft_id))||dd.find(x=>String(x.season)==='2026')||live.draft;
+   if(live.draft)try{
+    live.picks=await api('draft/'+live.draft.draft_id+'/picks');
+    for(const p of live.picks)if(p.player_id&&p.metadata?.first_name)
+     live.players[String(p.player_id)]={...live.players[String(p.player_id)],name:(p.metadata.first_name+' '+(p.metadata.last_name||'')).trim(),position:p.metadata.position};
+   }catch(e){console.warn('[LFA] Picks:',e)}
+  }
+  renderLiveSafely();
+  fetchPlayers();
+ }catch(e){
+  console.warn('[LFA] Consulta en vivo no disponible; usando respaldo:',e);
+  await fallbackSnapshot();
+ }finally{$('refresh').disabled=false}
+}
+
+renderHistory();populateWeeks();
+// Publicamos inmediatamente la última captura válida sin depender de la red.
+if(snapshotIsValid(window.LFA_INITIAL_SNAPSHOT))useSnapshot(window.LFA_INITIAL_SNAPSHOT);
+connect();
 // Reconsulta silenciosa mientras la página permanezca abierta. Los snapshots persistentes se publican por GitHub Actions.
 setInterval(()=>{if(!document.hidden)connect()},30*60*1000);

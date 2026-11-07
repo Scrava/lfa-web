@@ -151,3 +151,29 @@ tr:nth-child(even) td{background:#eff8fe7d}
 .diario-callout-button:hover{background:#086f9e}
 footer{color:#577c94;border-color:#c8e0ec}
 @media(max-width:740px){.diario-callout{flex-wrap:wrap;padding:18px;gap:12px}.diario-callout-mark{width:56px;height:56px;font-size:17px}.diario-callout-button{width:100%;margin:7px 0 0}.draftboard th{min-width:120px}.roster-table{overflow-x:auto}}
+
+/* PALETA DESCANSADA · celeste grisáceo y blancos ahumados */
+:root{--bg:#cedee7;--panel:#e5eef3;--panel2:#dceaf0;--line:#a9c7d8;--text:#153a52;--muted:#526f81;--gold:#a87824}
+html,body{background:#cfdee7!important}
+body{background-image:radial-gradient(ellipse at 40% 0%,#c0d8e6 0,#d3e1e9 56%,#c9d8e1 100%)!important}
+.masthead{background:linear-gradient(100deg,#075a82 0%,#14799f 67%,#288eb0 100%)!important;border-bottom:3px solid #c6a052}
+.panel{background:linear-gradient(145deg,#eaf2f6,#dceaf1)!important;border-color:#a9c7d7!important;box-shadow:0 6px 15px #27546c13!important}
+.diario-callout{background:linear-gradient(105deg,#d3e7f1,#e7eef1 60%,#f0e6cd)!important}
+.diario-callout-mark{background:#10799f}
+.draftboard th{background:#a8d3e5!important}
+th{background:#c8e2ef!important}
+.select{background:#eaf2f6!important;color:#173b55!important}
+.roster-tab{background:#dbeaf0!important}
+.teamcard{background:linear-gradient(145deg,#e8f1f5,#d5e6ef)!important}
+.stat,.recordcard{background:#e2edf3!important}
+.matchbox{background:#e0edf3!important}
+.chip{background:#f0e7d2!important}
+.storycard{background:#e8eff2!important}
+.note{background:#d5e8f1!important}
+.tablewrap tr:nth-child(even) td{background:#d4e5ed6b}
+.rivalry-hero{background:#dbeaf1!important}
+.franchise-summary>div,.franchise-section{background:#e0ecf2!important}
+.newspaper{background:#efede5!important}
+.view[data-view=noticias]>.newspaper-banner{background:#f0ede4!important}
+.playoff-panel{background:linear-gradient(150deg,#071d3a,#0b304e 60%,#172b40)!important;color:#f7fbff}
+.playoff-panel .bracket-game,.playoff-panel .contender{background:#123653!important;color:#fff}
