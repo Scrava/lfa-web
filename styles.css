@@ -483,7 +483,7 @@ footer{color:#acc8da;border-color:#4d7087}
   #rosterGrid .mobile-stack-table td:nth-child(4){grid-column:1/-1}
   #rosterGrid .mobile-stack-table td:nth-child(6){color:#f2cf83;font-weight:900}
   /* Draft en tarjetas por ronda, sin desplazar ocho columnas. */
-  #draftData .board-scroll{display:none}
+  #draftData.has-mobile-draft .board-scroll{display:none}
   .mobile-draft-board{display:block}
   .mobile-draft-guide{padding:10px 11px;margin:8px 0 13px;border-radius:9px;background:#244b66;color:#c7dcea;font-size:11px;border:1px solid #4c718b}
   .draft-mobile-round{margin:12px 0 17px}
