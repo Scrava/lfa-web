@@ -19,3 +19,14 @@ html,body{background-color:#08111f}body{background-image:radial-gradient(ellipse
 .oldpaper{background:#dcc5a0;color:#352819;border:8px solid #aa8e65;border-radius:5px;padding:clamp(12px,3vw,33px);box-shadow:inset 0 0 45px #7b552830,0 15px 30px #0005;background-image:repeating-linear-gradient(0deg,#6b421206 0px,#fff0 3px,#6b421206 4px),radial-gradient(ellipse at center,#f6e6bc,#d6bc90)}.oldpaper-banner{text-align:center;padding:25px 10px;margin-bottom:18px;border-top:3px double #704b27;border-bottom:3px double #704b27}.oldpaper-banner>span{letter-spacing:4px;font:bold 11px Georgia,serif}.oldpaper-banner h2{font:900 clamp(26px,4vw,49px)/1 Georgia,serif;margin:12px 0}.oldpaper-banner p{font:italic 14px Georgia,serif}.oldpaper .paper-story{background:#fff7e31c;border-color:#9f8566}.oldpaper .paper-meta{color:#6a3e26}.oldpaper .paper-story p{color:#514130}
 @media(max-width:1080px){.paper-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.paper-story:nth-child(3n){border-right:1px solid #bea98c}.paper-story:nth-child(2n){border-right:0}.playoff-contenders,.roster-switcher{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:750px){.home-heading{align-items:flex-start}.paper-grid{grid-template-columns:1fr}.paper-story,.paper-story:nth-child(2n),.paper-story:nth-child(3n){border-right:0}.paper-story.paper-lead{grid-column:span 1}.lineups-grid{grid-template-columns:1fr}.playoff-contenders{grid-template-columns:repeat(2,minmax(0,1fr))}.franchise-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.franchise-profile-head{gap:9px}.franchise-profile-head>img{width:85px;height:90px}.roster-header{align-items:flex-start;flex-direction:column}.projection-note{text-align:left}.roster-switcher{grid-template-columns:repeat(2,minmax(0,1fr))}.home-heading h1{font-size:27px}}
+
+/* LFA · refinamientos de edición: claridad del archivo y navegación */
+.view[data-view="records"] .panel{border-top:3px solid #a8844b}
+.view[data-view="records"] .panel:nth-child(even){border-top-color:#507e9b}
+.view[data-view="paternidades"] .panel{border-top:3px solid #705b9f}
+.view[data-view="records"] .tablewrap,.view[data-view="paternidades"] .tablewrap{max-height:650px;overflow:auto}
+.view[data-view="records"] th,.view[data-view="paternidades"] th{position:sticky;top:0;background:#233950;z-index:1}
+.paper-story.paper-satire{background:#8e61200c}
+.paper-story.paper-satire .paper-meta span{color:#8c5226}
+.match-open:focus-visible,.roster-tab:focus-visible{outline:2px solid #e9c77d;outline-offset:3px}
+@media(max-width:680px){.roster-header{flex-direction:column;align-items:flex-start}.projection-note{text-align:left}.home-heading{gap:10px}.paper-story.paper-lead{grid-column:auto}}

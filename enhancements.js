@@ -14,7 +14,7 @@ function v4StoryArticle(s,i=0){
   <div class="paper-meta"><span>${esc(tag)}</span>${when}</div>
   <h3>${esc(s.title)}</h3><p>${esc(s.description||s.body||'')}</p>
   ${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Leer noticia completa ↗</a>`:''}
-  ${satire?'<div class="paper-attribution">Parodia inventada · No es una declaración real</div>':s.fact?`<div class="paper-attribution">${esc(s.fact)}</div>`:''}
+  ${satire?'<div class="paper-attribution">Parodia inventada · No es una declaración real</div>':''}
   </article>`;
 }
 
@@ -82,13 +82,16 @@ function v4RenderNews(){
  const masthead=`<div class="newspaper-banner"><div class="paper-vol">FANTASY FOOTBALL · LA REDACCIÓN DE LA LFA</div><h2>ÚLTIMA HORA <span>LFA</span></h2><div class="paper-date">${esc(date)} · Crónicas, rumores paródicos y noticias de NFL</div></div>`;
  $('homeNews').innerHTML=masthead+'<div class="paper-grid">'+stories.slice(0,7).map((s,i)=>v4StoryArticle(s,i)).join('')+'</div>';
  $('newsGrid').innerHTML='<div class="paper-grid">'+stories.map((s,i)=>v4StoryArticle(s,i)).join('')+'</div>';
- $('newsStatus').textContent=(window.LFA_V4.nflNews||[]).length?'Titulares NFL actualizados al consultar la página. El humor de la LFA cambia cada día.':'Noticias NFL externas temporalmente no disponibles. Los datos de Sleeper y las parodias de la LFA siguen visibles.';
+ $('newsStatus').textContent=(window.LFA_V4.nflNews||[]).length?'Noticias NFL · Diario LFA · Edición del día':'Edición LFA · Las noticias externas pueden no estar disponibles';
 }
 
 function v4GameLineup(row,week){
  const isLive=week>=live.currentWeek;
- const ids=(Array.isArray(row?.players)&&row.players.length?row.players:roster(row?.roster_id)?.players||[]).map(String).filter(x=>x!=='0'&&x!=='');
- const starts=(Array.isArray(row?.starters)&&row.starters.length?row.starters:week===live.currentWeek?roster(row.roster_id)?.starters||[]:[]).map(String).filter(x=>x!=='0'&&x!=='');
+ const historical=week<live.currentWeek;
+ const actualIds=Array.isArray(row?.players)?row.players:[];
+ const actualStarts=Array.isArray(row?.starters)?row.starters:[];
+ const ids=(actualIds.length?actualIds:historical?[]:roster(row?.roster_id)?.players||[]).map(String).filter(x=>x!=='0'&&x!=='');
+ const starts=(actualStarts.length?actualStarts:historical?[]:roster(row?.roster_id)?.starters||[]).map(String).filter(x=>x!=='0'&&x!=='');
  const bench=ids.filter(id=>!starts.includes(id));
  const pts=row?.players_points||{};
  const starterPts=Array.isArray(row?.starters_points)?row.starters_points:[];
@@ -103,7 +106,7 @@ function v4GameLineup(row,week){
  return `<div class="lineup-team"><h4>${rchip(row.roster_id)} <em>${row.points!=null?fmt(Number(row.points)):'—'} pts</em></h4>
  <div class="lineup-label">TITULARES</div><div class="tablewrap">${table(['Puesto','Jugador','PTS'],starts.map(id=>{const p=live.players[id]||{};let val=Object.prototype.hasOwnProperty.call(pts,id)?Number(pts[id]):null; const idx=(row.starters||[]).map(String).indexOf(id);if(val==null&&idx>=0&&starterPts[idx]!=null)val=Number(starterPts[idx]);return [`<span class="lineup-slot">${esc(positions[starts.indexOf(id)]||p.position||'TIT')}</span>`,`<strong>${esc(playerName(id))}</strong> <small>${esc(p.position||'')} ${esc(p.team||'')}</small>${p.injury_status?` <span class="status-tag">${esc(p.injury_status)}</span>`:''}`,Number.isFinite(val)?fmt(val):'—'] }))}</div>
  <div class="lineup-label">SUPLENTES / BANCO</div><div class="tablewrap">${table(['Puesto','Jugador','PTS'],bench.map(id=>{const p=live.players[id]||{},v=Object.prototype.hasOwnProperty.call(pts,id)?Number(pts[id]):null;return ['BANCO',`${esc(playerName(id))} <small>${esc(p.position||'')} ${esc(p.team||'')}</small>`,Number.isFinite(v)?fmt(v):'—']}))}</div>
- ${!starts.length?'<p class="muted small">Aún no se publicó la formación para esta semana.</p>':''}</div>`;
+ ${!starts.length?`<p class="muted small">${historical?'Sleeper no conserva la alineación de este encuentro en los datos disponibles.':'La formación todavía no está disponible.'}</p>`:''}</div>`;
 }
 
 function v4RenderMatchups(){
@@ -213,7 +216,7 @@ function v4RenderComparison(){
   return {old,now:`${wins}–${losses}`,games:gg};
  }
  if(mode==='all'){
-  const rows=D.franchises.filter(f=>f.id!==a).map(f=>{const r=calculate(f.id);return [logoImg(f.id)+esc(f.name),r.now,r.old,r.games.map(g=>`S${g.week}`).join(', ')||'—']});
+  const rows=D.franchises.filter(f=>f.id!==a).map(f=>{const r=calculate(f.id);return [`<span class="cellteam">${logoImg(f.id)}${esc(f.name)}</span>`,r.now,r.old,r.games.map(g=>`S${g.week}`).join(', ')||'—']});
   $('h2hResult').innerHTML=`<h3>${esc(teamName(a))} frente a los otros siete</h3><div class="tablewrap">${table(['Rival','2026','Archivo histórico','Fechas 2026'],rows)}</div>`;
  }else{
   if(a===b){$('h2hResult').innerHTML='<div class="note">Seleccioná dos equipos distintos.</div>';return}
@@ -267,8 +270,8 @@ function v4EnhanceHistory(){
  const all=[...stories,...finals].sort((a,b)=>b.year-a.year);
  $('historicalStories').innerHTML='<div class="oldpaper-banner"><span>EL ARCHIVO · DESDE 2019</span><h2>CRÓNICAS DE OTRA ÉPOCA</h2><p>Glorias, humillaciones y rachas que dejaron huella en la LFA</p></div><div class="paper-grid">'+all.map((s,i)=>v4StoryArticle({...s,category:`${s.year} · ARCHIVO`,updated_at:null},i)).join('')+'</div>';
  const historic=v4HistoricalRows().filter(v=>v.wins!=null).sort((a,b)=>(b.score??0)-(a.score??0));
- $('legacyRanks').innerHTML=`<div class="tablewrap">${table(['#','Franquicia','Índice*','G–P acumulado'],historic.map((r,i)=>[i+1,logoImg(r.f.id)+esc(r.f.name),Number.isFinite(r.score)?fmt(r.score):'—',`${r.wins}–${r.losses??'—'}`]))}</div><p class="muted small">*Índice histórico orientativo: se incorporan resultados nuevos desde la semana 9 de 2026 cuando coinciden con el registro inicial. Las bonificaciones antiguas conservan su valor registrado.</p>`;
- const el=$('historicalOverall');if(el)el.innerHTML=`<div class="tablewrap">${table(['Franquicia','G','P','% victorias','Último agregado'],historic.map(r=>[logoImg(r.f.id)+esc(r.f.name),r.wins,r.losses??'—',r.rate==null?'—':`${fmt(r.rate)}%`,r.verifiedFromWeek8?(r.deltaGames?`+${r.deltaGames} fechas`:'Hasta semana 8'):'Pendiente']))}</div><p class="muted small">Cifras históricas provisionales; las derrotas se reconstruyen del porcentaje anterior. La coincidencia de puntos hasta la semana 8 permite sumar nuevas fechas sin duplicarlas.</p>`;
+ $('legacyRanks').innerHTML=`<div class="tablewrap">${table(['#','Franquicia','Índice*','G–P acumulado'],historic.map((r,i)=>[i+1,logoImg(r.f.id)+esc(r.f.name),Number.isFinite(r.score)?fmt(r.score):'—',`${r.wins}–${r.losses??'—'}`]))}</div><p class="muted small">Ranking histórico provisional.</p>`;
+ const el=$('historicalOverall');if(el)el.innerHTML=`<div class="tablewrap">${table(['Franquicia','G','P','% victorias','Último agregado'],historic.map(r=>[logoImg(r.f.id)+esc(r.f.name),r.wins,r.losses??'—',r.rate==null?'—':`${fmt(r.rate)}%`,r.verifiedFromWeek8?(r.deltaGames?`+${r.deltaGames} fechas`:'Hasta semana 8'):'Pendiente']))}</div><p class="muted small">Récord histórico provisional.</p>`;
 }
 function v4ShowFranchise(id){
  document.querySelectorAll('[data-franchise]').forEach(b=>b.classList.toggle('selected',b.dataset.franchise===id));
@@ -279,7 +282,7 @@ function v4ShowFranchise(id){
  $('franchiseDetail').innerHTML=`<div class="franchise-profile"><div class="franchise-profile-head">${logoImg(id)}<div><div class="eyetop">PERFIL DE FRANQUICIA</div><h2>${esc(f.name)}</h2><p>General Manager: <strong>${esc(f.manager)}</strong></p></div></div>
  <div class="franchise-summary"><div><span>TÍTULOS</span><strong>${titles(id)}</strong></div><div><span>FINALES</span><strong>${finals(id)}</strong></div><div><span>RECORD 2026</span><strong>${now?`${now.wins}–${now.losses}`:'—'}</strong></div><div><span>HISTÓRICO*</span><strong>${recordLegacy?.wins!=null?`${recordLegacy.wins}–${recordLegacy.losses??'?'}`:'—'}</strong></div></div>
  <div class="grid two spaced"><div class="franchise-section"><h3>Palmarés</h3><p><b>Campeonatos:</b> ${champion.length?champion.join(', '):'Sin campeonatos'}</p><p><b>Subcampeonatos:</b> ${runner.length?runner.join(', '):'Sin subcampeonatos registrados'}</p></div><div class="franchise-section"><h3>Rendimiento por temporada</h3><p><b>2025:</b> ${regular?`${regular.wins} G – ${regular.losses} P · ${fmt(regular.pf)} PF`:'Sin registros completos'}</p><p><b>2026:</b> ${now?`${fmt(now.pf)} PF · ${fmt(now.pa)} PA`:'Esperando resultados'}</p></div></div>
- <small class="muted">*El récord histórico es provisional; las derrotas se estiman a partir del porcentaje del archivo. No se agregan resultados que puedan estar duplicados.</small></div>`;
+ <small class="muted">*Récord histórico provisional.</small></div>`;
 }
 
 function v4RenderSeasons(){
@@ -323,6 +326,7 @@ function v4Init(){
  v4RenderNews();
  v4FetchNflNews();
  const now=v4DayKey();window.LFA_V4.day=now;
+ const todayLabel=$('todayLabel');if(todayLabel)todayLabel.textContent=new Intl.DateTimeFormat('es-AR',{weekday:'long',day:'numeric',month:'long',timeZone:'America/Argentina/Buenos_Aires'}).format(new Date()).toUpperCase();
  setInterval(()=>{if(window.LFA_V4.day!==v4DayKey()){window.LFA_V4.day=v4DayKey();v4RenderNews()}},30*60*1000);
  setInterval(()=>{if(!document.hidden)v4FetchNflNews()},30*60*1000);
 }
