@@ -11,10 +11,7 @@
     const key=[String(a).trim(),String(b).trim()].sort().join('|');
     const h=(Array.isArray(entries)?entries:[]).find(x=>
       [String(x.franchise_a_id).trim(),String(x.franchise_b_id).trim()].sort().join('|')===key);
-    if(!h){
-      console.error('CORE RIVALRY DEBUG',JSON.stringify({a,b,key,count:entries?.length,arrays:Array.isArray(entries),firstKey:entries?.[0]&&[String(entries[0].franchise_a_id).trim(),String(entries[0].franchise_b_id).trim()].sort().join('|'),found:entries?.filter(x=>String(x.franchise_a_id)===String(a)||String(x.franchise_b_id)===String(a)).length}));
-      return null;
-    }
+    if(!h)return null;
     const flipped=h.franchise_a_id!==a;
     const reg=[n(h.regular_wins_a),n(h.regular_wins_b)];
     const play=[n(h.playoff_wins_a),n(h.playoff_wins_b)];
