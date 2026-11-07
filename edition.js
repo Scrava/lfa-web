@@ -112,7 +112,10 @@
   const rows=sorted.map(id=>{
    const p=live.players[id]||{},role=starts.includes(id)?'TITULAR':reserve.has(id)?'RESERVA':'SUPLENTE';
    const proyeccion=Number(stats.projections?.[id]),projected=stats.projections&&Object.prototype.hasOwnProperty.call(stats.projections,id)&&Number.isFinite(proyeccion)?fmt(proyeccion):'—';
-   return [`<span class="lineup-slot">${role}</span>`,`<b>${ESC(p.position||'—')}</b>`,`<strong>${ESC(window.playerName(id))}</strong>`,ESC(nflName(p.team)),`<span class="${p.injury_status?'status-tag':''}">${ESC(p.injury_status||'—')}</span>`,projected];
+   const teamCode=String(p.team||'').toUpperCase();
+   const espnCode=({'JAC':'jax','WSH':'wsh','LA':'lar','OAK':'lv','SD':'lac','STL':'lar'})[teamCode]||teamCode.toLowerCase();
+   const icon=/^[a-z]{2,3}$/.test(espnCode)?`<img class="roster-nfl-shield" loading="lazy" alt="Escudo de ${ESC(nflName(teamCode))}" src="https://a.espncdn.com/i/teamlogos/nfl/500/${ESC(espnCode)}.png" onerror="this.style.display='none'">`:'';
+   return [`<span class="lineup-slot">${role}</span>`,`<b>${ESC(p.position||'—')}</b>`,`<span class="roster-player-cell">${icon}<strong>${ESC(window.playerName(id))}</strong></span>`,`<span class="roster-nfl-name">${ESC(nflName(p.team))}</span>`,`<span class="${p.injury_status?'status-tag':''}">${ESC(p.injury_status||'—')}</span>`,projected];
   });
   target.innerHTML=`<div class="roster-switcher">${tabs}</div>
    <div class="roster-header"><div><span class="eyetop">PLANTEL 2026</span><h2>${window.rchip(current.roster_id)}</h2><p>${players.length} jugadores · ${starts.length} titulares · ${reserve.size} en reserva</p></div>

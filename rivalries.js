@@ -1,71 +1,128 @@
-/* LFA – matriz histórica de rivalidades, con archivo y temporada separados. */
+/* LFA · Una sola fuente de verdad para matriz y búsqueda de Paternidades */
 (function(){
  'use strict';
  const $=id=>document.getElementById(id);
- const root=$('rivalryMatrix');
- const scope=$('matrixScope');
- const note=$('rivalryMatrixNote');
- if(!root||!scope||!note)return;
- const safe=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const franchises=Array.isArray(D.franchises)?D.franchises:[];
- const hist=Array.isArray(D.legacy_h2h_review)?D.legacy_h2h_review:[];
- function resolve(a,b){
-  if(scope.value==='historico'){
-   const h=hist.find(x=>(x.franchise_a_id===a&&x.franchise_b_id===b)||(x.franchise_a_id===b&&x.franchise_b_id===a));
-   if(!h)return null;
-   return h.franchise_a_id===a?
-    [Number(h.regular_wins_a||0)+Number(h.playoff_wins_a||0),Number(h.regular_wins_b||0)+Number(h.playoff_wins_b||0)]:
-    [Number(h.regular_wins_b||0)+Number(h.playoff_wins_b||0),Number(h.regular_wins_a||0)+Number(h.playoff_wins_a||0)];
-  }
-  if(!live.ready)return null;
-  const ra=live.rosters.find(r=>assigned(r)?.id===a)?.roster_id;
-  const rb=live.rosters.find(r=>assigned(r)?.id===b)?.roster_id;
-  if(ra==null||rb==null)return null;
-  const games=completedGames().filter(g=>g.type==='regular'&&
-   ((g.a===Number(ra)&&g.b===Number(rb))||(g.a===Number(rb)&&g.b===Number(ra))));
-  let wins=0,losses=0;
-  for(const g of games){
-   const pa=g.a===Number(ra)?g.pa:g.pb;
-   const pb=g.a===Number(ra)?g.pb:g.pa;
-   if(pa>pb)wins++;else if(pa<pb)losses++;
-  }
-  return [wins,losses];
- }
- function draw(){
-  if(franchises.length!==8){root.innerHTML='<p class="empty">Cuadro no disponible.</p>';return}
-  note.textContent=scope.value==='historico'?
-   'Archivo histórico registrado: fase regular y playoffs. Corte histórico pendiente de verificación; 2026 se muestra aparte.':
-   'Temporada 2026: solo encuentros de fase regular finalizados y confirmados por Sleeper.';
-  const heads=franchises.map(f=>'<th scope="col" title="'+safe(f.name)+'"><span class="matrix-team">'+logoImg(f.id)+'<small>'+safe(f.name)+'</small></span></th>').join('');
-  const body=franchises.map(a=>'<tr><th scope="row"><span class="matrix-row-team">'+logoImg(a.id)+'<b>'+safe(a.name)+'</b></span></th>'+
-   franchises.map(b=>{
-    if(a.id===b.id)return '<td class="matrix-self" aria-label="Mismo equipo">◆</td>';
-    const result=resolve(a.id,b.id);
-    if(!result)return '<td class="matrix-empty" title="Sin registro">—</td>';
-    const [w,l]=result;
-    const css=w>l?'matrix-ahead':w<l?'matrix-behind':'matrix-even';
-    return '<td class="'+css+'"><button type="button" class="matrix-cell" data-rival-a="'+safe(a.id)+'" data-rival-b="'+safe(b.id)+'" aria-label="'+safe(a.name)+' contra '+safe(b.name)+': '+w+' ganados, '+l+' perdidos" title="'+safe(a.name)+' vs '+safe(b.name)+'">'+w+'–'+l+'</button></td>';
-   }).join('')+'</tr>').join('');
-  root.innerHTML='<table class="rivalry-matrix"><thead><tr><th scope="col" class="matrix-corner">VS</th>'+heads+'</tr></thead><tbody>'+body+'</tbody></table>';
- }
- root.addEventListener('click',ev=>{
-  const button=ev.target.closest('[data-rival-a][data-rival-b]');
-  if(!button)return;
-  const a=$('h2hA'),b=$('h2hB'),mode=$('h2hMode');
-  if(!a||!b||!mode)return;
-  a.value=button.dataset.rivalA;b.value=button.dataset.rivalB;mode.value='duel';
-  try{if(typeof window.v4RenderComparison==='function')window.v4RenderComparison()}catch(e){console.warn('[LFA] Rivalidad:',e)}
-  $('rivalryLookup')?.scrollIntoView({behavior:'smooth',block:'start'});
+ const matrix=$('rivalryMatrix'),scope=$('matrixScope'),note=$('rivalryMatrixNote'),
+       output=$('h2hResult'),mode=$('h2hMode'),selA=$('h2hA'),selB=$('h2hB'),
+       bField=$('h2hBField'),historyPanel=$('rivalryLookup');
+ const core=window.LFA_RIVALRY_CORE;
+ if(!matrix||!scope||!note||!output||!mode||!selA||!selB||!core)return;
+ const teams=Array.isArray(D.franchises)?D.franchises:[];
+ const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const teamName=id=>teams.find(x=>x.id===id)?.name||id;
+ const teamLogo=id=>{try{return logoImg(id)}catch{return ''}};
+ const pair=(a,b)=>({
+   old:core.history(D.legacy_h2h_review,a,b),
+   year:core.season(live.rosters,live.ready?completedGames():[],r=>assigned(r)?.id,a,b)
  });
- scope.addEventListener('change',draw);
- ['h2hA','h2hB','h2hMode'].forEach(id=>$(id)?.addEventListener('change',draw));
- let queued=false;
- const rerender=()=>{
-  if(queued)return;
-  queued=true;
-  requestAnimationFrame(()=>{queued=false;draw()});
- };
- const standings=$('standingsLive');
- if(standings)new MutationObserver(rerender).observe(standings,{childList:true});
- draw();
+ const fmt=(v,withTies=false)=>!v||!v.count?'—':v.wins+'–'+v.losses+(withTies&&v.ties?' ('+v.ties+' E)':'');
+ // Mostramos 0–0 cuando hay un registro histórico formal de 0 encuentros.
+ const formatArchive=v=>v?v.wins+'–'+v.losses:'—';
+ const formatSeason=v=>v&&v.count?v.wins+'–'+v.losses+(v.ties?' ('+v.ties+' E)':''):'—';
+ const tableView=()=>scope.value==='2026'?'year':'old';
+ function ensureOptions(){
+   if(!teams.length)return;
+   const valid=new Set(teams.map(f=>f.id));
+   const opts=teams.map(f=>'<option value="'+safe(f.id)+'">'+safe(f.name)+'</option>').join('');
+   for(const select of [selA,selB]){
+     const original=select.value;
+     if(select.options.length!==teams.length||[...select.options].some(x=>!valid.has(x.value))){
+       select.innerHTML=opts;
+       if(valid.has(original))select.value=original;
+     }
+   }
+   if(!valid.has(selA.value))selA.value=teams[0]?.id||'';
+   if(!valid.has(selB.value))selB.value=teams.find(t=>t.id!==selA.value)?.id||'';
+ }
+ function detailItem(a,b,p,scopeKey){
+   const value=p[scopeKey];
+   const text=scopeKey==='old'?formatArchive(value):formatSeason(value);
+   const label=scopeKey==='old'?'Histórico registrado':'Temporada 2026';
+   return '<div class="rivalry-detail-stat"><small>'+label+'</small><b>'+safe(text)+'</b></div>';
+ }
+ function renderLookup(){
+   ensureOptions();
+   const a=selA.value,b=selB.value,all=mode.value==='all';
+   if(bField){bField.hidden=all;bField.style.display=all?'none':''}
+   if(!teams.find(t=>t.id===a)){output.innerHTML='<p class="empty">Elegí un equipo.</p>';return}
+   const focus=tableView();
+   if(all){
+     const rows=teams.filter(t=>t.id!==a).map(t=>{
+       const p=pair(a,t.id);
+       return '<tr><td><span class="cellteam">'+teamLogo(t.id)+safe(t.name)+'</span></td>'+
+         '<td class="'+(focus==='old'?'rivalry-focus':'')+'">'+safe(formatArchive(p.old))+'</td>'+
+         '<td class="'+(focus==='year'?'rivalry-focus':'')+'">'+safe(formatSeason(p.year))+'</td>'+
+         '<td><button class="rivalry-action" type="button" data-focus-a="'+safe(a)+'" data-focus-b="'+safe(t.id)+'">Ver cruce</button></td></tr>';
+     }).join('');
+     output.innerHTML='<h3>'+safe(teamName(a))+' frente a los otros siete</h3>'+
+       '<div class="rivalry-results-scroll"><table class="rivalry-result-table"><thead><tr><th>Rival</th><th>Histórico</th><th>2026</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+       '<p class="rivalry-foot">Histórico: temporada regular y playoffs registrados. El año 2026 se muestra por separado.</p>';
+     return;
+   }
+   if(a===b||!teams.find(t=>t.id===b)){output.innerHTML='<p class="note">Elegí dos franquicias distintas.</p>';return}
+   const p=pair(a,b);
+   const primary=focus==='old'?formatArchive(p.old):formatSeason(p.year);
+   const old=p.old,year=p.year;
+   const oldSubtitle=old?
+     'Temporada regular '+old.regular.wins+'–'+old.regular.losses+' · Playoffs '+old.playoffs.wins+'–'+old.playoffs.losses:
+     'Sin registros históricos';
+   const yearSubtitle=year?.count?
+     year.count+' cruces cerrados · Semanas '+(year.weeks||[]).join(', '):
+     'Sin enfrentamientos de 2026 cerrados';
+   output.innerHTML='<div class="rivalry-duel">'+
+     '<div class="rivalry-duel-team">'+teamLogo(a)+'<strong>'+safe(teamName(a))+'</strong></div>'+
+     '<div class="rivalry-duel-score"><small>'+safe(focus==='old'?'HISTORIAL REGISTRADO':'2026')+'</small><b>'+safe(primary)+'</b></div>'+
+     '<div class="rivalry-duel-team">'+teamLogo(b)+'<strong>'+safe(teamName(b))+'</strong></div></div>'+
+     '<div class="rivalry-detail-grid">'+detailItem(a,b,p,'old')+detailItem(a,b,p,'year')+'</div>'+
+     '<p class="rivalry-foot">'+safe(oldSubtitle)+'<span class="rivalry-foot-divider"> · </span>'+safe(yearSubtitle)+'</p>';
+ }
+ function renderMatrix(){
+  ensureOptions();
+  if(teams.length!==8){matrix.innerHTML='<p class="empty">Cuadro no disponible.</p>';return}
+  const focus=tableView();
+  note.textContent=focus==='old'?
+   'Historial registrado: fase regular y playoffs. La temporada 2026 se consulta por separado.':
+   'Temporada 2026: solamente enfrentamientos finalizados de fase regular.';
+  const heads=teams.map(t=>'<th scope="col" title="'+safe(t.name)+'"><span class="matrix-team">'+teamLogo(t.id)+'<small>'+safe(t.name)+'</small></span></th>').join('');
+  const rows=teams.map(a=>'<tr><th scope="row"><span class="matrix-row-team">'+teamLogo(a.id)+'<b>'+safe(a.name)+'</b></span></th>'+
+   teams.map(b=>{
+     if(a.id===b.id)return '<td class="matrix-self">◆</td>';
+     const value=pair(a.id,b.id)[focus];
+     const label=focus==='old'?formatArchive(value):formatSeason(value);
+     const neutral=focus==='year'&&!value?.count;
+     const css=neutral?'matrix-empty':value&&value.wins>value.losses?'matrix-ahead':value&&value.wins<value.losses?'matrix-behind':'matrix-even';
+     return '<td class="'+css+'"><button type="button" class="matrix-cell" data-rival-a="'+safe(a.id)+'" data-rival-b="'+safe(b.id)+'" aria-label="'+safe(a.name)+' contra '+safe(b.name)+': '+safe(label)+'">'+safe(label)+'</button></td>';
+   }).join('')+'</tr>').join('');
+  matrix.innerHTML='<table class="rivalry-matrix"><thead><tr><th scope="col" class="matrix-corner">VS</th>'+heads+'</tr></thead><tbody>'+rows+'</tbody></table>';
+ }
+ function renderAll(){renderMatrix();renderLookup()}
+ function selectDuel(a,b){
+   ensureOptions();selA.value=a;selB.value=b;mode.value='duel';
+   renderLookup();
+   historyPanel?.scrollIntoView({behavior:'smooth',block:'start'});
+ }
+ matrix.addEventListener('click',ev=>{
+   const btn=ev.target.closest('[data-rival-a][data-rival-b]');
+   if(btn)selectDuel(btn.dataset.rivalA,btn.dataset.rivalB);
+ });
+ output.addEventListener('click',ev=>{
+   const btn=ev.target.closest('[data-focus-a][data-focus-b]');
+   if(btn)selectDuel(btn.dataset.focusA,btn.dataset.focusB);
+ });
+ for(const control of [selA,selB,mode])control.addEventListener('change',renderLookup);
+ scope.addEventListener('change',renderAll);
+ window.LFA_RIVALRIES={pair,renderLookup,renderMatrix,renderAll};
+ // El motor original continúa llamando renderComparison() luego de cada fecha.
+ // Reemplazamos ambas funciones globales para evitar cálculos antiguos.
+ window.v4RenderComparison=renderLookup;
+ window.renderComparison=renderLookup;
+ const originalRenderStandings=window.renderStandings;
+ if(typeof originalRenderStandings==='function'){
+   window.renderStandings=function(...args){
+     const result=originalRenderStandings(...args);
+     renderAll();
+     return result;
+   };
+ }
+ renderAll();
 })();

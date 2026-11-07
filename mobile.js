@@ -49,8 +49,8 @@
     viewObserver.observe(view, {attributes:true, attributeFilter:['class']})
   );
 
-  const containers = ['standingsLive','rosterGrid'];
-  const compactContainers = ['legacyRanks','seasonRecords','h2hResult','h2hTable','h2h2026','standings2025','championsList'];
+  const containers = ['rosterGrid'];
+  const compactContainers = ['standingsLive','legacyRanks','seasonRecords','h2hResult','h2hTable','h2h2026','standings2025','championsList'];
   function decorate(container) {
     if (!container) return;
     container.querySelectorAll('table:not(.draftboard)').forEach(table => {
