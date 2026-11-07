@@ -42,6 +42,12 @@
   if (media.addEventListener) media.addEventListener('change', () => { menu(false); sync(); });
   else media.addListener(() => { menu(false); sync(); });
   sync();
+  // También sincroniza el acceso rápido cuando una función abre una sección
+  // desde un partido o una noticia, sin tocar un botón de navegación.
+  const viewObserver = new MutationObserver(sync);
+  document.querySelectorAll('.view').forEach(view =>
+    viewObserver.observe(view, {attributes:true, attributeFilter:['class']})
+  );
 
   const containers = ['standingsLive','rosterGrid','legacyRanks','seasonRecords',
     'h2hResult','h2hTable','h2h2026','standings2025'];
@@ -101,6 +107,7 @@
       wrapper.appendChild(section);
     });
     root.appendChild(wrapper);
+    root.classList.add('has-mobile-draft');
   }
   if (root) {
     drawDraftCards();
