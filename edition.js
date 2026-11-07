@@ -140,9 +140,16 @@
     teamBySlot.set(Number(p.draft_slot),match?.roster_id||p.roster_id);
    }
   }
+  // Encabezado: franquicia titular del turno original (Sleeper draft_order).
   const headers=Array.from({length:slots},(_,i)=>{
-   const id=teamBySlot.get(i+1);
-   return id?`<div class="draft-slot-owner">${window.rchip(id)}</div>`:`<span class="draft-turn">Posición ${i+1}</span>`;
+   const slot=i+1;
+   const firstRound=picks.find(p=>Number(p.round)===1&&Number(p.draft_slot)===slot);
+   const byUser=live.rosters.find(r=>String(r.owner_id)===String(firstRound?.picked_by));
+   const rid=teamBySlot.get(slot)??byUser?.roster_id??firstRound?.roster_id;
+   const f=window.assigned(window.roster(rid));
+   const name=f?.name||window.rname(rid)||'Franquicia';
+   const shield=f?window.logoImg(f.id,'draft-slot-shield'):'';
+   return `<div class="draft-slot-owner"><span class="draft-slot-number">TURNO ${slot}</span><div class="draft-slot-franchise">${shield}<b>${ESC(name)}</b></div></div>`;
   });
   const byKey=new Map(picks.map(p=>[`${p.round}-${p.draft_slot}`,p]));
   const rows=[];
@@ -153,9 +160,11 @@
     const f=window.assigned(window.roster(p.roster_id));
     const name=[p.metadata?.first_name,p.metadata?.last_name].filter(Boolean).join(' ')||window.playerName(p.player_id);
     const pos=p.metadata?.position||live.players[String(p.player_id)]?.position||'—';
-    const abbr=String(p.metadata?.team||live.players[String(p.player_id)]?.team||'').toLowerCase().replace(/[^a-z]/g,'');
-    const pic=abbr?`<img class="nfl-logo" loading="lazy" alt="NFL ${ESC(abbr.toUpperCase())}" src="https://a.espncdn.com/i/teamlogos/nfl/500/${ESC(abbr)}.png" onerror="this.style.display='none'">`:'';
-    return `<td><div class="pick" data-pos="${ESC(pos)}"><span class="draft-owner">${f?window.logoImg(f.id):''}<span>${ESC(f?.name||window.rname(p.roster_id))}</span></span><span class="player">${ESC(name)}</span><span class="nfl-team">${pic}<b>${ESC(pos)}</b> · ${ESC(nflName(p.metadata?.team||''))}</span></div></td>`;
+    const teamCode=String(p.metadata?.team||live.players[String(p.player_id)]?.team||'').toUpperCase();
+    const espnCode=({'JAC':'jax','WSH':'wsh','LA':'lar','OAK':'lv','SD':'lac','STL':'lar'})[teamCode]||teamCode.toLowerCase();
+    const validCode=/^[a-z]{2,3}$/.test(espnCode);
+    const pic=validCode?`<img class="draft-nfl-shield" loading="lazy" alt="Escudo ${ESC(nflName(teamCode))}" src="https://a.espncdn.com/i/teamlogos/nfl/500/${ESC(espnCode)}.png" onerror="this.style.display='none'">`:'';
+    return `<td><div class="pick" data-pos="${ESC(pos)}"><span class="draft-owner">${f?window.logoImg(f.id):''}<span>${ESC(f?.name||window.rname(p.roster_id))}</span></span><span class="draft-player-line">${pic}<strong class="player">${ESC(name)}</strong></span><span class="draft-player-meta"><b>${ESC(pos)}</b> · ${ESC(nflName(teamCode))}</span></div></td>`;
    }).join('')}</tr>`);
   }
   $('draftData').innerHTML=`<div class="board-scroll"><table class="draftboard"><thead><tr><th>RONDA</th>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;

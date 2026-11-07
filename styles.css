@@ -321,3 +321,17 @@ footer{color:#acc8da;border-color:#4d7087}
  .panel,.teamcard{box-shadow:none}
  .teamcard img{background:radial-gradient(ellipse,#476f88 0%,transparent 74%)}
 }
+
+/* DRAFT: franquicia visible por turno y escudo NFL junto al jugador */
+.draftboard th:not(:first-child){min-width:155px;vertical-align:middle}
+.draft-slot-owner{min-height:73px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.draft-slot-number{color:#f4ca7c;font-size:9px;letter-spacing:1.3px;font-weight:900}
+.draft-slot-franchise{display:flex;align-items:center;gap:7px;justify-content:center;width:100%;line-height:1.15;text-align:left}
+.draft-slot-franchise img.draft-slot-shield{width:37px!important;height:37px!important;max-width:37px;object-fit:contain;flex-shrink:0}
+.draft-slot-franchise b{font-size:11px;color:#fff;white-space:normal;overflow-wrap:anywhere}
+.draft-player-line{display:flex;gap:8px;align-items:center;min-height:36px}
+.draft-player-line .draft-nfl-shield{display:block;width:30px;height:30px;flex-shrink:0;object-fit:contain}
+.draft-player-line .player{font-size:12px;font-weight:900;color:#fff;line-height:1.2;overflow-wrap:anywhere}
+.draft-player-meta{font-size:10px;color:#bed8e7;display:block;margin-left:38px;white-space:normal}
+.draft-player-meta b{color:#f1c87b}
+@media(max-width:760px){.draftboard th:not(:first-child){min-width:142px}.draft-slot-franchise{flex-direction:column;text-align:center}.draft-slot-franchise img.draft-slot-shield{height:33px!important;width:33px!important}}
