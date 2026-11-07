@@ -1,7 +1,7 @@
 name: Actualizar LFA desde Sleeper
 on:
   schedule:
-    - cron: '17 */6 * * *'  # Cada 6 horas UTC; puede retrasarse por carga de GitHub Actions
+    - cron: '17 12 * * 2'  # Respaldo semanal: martes 12:17 UTC (09:17 Argentina); puede retrasarse
   workflow_dispatch:
 permissions:
   contents: write

@@ -12,14 +12,13 @@
 ## Primera prueba
 Abrí `index.html` o subí esta carpeta a Netlify. Recomendado: un hosting web con HTTPS y dominio (no `file://`), ya que el navegador debe acceder a la API de Sleeper. No contiene credenciales personales.
 
-## Activar sincronización de fondo real cada 6 horas
-1. Creá un repositorio de GitHub con **el contenido** de esta carpeta en la raíz.
-2. Activá **GitHub Actions** y asegurate de habilitar `Settings → Actions → General → Workflow permissions → Read and write permissions` si tu repo no lo tiene.
-3. Abrí `Actions → Actualizar LFA desde Sleeper → Run workflow` para realizar la primera captura.
-4. Conectá ese repositorio en **Netlify → Add new project → Import existing project**. Publicá desde la raíz (`.`), sin build command.
-5. Cada seis horas, GitHub Actions intenta consultar Sleeper, escribir los JSON de `data/` y hacer un commit. Ese commit dispara un nuevo despliegue en Netlify; si no hubo datos válidos o falla la API, no se publica un snapshot inventado.
+## Datos en vivo y respaldo semanal
+- **En vivo:** cada visitante consulta directamente a Sleeper al abrir la web. Si deja la pestaña visible, el sitio vuelve a consultar automáticamente cada 30 minutos. Estas consultas **no crean un deploy** en Netlify.
+- **Respaldo:** GitHub Actions ejecuta `scripts/sync_sleeper.py` **una vez por semana**, los martes a las 12:17 UTC (09:17 de Argentina; GitHub puede retrasar el inicio). Actualiza los JSON de `data/` con datos verificados y hace commit solo si hay cambios; ese commit permite que Netlify vuelva a publicar el sitio.
+- **Ejecución manual:** `GitHub → Actions → Actualizar LFA desde Sleeper → Run workflow`. Se puede usar cuando se requiera un respaldo extraordinario.
+- **Hosting:** proyecto Netlify existente `fantasylfa`, conectado al repositorio `Scrava/lfa-web`, rama `main`, sin comando de compilación, con carpeta de publicación `.`.
 
-**Estado actual:** automatización incluida en código, no instalada ni activada en GitHub/Netlify. Al abrir la web se hace consulta directa a Sleeper y una nueva consulta cada 30 minutos si la pestaña está visible.
+**Importante:** el respaldo semanal no garantiza que las noticias guardadas sean instantáneas si la API de Sleeper falla en el navegador; se muestra la fecha de los datos respaldados. Para minimizar publicaciones, evitamos crear commits o despliegues por cada consulta de Sleeper.
 
 ## Lógica editorial
 Las noticias automáticas son **resúmenes estructurados** de datos de Sleeper, no reportes periodísticos de NFL. Los estados de lesión se identifican siempre como etiquetas de Sleeper, no como partes médicos confirmados. Las cargadas se basan en resultados reales, no hay noticias ficticias.
