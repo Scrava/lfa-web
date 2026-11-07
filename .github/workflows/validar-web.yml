@@ -6,6 +6,7 @@ on:
       - 'app.js'
       - 'enhancements.js'
       - 'edition.js'
+      - 'data/live_bootstrap.js'
       - 'index.html'
       - 'styles.css'
       - '.github/workflows/validar-web.yml'
@@ -22,6 +23,7 @@ jobs:
           node --check app.js
           node --check enhancements.js
           node --check edition.js
+          node --check data/live_bootstrap.js
       - name: Verificar recursos principales
         run: |
           test -f index.html
@@ -29,3 +31,11 @@ jobs:
           test -f data/bootstrap.js
           test -f data/live_snapshot.json
           test -f data/player_catalog.json
+          node - <<'NODE'
+          const fs=require('fs');const vm=require('vm');
+          const env={window:{}};
+          vm.runInNewContext(fs.readFileSync('data/live_bootstrap.js','utf8'),env);
+          const snap=env.window.LFA_INITIAL_SNAPSHOT;
+          if(String(snap?.league_id)!=='1388976988894543872'||snap.rosters.length!==8||!Object.keys(snap.matchups).length)throw Error('El respaldo LFA no es válido');
+          console.log('Respaldo LFA verificado, semana',snap.week);
+          NODE
