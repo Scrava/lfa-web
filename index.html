@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#0b9bc9"><meta name="description" content="LFA — la temporada 2026, el mercado, el draft board completo, las noticias, el archivo histórico y los récords de las ocho franquicias.">
 <title>LFA · Fantasy Football — El deporte más personal</title>
 <link rel="icon" href="assets/lfa.webp" type="image/webp"><link rel="stylesheet" href="styles.css">
-<script src="data/bootstrap.js" defer></script><script src="data/live_bootstrap.js" defer></script><script src="app.js" defer></script><script src="enhancements.js" defer></script><script src="edition.js" defer></script><script src="mobile.js" defer></script>
+<script src="data/bootstrap.js" defer></script><script src="data/live_bootstrap.js" defer></script><script src="app.js" defer></script><script src="enhancements.js" defer></script><script src="edition.js" defer></script><script src="mobile.js" defer></script><script src="rivalries.js" defer></script>
 </head>
 <body>
 <header class="masthead">
@@ -72,7 +72,27 @@
   <div class="panel spaced"><div class="panel-header"><h3>Datos por temporada</h3><label class="selector-label">Año <select id="seasonRecordYear" class="select"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option><option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option><option value="2019">2019</option></select></label></div><div id="seasonRecords"></div></div>
   <div hidden aria-hidden="true"><div id="champRank"></div><div id="ranking2026"></div><div id="historicalOverall"></div></div>
  </section>
- <section class="view" data-view="paternidades"><div class="eyetop">ESTADÍSTICAS DE PATERNIDAD</div><h1 class="pagetitle">¿Quién tiene de hijo a quién?</h1><p class="intro">Los enfrentamientos, uno contra uno o contra toda la liga.</p><div class="panel spaced"><div class="row wrap gap"><label class="field">Vista <select class="select" id="h2hMode"><option value="duel">Dos equipos</option><option value="all">Un equipo vs. los otros 7</option></select></label><label class="field">Franquicia<select class="select" id="h2hA"></select></label><label class="field" id="h2hBField">Rival<select class="select" id="h2hB"></select></label></div><div id="h2hResult" class="spaced"></div></div><div class="grid two spaced"><div class="panel"><h3>Enfrentamientos verificados en 2026</h3><div id="h2h2026" class="empty">Esperando Sleeper…</div></div><div class="panel"><h3>Historial de rivalidades</h3><div class="tablewrap" id="h2hTable"></div></div></div></section>
+ <section class="view" data-view="paternidades">
+  <div class="eyetop">LA HISTORIA DE LOS CLÁSICOS</div>
+  <h1 class="pagetitle">Paternidades y rivalidades</h1>
+  <p class="intro">El cuadro histórico de los ocho equipos. Tocá cualquier cruce para conocer la rivalidad.</p>
+  <div class="panel spaced rivalry-panel">
+   <div class="panel-header"><h2>Cuadro de rivalidades</h2><label class="selector-label">Registro <select class="select" id="matrixScope"><option value="historico">Histórico registrado</option><option value="2026">Temporada 2026</option></select></label></div>
+   <div class="rivalry-legend"><span class="legend-leads">Domina</span><span class="legend-tied">Empatado</span><span class="legend-trails">En desventaja</span></div>
+   <div class="matrix-scroll" id="rivalryMatrix" aria-label="Matriz de enfrentamientos LFA"></div>
+   <p id="rivalryMatrixNote" class="rivalry-matrix-note">Historial de fase regular y playoffs registrado en el archivo de la liga.</p>
+  </div>
+  <div class="panel spaced rivalry-lookup" id="rivalryLookup">
+   <div class="panel-header"><h2>Consultar una rivalidad</h2><span class="chip">Historial por equipo</span></div>
+   <div class="row wrap gap rivalry-filters">
+    <label class="field">Vista <select class="select" id="h2hMode"><option value="duel">Dos equipos</option><option value="all">Un equipo contra los otros siete</option></select></label>
+    <label class="field">Franquicia <select class="select" id="h2hA"></select></label>
+    <label class="field" id="h2hBField">Rival <select class="select" id="h2hB"></select></label>
+   </div>
+   <div id="h2hResult" class="spaced"></div>
+  </div>
+  <div hidden aria-hidden="true"><div id="h2h2026"></div><div id="h2hTable"></div></div>
+ </section>
  <section class="view" data-view="historia"><div class="eyetop">MUSEO DE LOS ANILLOS</div><h1 class="pagetitle">Historia y campeones</h1><p class="intro">2018 es la prehistoria de Nuevos Santos y no computa para los títulos oficiales. La era profesional comienza en 2019.</p><div class="grid two spaced"><div class="panel"><h3>Libro de campeones</h3><div id="championsList"></div></div><div class="panel"><h3>¿Quién tiene más anillos?</h3><div id="titleChart"></div><hr><div class="prehistoria"><strong>2018 · Prehistoria</strong><p>Nuevos Santos fue campeón de la temporada cero; no cuenta como campeonato profesional.</p></div></div></div><div class="panel spaced"><h3>Tabla de la fase regular · 2025</h3><div class="tablewrap" id="standings2025"></div></div></section>
  <section class="view" data-view="hechos"><div class="eyetop">ARCHIVO DEL BOCHORNO Y LA GLORIA</div><h1 class="pagetitle">Hechos históricos de la LFA</h1><p class="intro">Glorias, papelones y clásicos que merecen quedar escritos para siempre.</p><div class="oldpaper" id="historicalStories"></div></section>
  <div hidden aria-hidden="true"><span id="sourceStatus"></span><span id="sourceDetails"></span></div>

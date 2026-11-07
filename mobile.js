@@ -49,8 +49,8 @@
     viewObserver.observe(view, {attributes:true, attributeFilter:['class']})
   );
 
-  const containers = ['standingsLive','rosterGrid','legacyRanks','seasonRecords',
-    'h2hResult','h2hTable','h2h2026','standings2025'];
+  const containers = ['standingsLive','rosterGrid'];
+  const compactContainers = ['legacyRanks','seasonRecords','h2hResult','h2hTable','h2h2026','standings2025','championsList'];
   function decorate(container) {
     if (!container) return;
     container.querySelectorAll('table:not(.draftboard)').forEach(table => {
@@ -69,6 +69,21 @@
     if (!target) return;
     decorate(target);
     new MutationObserver(() => decorate(target)).observe(target, {childList:true});
+  });
+
+  function makeCompact(container) {
+    if (!container) return;
+    container.querySelectorAll('table:not(.draftboard)').forEach(t => {
+      t.classList.remove('mobile-stack-table');
+      t.classList.add('mobile-compact-table');
+      t.querySelectorAll('td[data-label]').forEach(c => c.removeAttribute('data-label'));
+    });
+  }
+  compactContainers.forEach(id => {
+    const target = $(id);
+    if (!target) return;
+    makeCompact(target);
+    new MutationObserver(() => makeCompact(target)).observe(target, {childList:true});
   });
 
   const root = $('draftData');

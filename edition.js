@@ -180,7 +180,7 @@
   const ra=live.rosters.find(r=>window.assigned(r)?.id===a)?.roster_id;
   const statsFor=opp=>{
    const h=history.find(x=>(x.franchise_a_id===a&&x.franchise_b_id===opp)||(x.franchise_a_id===opp&&x.franchise_b_id===a));
-   const old=h?(h.franchise_a_id===a?`${h.regular_wins_a}–${h.regular_wins_b}`:`${h.regular_wins_b}–${h.regular_wins_a}`):'—';
+   const old=h?(h.franchise_a_id===a?`${h.regular_wins_a+h.playoff_wins_a}–${h.regular_wins_b+h.playoff_wins_b}`:`${h.regular_wins_b+h.playoff_wins_b}–${h.regular_wins_a+h.playoff_wins_a}`):'—';
    const rb=live.rosters.find(r=>window.assigned(r)?.id===opp)?.roster_id;
    const games=ra!=null&&rb!=null?matches.filter(g=>(g.a===Number(ra)&&g.b===Number(rb))||(g.a===Number(rb)&&g.b===Number(ra))):[];
    const wins=games.filter(g=>(g.a===Number(ra)?g.pa:g.pb)>(g.a===Number(ra)?g.pb:g.pa)).length;
