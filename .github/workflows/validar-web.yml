@@ -7,6 +7,7 @@ on:
       - 'enhancements.js'
       - 'edition.js'
       - 'mobile.js'
+      - 'rivalries.js'
       - 'data/live_bootstrap.js'
       - 'index.html'
       - 'styles.css'
@@ -25,12 +26,14 @@ jobs:
           node --check enhancements.js
           node --check edition.js
           node --check mobile.js
+          node --check rivalries.js
           node --check data/live_bootstrap.js
       - name: Verificar recursos principales
         run: |
           test -f index.html
           test -f styles.css
           test -f mobile.js
+          test -f rivalries.js
           test -f data/bootstrap.js
           test -f data/live_snapshot.json
           test -f data/player_catalog.json
@@ -48,5 +51,12 @@ jobs:
             if(!html.includes('id="'+id+'"'))throw Error('Falta control movil '+id);
           }
           if(!html.includes('src="mobile.js"')||!css.includes('.mobile-stack-table')||!css.includes('.mobile-draft-board')||!mobile.includes('MutationObserver'))throw Error('Recursos responsivos incompletos');
-          console.log('Navegación móvil y vistas responsivas verificadas.');
+          const rivalry=fs.readFileSync('rivalries.js','utf8');
+          const bootstrap=fs.readFileSync('data/bootstrap.js','utf8');
+          const ctx={window:{}};vm.runInNewContext(bootstrap,ctx);
+          const pairs=ctx.window.LFA_DATA?.legacy_h2h_review||[];
+          if(pairs.length!==28 || new Set(pairs.map(p=>[p.franchise_a_id,p.franchise_b_id].sort().join('|'))).size!==28)throw Error('Matriz histórica incompleta');
+          if(!html.includes('id="rivalryMatrix"')||!html.includes('src="rivalries.js"')||!rivalry.includes('matrix-cell'))throw Error('Falta matriz de rivalidades');
+          if(!css.includes('.mobile-compact-table')||!css.includes('.paper-grid'))throw Error('Faltan tablas compactas');
+          console.log('Navegación móvil, 28 cruces y estilos compactos verificados.');
           NODE
