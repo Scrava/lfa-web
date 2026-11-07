@@ -1,0 +1,22 @@
+{
+  "id": "lfa",
+  "name": "LFA",
+  "official_start_year": 2019,
+  "prehistory_year": 2018,
+  "current_season": 2026,
+  "sleeper_league_id": "1388976988894543872",
+  "logo": "assets/lfa.webp",
+  "owners_stable": true,
+  "current_teams": 8,
+  "editorial_tone": "picante / folklore",
+  "scoring_rules_status": "read_live_from_sleeper",
+  "sleeper_status": "not_verified_in_generation_environment",
+  "source_priority": [
+    "user_confirmation",
+    "original_results",
+    "Sleeper API",
+    "LFA guion histórico",
+    "legacy_site_review"
+  ],
+  "records_policy": "do_not_claim_unvalidated_data_as_official"
+}

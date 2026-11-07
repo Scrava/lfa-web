@@ -1,0 +1,114 @@
+[
+  {
+    "id": "final-2023",
+    "title": "La final de las 76 centésimas",
+    "type": "editorial",
+    "year": 2023,
+    "related": [
+      "all-bros",
+      "cougars"
+    ],
+    "description": "Juani 125,24; Nehue 124,48. Hay finales que se ganan y derrotas que se heredan.",
+    "fact": "Diferencia en la final: 0,76 puntos",
+    "status": "historical_verified"
+  },
+  {
+    "id": "boom-2025",
+    "title": "13–2 en la fase regular. ¿Y la copa?",
+    "type": "editorial",
+    "year": 2025,
+    "related": [
+      "boom-or-bust",
+      "all-bros"
+    ],
+    "description": "Boom or Bust dominó la fase regular y perdió la final ante All Bros. La fase regular no entrega anillos.",
+    "fact": "Boom or Bust 13–2, subcampeón 2025",
+    "status": "historical_verified"
+  },
+  {
+    "id": "god-2024",
+    "title": "Fantasy Gods volvió a levantar la copa",
+    "type": "editorial",
+    "year": 2024,
+    "related": [
+      "fantasy-gods"
+    ],
+    "description": "Latuf le puso la segunda estrella al escudo. La estadística es seria; las excusas de los demás, no.",
+    "fact": "Campeón 2019 y 2024",
+    "status": "historical_verified"
+  },
+  {
+    "id": "cougars-2023",
+    "title": "Cougars: el margen de una maldición",
+    "type": "folklore",
+    "year": 2023,
+    "related": [
+      "cougars"
+    ],
+    "description": "A 76 centésimas de la gloria. Este es un titular de folklore basado en el resultado real.",
+    "fact": "Subcampeón 2023 por 0,76",
+    "status": "historical_verified"
+  },
+  {
+    "id": "cougars-2025",
+    "title": "La temporada de la igualdad absoluta",
+    "type": "editorial",
+    "year": 2025,
+    "related": [
+      "cougars"
+    ],
+    "description": "Cougars terminó con apenas 0,78 puntos menos a favor que en contra durante toda la fase regular. Precisión quirúrgica para quedarse en 6–9.",
+    "fact": "PF 1.962,18 · PA 1.962,96 · diferencia –0,78",
+    "status": "historical_verified"
+  },
+  {
+    "id": "evils-gods-2025",
+    "title": "Ganó por 24 centésimas. Sí, 24.",
+    "type": "folklore",
+    "year": 2025,
+    "related": [
+      "fantasy-evils",
+      "fantasy-gods"
+    ],
+    "description": "Una victoria de Fantasy Evils sobre Fantasy Gods que merece ser contada con decimales, no con palabras.",
+    "fact": "Evils 120,00 – Gods 119,76 · margen 0,24",
+    "status": "historical_document_review"
+  },
+  {
+    "id": "tiburoncin-2025",
+    "title": "El tiburón despertó cuando se apagaron las luces",
+    "type": "folklore",
+    "year": 2025,
+    "related": [
+      "tiburoncin"
+    ],
+    "description": "Emilio arrancó 2025 con ocho derrotas seguidas y cerró ganando tres partidos al hilo. La remontada llegó tarde, pero por lo menos llegó.",
+    "fact": "Arranque 0–8; cierre 3–0; récord final 4–11",
+    "status": "historical_document_review"
+  },
+  {
+    "id": "scrava-2021",
+    "title": "55,6 puntos y una final para siempre",
+    "type": "editorial",
+    "year": 2021,
+    "related": [
+      "scravengers"
+    ],
+    "description": "La actuación de Ja’Marr Chase en la final ayudó a sellar el campeonato 2021 de The Scravengers.",
+    "fact": "Final 2021: Scravengers 162,76 – Gods 137,84",
+    "status": "historical_verified"
+  },
+  {
+    "id": "tiburoncin-2022",
+    "title": "La final que ni la NFL pudo terminar normal",
+    "type": "editorial",
+    "year": 2022,
+    "related": [
+      "tiburoncin",
+      "nakillers"
+    ],
+    "description": "Tiburoncín se coronó en una definición recordada por la suspensión del partido de Buffalo.",
+    "fact": "Final 2022: Tiburoncin 163,02 – Nakillers 122,90",
+    "status": "historical_verified"
+  }
+]

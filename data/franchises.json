@@ -1,0 +1,149 @@
+[
+  {
+    "id": "all-bros",
+    "name": "All Bros",
+    "manager": "Juani",
+    "logo": "assets/all-bros.webp",
+    "aliases": [
+      "All Bros",
+      "AllBros"
+    ],
+    "manager_aliases": [
+      "Juani",
+      "Juany"
+    ],
+    "owner_stable": true,
+    "sleeper_user_id": null,
+    "sleeper_roster_id": null,
+    "titles_2019_2025": 2,
+    "source": "user_confirmed_2026-11-07"
+  },
+  {
+    "id": "boom-or-bust",
+    "name": "Boom or Bust",
+    "manager": "Gaspi",
+    "logo": "assets/boom-or-bust.webp",
+    "aliases": [
+      "Boom or Bust",
+      "Boom"
+    ],
+    "manager_aliases": [
+      "Gaspi",
+      "Gaspe"
+    ],
+    "owner_stable": true,
+    "sleeper_user_id": null,
+    "sleeper_roster_id": null,
+    "titles_2019_2025": 1,
+    "source": "user_confirmed_2026-11-07"
+  },
+  {
+    "id": "tiburoncin",
+    "name": "Tiburoncin UH JAJA",
+    "manager": "Emilio",
+    "logo": "assets/tiburoncin.webp",
+    "aliases": [
+      "Tiburoncín",
+      "Tiburoncín UH JA JA",
+      "Tiburoncin UH JA JA",
+      "Tiburoncin UH JAJA"
+    ],
+    "manager_aliases": [
+      "Emilio",
+      "Emily",
+      "Emili"
+    ],
+    "owner_stable": true,
+    "sleeper_user_id": null,
+    "sleeper_roster_id": null,
+    "titles_2019_2025": 1,
+    "source": "user_confirmed_2026-11-07"
+  },
+  {
+    "id": "fantasy-gods",
+    "name": "Fantasy Gods",
+    "manager": "Latuf",
+    "logo": "assets/fantasy-gods.webp",
+    "aliases": [
+      "Fantasy Gods"
+    ],
+    "manager_aliases": [
+      "Latuf"
+    ],
+    "owner_stable": true,
+    "sleeper_user_id": null,
+    "sleeper_roster_id": null,
+    "titles_2019_2025": 2,
+    "source": "user_confirmed_2026-11-07"
+  },
+  {
+    "id": "fantasy-evils",
+    "name": "Fantasy Evils",
+    "manager": "Chevito",
+    "logo": "assets/fantasy-evils.webp",
+    "aliases": [
+      "Fantasy Evils"
+    ],
+    "manager_aliases": [
+      "Chevito"
+    ],
+    "owner_stable": true,
+    "sleeper_user_id": null,
+    "sleeper_roster_id": null,
+    "titles_2019_2025": 0,
+    "source": "user_confirmed_2026-11-07"
+  },
+  {
+    "id": "cougars",
+    "name": "Cougars FT",
+    "manager": "Nehue",
+    "logo": "assets/cougars.webp",
+    "aliases": [
+      "Cougars",
+      "Cougars FT"
+    ],
+    "manager_aliases": [
+      "Nehue"
+    ],
+    "owner_stable": true,
+    "sleeper_user_id": null,
+    "sleeper_roster_id": null,
+    "titles_2019_2025": 0,
+    "source": "user_confirmed_2026-11-07"
+  },
+  {
+    "id": "scravengers",
+    "name": "The Scravengers",
+    "manager": "Scrava",
+    "logo": "assets/scravengers.webp",
+    "aliases": [
+      "The Scravengers",
+      "Scravengers"
+    ],
+    "manager_aliases": [
+      "Scrava"
+    ],
+    "owner_stable": true,
+    "sleeper_user_id": null,
+    "sleeper_roster_id": null,
+    "titles_2019_2025": 1,
+    "source": "user_confirmed_2026-11-07"
+  },
+  {
+    "id": "nakillers",
+    "name": "Nakillers",
+    "manager": "Naki",
+    "logo": "assets/nakillers.webp",
+    "aliases": [
+      "Nakillers"
+    ],
+    "manager_aliases": [
+      "Naki"
+    ],
+    "owner_stable": true,
+    "sleeper_user_id": null,
+    "sleeper_roster_id": null,
+    "titles_2019_2025": 0,
+    "source": "user_confirmed_2026-11-07"
+  }
+]

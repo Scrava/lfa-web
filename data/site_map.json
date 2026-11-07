@@ -1,0 +1,68 @@
+[
+  {
+    "slug": "inicio",
+    "label": "Portada",
+    "available": true,
+    "source": "Sleeper 2026"
+  },
+  {
+    "slug": "temporada",
+    "label": "Temporada 2026",
+    "available": true,
+    "source": "Sleeper 2026"
+  },
+  {
+    "slug": "movimientos",
+    "label": "Mercado",
+    "available": true,
+    "source": "Sleeper transacciones, altas y bajas"
+  },
+  {
+    "slug": "draft",
+    "label": "Draft board",
+    "available": true,
+    "source": "Sleeper picks 2026"
+  },
+  {
+    "slug": "noticias",
+    "label": "Diario LFA",
+    "available": true,
+    "source": "Sleeper y editorial automatizada verificada"
+  },
+  {
+    "slug": "equipos",
+    "label": "Franquicias",
+    "available": true,
+    "source": "Usuario e historial"
+  },
+  {
+    "slug": "records",
+    "label": "Récords",
+    "available": true,
+    "source": "Histórico documentado + Sleeper 2026"
+  },
+  {
+    "slug": "paternidades",
+    "label": "Paternidades",
+    "available": true,
+    "source": "Histórico provisional por separado + Sleeper 2026"
+  },
+  {
+    "slug": "historia",
+    "label": "Historia",
+    "available": true,
+    "source": "Era profesional 2019-2025"
+  },
+  {
+    "slug": "hechos",
+    "label": "Hechos históricos",
+    "available": true,
+    "source": "Archivo histórico LFA"
+  },
+  {
+    "slug": "archivo",
+    "label": "Fuentes",
+    "available": true,
+    "source": "Auditoría y asociación de equipos"
+  }
+]

@@ -1,0 +1,170 @@
+[
+  {
+    "source_manager_name": "Emily",
+    "franchise_id": "tiburoncin",
+    "wins_reported": 58,
+    "win_rate_reported": 54.21,
+    "points_total_reported": 14185.64,
+    "points_rate_reported": 132.58,
+    "season_points": {
+      "2019": 1704.78,
+      "2020": 1814.88,
+      "2021": 1970.04,
+      "2022": 2047.52,
+      "2023": 1873.52,
+      "2024": 1812.42,
+      "2025": 1744.1,
+      "2026": 1218.38
+    },
+    "status": "pending_review",
+    "cutoff": "unknown",
+    "year2026_partial": true
+  },
+  {
+    "source_manager_name": "Juany",
+    "franchise_id": "all-bros",
+    "wins_reported": 65,
+    "win_rate_reported": 60.75,
+    "points_total_reported": 15109.22,
+    "points_rate_reported": 141.21,
+    "season_points": {
+      "2019": 1501.6,
+      "2020": 1769.2,
+      "2021": 2237.0,
+      "2022": 2036.44,
+      "2023": 2083.06,
+      "2024": 2223.02,
+      "2025": 2216.42,
+      "2026": 1042.48
+    },
+    "status": "pending_review",
+    "cutoff": "unknown",
+    "year2026_partial": true
+  },
+  {
+    "source_manager_name": "Latuf",
+    "franchise_id": "fantasy-gods",
+    "wins_reported": 52,
+    "win_rate_reported": 48.6,
+    "points_total_reported": 14078.84,
+    "points_rate_reported": 131.58,
+    "season_points": {
+      "2019": 1757.1,
+      "2020": 1815.4,
+      "2021": 1899.86,
+      "2022": 1750.04,
+      "2023": 1860.94,
+      "2024": 2079.48,
+      "2025": 2032.1,
+      "2026": 883.92
+    },
+    "status": "pending_review",
+    "cutoff": "unknown",
+    "year2026_partial": true
+  },
+  {
+    "source_manager_name": "Chevito",
+    "franchise_id": "fantasy-evils",
+    "wins_reported": 48,
+    "win_rate_reported": 51.61,
+    "points_total_reported": 12390.4,
+    "points_rate_reported": 133.23,
+    "season_points": {
+      "2019": 0.0,
+      "2020": 1662.36,
+      "2021": 1787.3,
+      "2022": 2000.46,
+      "2023": 1903.28,
+      "2024": 2131.78,
+      "2025": 1754.88,
+      "2026": 1150.34
+    },
+    "status": "pending_review",
+    "cutoff": "unknown",
+    "year2026_partial": true
+  },
+  {
+    "source_manager_name": "Gaspe",
+    "franchise_id": "boom-or-bust",
+    "wins_reported": 55,
+    "win_rate_reported": 51.4,
+    "points_total_reported": 14547.72,
+    "points_rate_reported": 135.96,
+    "season_points": {
+      "2019": 1535.92,
+      "2020": 2053.06,
+      "2021": 1728.92,
+      "2022": 1896.22,
+      "2023": 1954.92,
+      "2024": 1977.7,
+      "2025": 2210.3,
+      "2026": 1190.68
+    },
+    "status": "pending_review",
+    "cutoff": "unknown",
+    "year2026_partial": true
+  },
+  {
+    "source_manager_name": "Scrava",
+    "franchise_id": "scravengers",
+    "wins_reported": 54,
+    "win_rate_reported": 50.47,
+    "points_total_reported": 14530.28,
+    "points_rate_reported": 135.8,
+    "season_points": {
+      "2019": 1499.98,
+      "2020": 1784.3,
+      "2021": 1937.3,
+      "2022": 2087.1,
+      "2023": 2164.12,
+      "2024": 2024.0,
+      "2025": 1969.08,
+      "2026": 1064.4
+    },
+    "status": "pending_review",
+    "cutoff": "unknown",
+    "year2026_partial": true
+  },
+  {
+    "source_manager_name": "Landa",
+    "franchise_id": null,
+    "wins_reported": 52,
+    "win_rate_reported": 48.6,
+    "points_total_reported": 14576.02,
+    "points_rate_reported": 136.22,
+    "season_points": {
+      "2019": 1623.6,
+      "2020": 1888.78,
+      "2021": 1828.58,
+      "2022": 2079.98,
+      "2023": 2116.6,
+      "2024": 1995.82,
+      "2025": 1962.18,
+      "2026": 1080.48
+    },
+    "status": "pending_review",
+    "cutoff": "unknown",
+    "year2026_partial": true
+  },
+  {
+    "source_manager_name": "Naki",
+    "franchise_id": "nakillers",
+    "wins_reported": 35,
+    "win_rate_reported": 54.69,
+    "points_total_reported": 8723.14,
+    "points_rate_reported": 136.3,
+    "season_points": {
+      "2019": 0.0,
+      "2020": 0.0,
+      "2021": 0.0,
+      "2022": 2024.0,
+      "2023": 1915.14,
+      "2024": 1993.7,
+      "2025": 1752.22,
+      "2026": 1038.08
+    },
+    "status": "pending_review",
+    "cutoff": "unknown",
+    "year2026_partial": true
+  }
+]

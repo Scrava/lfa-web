@@ -1,0 +1,125 @@
+[
+  {
+    "year": 2018,
+    "era": "prehistoria",
+    "official": false,
+    "champion_franchise_id": null,
+    "champion_name": "Nuevos Santos",
+    "runner_up_name": null,
+    "final_score": null,
+    "editorial": "El campeonato de 2018 existe en el folklore, pero no entra en el palmarés profesional.",
+    "source": "user_confirmed + LFA guion histórico"
+  },
+  {
+    "year": 2019,
+    "era": "profesional",
+    "official": true,
+    "champion_franchise_id": "fantasy-gods",
+    "champion_name": "Fantasy Gods",
+    "runner_up_franchise_id": null,
+    "runner_up_name": "Mejor no decirlo",
+    "final_score": {
+      "champion": 124.72,
+      "runner_up": 81.46,
+      "margin": 43.26
+    },
+    "editorial": "El debut de la era profesional: Latuf levanta el primer título.",
+    "source": "LFA guion histórico / finales aportadas"
+  },
+  {
+    "year": 2020,
+    "era": "profesional",
+    "official": true,
+    "champion_franchise_id": "boom-or-bust",
+    "champion_name": "Boom or Bust",
+    "runner_up_franchise_id": "all-bros",
+    "runner_up_name": "All Bros",
+    "final_score": {
+      "champion": 174.22,
+      "runner_up": 139.34,
+      "margin": 34.88
+    },
+    "editorial": "Gaspi inaugura su vitrina con una final de 174,22 puntos.",
+    "source": "LFA guion histórico / finales aportadas"
+  },
+  {
+    "year": 2021,
+    "era": "profesional",
+    "official": true,
+    "champion_franchise_id": "scravengers",
+    "champion_name": "The Scravengers",
+    "runner_up_franchise_id": "fantasy-gods",
+    "runner_up_name": "Fantasy Gods",
+    "final_score": {
+      "champion": 162.76,
+      "runner_up": 137.84,
+      "margin": 24.92
+    },
+    "editorial": "Scrava campeón y una final recordada por los 55,6 puntos de Ja’Marr Chase.",
+    "source": "LFA guion histórico / finales aportadas"
+  },
+  {
+    "year": 2022,
+    "era": "profesional",
+    "official": true,
+    "champion_franchise_id": "tiburoncin",
+    "champion_name": "Tiburoncin UH JAJA",
+    "runner_up_franchise_id": "nakillers",
+    "runner_up_name": "Nakillers",
+    "final_score": {
+      "champion": 163.02,
+      "runner_up": 122.9,
+      "margin": 40.12
+    },
+    "editorial": "El campeonato de Emilio, atravesado por la suspensión del partido de Buffalo.",
+    "source": "LFA guion histórico / finales aportadas"
+  },
+  {
+    "year": 2023,
+    "era": "profesional",
+    "official": true,
+    "champion_franchise_id": "all-bros",
+    "champion_name": "All Bros",
+    "runner_up_franchise_id": "cougars",
+    "runner_up_name": "Cougars FT",
+    "final_score": {
+      "champion": 125.24,
+      "runner_up": 124.48,
+      "margin": 0.76
+    },
+    "editorial": "Juani le gana a Nehue por apenas 0,76; la cicatriz más famosa de la liga.",
+    "source": "LFA guion histórico / finales aportadas"
+  },
+  {
+    "year": 2024,
+    "era": "profesional",
+    "official": true,
+    "champion_franchise_id": "fantasy-gods",
+    "champion_name": "Fantasy Gods",
+    "runner_up_franchise_id": "all-bros",
+    "runner_up_name": "All Bros",
+    "final_score": {
+      "champion": 149.42,
+      "runner_up": 139.68,
+      "margin": 9.74
+    },
+    "editorial": "Fantasy Gods consigue su segunda estrella.",
+    "source": "LFA guion histórico / finales aportadas"
+  },
+  {
+    "year": 2025,
+    "era": "profesional",
+    "official": true,
+    "champion_franchise_id": "all-bros",
+    "champion_name": "All Bros",
+    "runner_up_franchise_id": "boom-or-bust",
+    "runner_up_name": "Boom or Bust",
+    "final_score": {
+      "champion": 158.32,
+      "runner_up": 153.42,
+      "margin": 4.9
+    },
+    "editorial": "All Bros consigue la segunda corona frente al equipo de mejor récord en fase regular.",
+    "source": "LFA guion histórico / finales aportadas"
+  }
+]

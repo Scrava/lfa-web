@@ -1,0 +1,74 @@
+[
+  {
+    "rank": 1,
+    "franchise_id": "boom-or-bust",
+    "wins": 13,
+    "losses": 2,
+    "pf": 2210.3,
+    "pa": 1906.98,
+    "difference": 303.32
+  },
+  {
+    "rank": 2,
+    "franchise_id": "all-bros",
+    "wins": 11,
+    "losses": 4,
+    "pf": 2216.42,
+    "pa": 1856.5,
+    "difference": 359.92
+  },
+  {
+    "rank": 3,
+    "franchise_id": "fantasy-gods",
+    "wins": 8,
+    "losses": 7,
+    "pf": 2032.1,
+    "pa": 1940.28,
+    "difference": 91.82
+  },
+  {
+    "rank": 4,
+    "franchise_id": "scravengers",
+    "wins": 7,
+    "losses": 8,
+    "pf": 1969.08,
+    "pa": 1991.62,
+    "difference": -22.54
+  },
+  {
+    "rank": 5,
+    "franchise_id": "cougars",
+    "wins": 6,
+    "losses": 9,
+    "pf": 1962.18,
+    "pa": 1962.96,
+    "difference": -0.78
+  },
+  {
+    "rank": 6,
+    "franchise_id": "fantasy-evils",
+    "wins": 6,
+    "losses": 9,
+    "pf": 1754.88,
+    "pa": 1829.18,
+    "difference": -74.3
+  },
+  {
+    "rank": 7,
+    "franchise_id": "nakillers",
+    "wins": 5,
+    "losses": 10,
+    "pf": 1752.22,
+    "pa": 2025.86,
+    "difference": -273.64
+  },
+  {
+    "rank": 8,
+    "franchise_id": "tiburoncin",
+    "wins": 4,
+    "losses": 11,
+    "pf": 1744.1,
+    "pa": 2127.9,
+    "difference": -383.8
+  }
+]
