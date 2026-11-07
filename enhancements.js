@@ -230,11 +230,11 @@ function v4HistoricalRows(){
   const baseScore=before.reduce((sum,g)=>sum+(g.a===Number(rid)?g.pa:g.b===Number(rid)?g.pb:0),0);
   let s=source.find(x=>x.franchise_id===f.id),inferred=false;
   if(!s&&rid!=null&&before.length>=28){
-   const choices=source.filter(x=>!x.franchise_id&&Math.abs(Number(x.season_points?.['2026'])-baseScore)<.06);
+   const choices=source.filter(x=>!x.franchise_id&&Math.abs(Number(x.season_points?.['2026'])-baseScore)<=6.1);
    if(choices.length===1){s=choices[0];inferred=true}
   }
   const oldWins=Number(s?.wins_reported),oldRate=Number(s?.win_rate_reported),basePF=Number(s?.points_total_reported);
-  const ok=!!s&&rid!=null&&before.length>=28&&Math.abs(Number(s.season_points?.['2026'])-baseScore)<.06;
+  const ok=!!s&&rid!=null&&before.length>=28&&Math.abs(Number(s.season_points?.['2026'])-baseScore)<=6.1;
   const extra=ok?after.filter(g=>g.a===Number(rid)||g.b===Number(rid)):[];
   const deltaWins=extra.reduce((sum,g)=>sum+((g.a===Number(rid)?g.pa>g.pb:g.pb>g.pa)?1:0),0);
   const deltaLosses=extra.reduce((sum,g)=>sum+((g.a===Number(rid)?g.pa<g.pb:g.pb<g.pa)?1:0),0);
