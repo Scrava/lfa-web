@@ -2,10 +2,10 @@
 <html lang="es-AR">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#08111f"><meta name="description" content="LFA — la temporada 2026, el mercado, el draft board completo, las noticias, el archivo histórico y los récords de las ocho franquicias.">
+<meta name="theme-color" content="#0b9bc9"><meta name="description" content="LFA — la temporada 2026, el mercado, el draft board completo, las noticias, el archivo histórico y los récords de las ocho franquicias.">
 <title>LFA · Fantasy Football — El deporte más personal</title>
 <link rel="icon" href="assets/lfa.webp" type="image/webp"><link rel="stylesheet" href="styles.css">
-<script src="data/bootstrap.js" defer></script><script src="app.js" defer></script><script src="enhancements.js" defer></script>
+<script src="data/bootstrap.js" defer></script><script src="app.js" defer></script><script src="enhancements.js" defer></script><script src="edition.js" defer></script>
 </head>
 <body>
 <header class="masthead">
@@ -35,7 +35,12 @@
    <div class="panel"><div class="panel-header"><h2>Tabla de posiciones</h2><button class="textlink" type="button" data-go="temporada">Tabla completa ↗</button></div><div id="homeLive" class="empty">Consultando tabla…</div></div>
    <div class="panel"><div class="panel-header"><h2>La fecha actual <span id="homeWeekLabel" class="chip">2026</span></h2><button class="textlink" type="button" data-go="temporada">Resultados ↗</button></div><div id="homeGames" class="empty">Cargando enfrentamientos…</div></div>
   </div>
-  <div class="sectionhead"><h2>Última hora LFA</h2><button class="textlink" data-go="noticias">Ir al diario ↗</button></div><div class="newspaper" id="homeNews"><div class="empty">Abriendo la redacción…</div></div>
+  <div class="diario-callout">
+    <div class="diario-callout-mark">LFA <span>✦</span></div>
+    <div><div class="eyetop">LA REDACCIÓN DE LA LIGA</div><h2>Leé el Diario LFA</h2><p>Noticias NFL, rumores ficticios y el folklore que no entra en las estadísticas. Nueva edición cada tres días.</p></div>
+    <button type="button" data-go="noticias" class="diario-callout-button">Entrar al diario <span aria-hidden="true">↗</span></button>
+  </div>
+  <div id="homeNews" hidden aria-hidden="true"></div>
 
   <div class="sectionhead"><h2>Últimos movimientos</h2><button class="textlink" data-go="movimientos">Ver mercado completo ↗</button></div><div class="panel" id="homeMoves"><div class="empty">Consultando el mercado…</div></div>
  </section>
@@ -56,14 +61,15 @@
  <section class="view" data-view="draft"><div class="eyetop">DRAFT NIGHT · 2026</div><h1 class="pagetitle">El draft board completo</h1><p class="intro">Las elecciones, franquicias y jugadores de cada ronda.</p>
   <div class="panel spaced"><div class="panel-header"><h3>Draft 2026 <span class="chip" id="draftTotal">—</span></h3><label class="selector-label">Ir a ronda <select id="draftRound" class="select"><option value="all">Todas</option></select></label></div><div id="draftData" class="empty">Consultando draft…</div></div>
  </section>
- <section class="view" data-view="noticias"><div class="eyetop">EXCLUSIVAS · FOLKLORE · NFL</div><h1 class="pagetitle">Diario de la LFA</h1><p class="intro">Noticias NFL, actualidad fantasy y las exclusivas más escandalosas del universo LFA.</p><div class="newspaper-banner"><div class="paper-vol">EL DEPORTE MÁS PERSONAL</div><h2>DIARIO LFA</h2><p>La edición que nadie pidió y todos van a leer</p></div><div class="note" id="newsStatus">Cargando noticias…</div><div class="newspaper" id="newsGrid"></div></section>
+ <section class="view" data-view="noticias"><div class="eyetop">EXCLUSIVAS · FOLKLORE · NFL</div><h1 class="pagetitle">Diario de la LFA</h1><p class="intro">Todas las noticias en español: actualidad NFL y las exclusivas más picantes de la LFA. Nueva edición cada tres días.</p><div class="newspaper-banner"><div class="paper-vol">EL DEPORTE MÁS PERSONAL</div><h2>DIARIO LFA</h2><p>La edición que nadie pidió y todos van a leer</p></div><div class="note" id="newsStatus">Cargando noticias…</div><div class="newspaper" id="newsGrid"></div></section>
  <section class="view" data-view="equipos"><div class="eyetop">ESCUDOS, FRANQUICIAS Y PERSONALIDADES</div><h1 class="pagetitle">Los ocho sospechosos de siempre</h1><p class="intro">Entrá en cada franquicia para conocer su historia, números y palmarés.</p><div class="teamgrid" id="franchiseGrid"></div><div class="panel spaced" id="franchiseDetail"><div class="empty">Elegí una franquicia</div></div></section>
- <section class="view" data-view="records"><div class="eyetop">LOS NÚMEROS NO SON OPINIÓN</div><h1 class="pagetitle">Récords y rankings</h1><p class="intro">Las marcas, los protagonistas y los rankings de la LFA.</p><div class="grid three spaced" id="verifiedRecords"></div>
-  <div class="grid two spaced"><div class="panel"><h3>Campeonatos oficiales · 2019–2025</h3><div id="champRank"></div></div><div class="panel"><h3>Ranking histórico · índice LFA</h3><div id="legacyRanks"></div></div></div>
-  <div class="panel spaced"><div class="panel-header"><h3>Récords de 2026 · actualizables</h3><span class="chip" id="recordsCutoff">Sleeper</span></div><div id="currentRecords" class="empty">Consultando resultados semanales…</div></div>
-  <div class="panel spaced"><h3>Ranking oficial parcial · 2026</h3><div id="ranking2026" class="empty">Pendiente de resultados oficiales</div></div>
-<div class="panel spaced"><h3>Récord general histórico</h3><div id="historicalOverall"></div></div>
-  <div class="panel spaced"><div class="panel-header"><h3>Temporada por temporada</h3><label class="selector-label">Año <select id="seasonRecordYear" class="select"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option><option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option><option value="2019">2019</option></select></label></div><div id="seasonRecords"></div></div>
+ <section class="view" data-view="records">
+  <div class="eyetop">EL LIBRO DE LOS NÚMEROS</div><h1 class="pagetitle">Récords de la LFA</h1><p class="intro">Una sola clasificación histórica. Las hazañas y los récords, ordenados por categoría y temporada.</p>
+  <div class="grid three spaced" id="verifiedRecords"></div>
+  <div class="panel spaced ranking-feature"><div class="panel-header"><h2>Ranking histórico · Índice LFA</h2><span class="chip">Historia de la liga</span></div><div class="tablewrap" id="legacyRanks"></div></div>
+  <div class="panel spaced"><div class="panel-header"><h3>Marcas destacadas · 2026</h3><span class="chip" id="recordsCutoff">Temporada en juego</span></div><div id="currentRecords"></div></div>
+  <div class="panel spaced"><div class="panel-header"><h3>Datos por temporada</h3><label class="selector-label">Año <select id="seasonRecordYear" class="select"><option value="2026">2026</option><option value="2025">2025</option><option value="2024">2024</option><option value="2023">2023</option><option value="2022">2022</option><option value="2021">2021</option><option value="2020">2020</option><option value="2019">2019</option></select></label></div><div id="seasonRecords"></div></div>
+  <div hidden aria-hidden="true"><div id="champRank"></div><div id="ranking2026"></div><div id="historicalOverall"></div></div>
  </section>
  <section class="view" data-view="paternidades"><div class="eyetop">ESTADÍSTICAS DE PATERNIDAD</div><h1 class="pagetitle">¿Quién tiene de hijo a quién?</h1><p class="intro">Los enfrentamientos, uno contra uno o contra toda la liga.</p><div class="panel spaced"><div class="row wrap gap"><label class="field">Vista <select class="select" id="h2hMode"><option value="duel">Dos equipos</option><option value="all">Un equipo vs. los otros 7</option></select></label><label class="field">Franquicia<select class="select" id="h2hA"></select></label><label class="field" id="h2hBField">Rival<select class="select" id="h2hB"></select></label></div><div id="h2hResult" class="spaced"></div></div><div class="grid two spaced"><div class="panel"><h3>Enfrentamientos verificados en 2026</h3><div id="h2h2026" class="empty">Esperando Sleeper…</div></div><div class="panel"><h3>Historial de rivalidades</h3><div class="tablewrap" id="h2hTable"></div></div></div></section>
  <section class="view" data-view="historia"><div class="eyetop">MUSEO DE LOS ANILLOS</div><h1 class="pagetitle">Historia y campeones</h1><p class="intro">2018 es la prehistoria de Nuevos Santos y no computa para los títulos oficiales. La era profesional comienza en 2019.</p><div class="grid two spaced"><div class="panel"><h3>Libro de campeones</h3><div id="championsList"></div></div><div class="panel"><h3>¿Quién tiene más anillos?</h3><div id="titleChart"></div><hr><div class="prehistoria"><strong>2018 · Prehistoria</strong><p>Nuevos Santos fue campeón de la temporada cero; no cuenta como campeonato profesional.</p></div></div></div><div class="panel spaced"><h3>Tabla de la fase regular · 2025</h3><div class="tablewrap" id="standings2025"></div></div></section>
