@@ -149,7 +149,7 @@
    const f=window.assigned(window.roster(rid));
    const name=f?.name||window.rname(rid)||'Franquicia';
    const shield=f?window.logoImg(f.id,'draft-slot-shield'):'';
-   return `<div class="draft-slot-owner"><span class="draft-slot-number">TURNO ${slot}</span><div class="draft-slot-franchise">${shield}<b>${ESC(name)}</b></div></div>`;
+   return `<div class="draft-slot-owner"><span class="draft-slot-number">#${slot}</span><div class="draft-slot-franchise">${shield}<b>${ESC(name)}</b></div></div>`;
   });
   const byKey=new Map(picks.map(p=>[`${p.round}-${p.draft_slot}`,p]));
   const rows=[];
