@@ -664,3 +664,11 @@ footer{color:#acc8da;border-color:#4d7087}
  .rivalry-detail-stat b{font-size:18px}
  .rivalry-results-scroll{border:1px solid #547c94;border-radius:8px}
 }
+
+/* Diario LFA: una sola presentación visual para todas las crónicas */
+#newsGrid .paper-story{background:transparent!important;border-color:#b6a384;color:#382d24}
+#newsGrid .paper-story .paper-meta,#newsGrid .paper-story .paper-meta span{color:#7c4233!important}
+#newsGrid .paper-story h3{color:#302720}
+#newsGrid .paper-story p{color:#504135}
+.diario-editorial-note{font-size:11px;line-height:1.55;color:#b9cad7;margin:13px 3px 0;max-width:900px}
+.diario-editorial-note strong{font-weight:750;color:#d6e6ef}

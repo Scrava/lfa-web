@@ -5,16 +5,16 @@ function v4DayKey(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Ar
 function v4SafeUrl(url){return typeof url==='string'&&/^https:\/\/[a-z0-9.-]+(?:\/|$)/i.test(url)?url:''}
 
 function v4StoryArticle(s,i=0){
- const satire=!!s.satire,ext=!!s.external;
- const tag=satire?'FICCIÓN · HUMOR LFA':ext?'NFL · NOTICIA REAL':String(s.category||'LFA').toUpperCase();
+ // Una sola estética y sección periodística; los artículos de archivo
+ // conservan su fecha/categoría histórica, no el tipo de contenido.
+ const tag=s.year?String(s.category||'ARCHIVO LFA').toUpperCase():'EDICIÓN LFA';
  const date=s.updated_at?new Date(s.updated_at):null;
  const when=date&&!Number.isNaN(date.getTime())?`<time>${esc(new Intl.DateTimeFormat('es-AR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).format(date))}</time>`:'';
  const url=v4SafeUrl(s.url);
- return `<article class="paper-story ${i===0?'paper-lead':''} ${satire?'paper-satire':''}">
+ return `<article class="paper-story ${i===0?'paper-lead':''}">
   <div class="paper-meta"><span>${esc(tag)}</span>${when}</div>
   <h3>${esc(s.title)}</h3><p>${esc(s.description||s.body||'')}</p>
   ${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Leer noticia completa ↗</a>`:''}
-  ${satire?'<div class="paper-attribution">Parodia inventada · No es una declaración real</div>':''}
   </article>`;
 }
 
@@ -22,30 +22,30 @@ function v4DailySatire(){
  const date=v4DayKey(), seed=Number(date.replace(/\D/g,''))||1;
  const teams=D.franchises;
  const jokes=[
-  ['Cumbre de emergencia en el vestuario','Según esta entrevista completamente ficticia, {a} abrió una reunión para anunciar que “los puntos esperados también deberían dar victorias”. Nadie se animó a preguntarle por las derrotas.'],
-  ['El GM pidió una auditoría de la suerte','En nuestra parodia del día, {a} denunció que la aplicación le muestra un récord injusto. Propuso contar como triunfo cada partido en el que se sintió superior.'],
-  ['Una negociación que terminó en pizza','El supuesto intercambio entre {a} y {b} habría llegado a buen puerto, hasta que ambos GM discutieron quién pagaba la muzzarella. No hubo trade y sobró hambre.'],
-  ['Operativo encubierto en los waivers','Dicen, en esta historia inventada, que {a} instaló tres alarmas para levantar un corredor suplente. Cuando abrió Sleeper, el jugador ya lo había agarrado {b}.'],
-  ['Una conferencia sin autocrítica','El GM de {a} dio una conferencia imaginaria de 40 minutos. Su única conclusión fue: “Si mis jugadores anotaban más, ganábamos”.'],
-  ['La oficina de las excusas amplía horario','El gerente de {a} inauguró un departamento ficticio de excusas. Trabajará los lunes después del partido y los martes después de las correcciones de puntos.'],
-  ['Un scouting revolucionario','La nueva política imaginaria de {a}: elegir siempre al que hizo 30 puntos la semana anterior. Los analistas intentaron explicarle el concepto de regresión a la media.'],
-  ['Tensión diplomática entre franquicias','{a} y {b} protagonizaron una crisis ficticia: uno dejó el mensaje en visto y el otro interpretó que era una oferta formal de trade.'],
-  ['El vestuario exige responsabilidades','En esta entrevista de ficción, el plantel de {a} pidió explicaciones por el último flex. El GM respondió que lo eligió “por vibra”.'],
-  ['La comisión investiga un milagro','Nuestro diario imaginó un expediente sobre {a}: su mánager habría celebrado antes del último Monday Night. El fútbol americano tiene memoria.'],
-  ['Se filtró un plan táctico insólito','El plan ficticio de {a} incluye pedirle personalmente al rival que deje a su mejor receptor en el banco. La negociación continúa sin avances.'],
-  ['Una oferta imposible de rechazar','{a} llamó a {b} para ofrecerle “un futuro prometedor” a cambio de tres titulares. Era una parodia, pero ambos pidieron que se elimine la grabación.'],
-  ['Entrevista exclusiva con el sillón vacío','El GM de {a} no acudió a nuestra conferencia inventada. El sillón contestó más preguntas que él y fue elegido figura de la semana.'],
-  ['Una apuesta por la astrología fantasy','El supuesto nuevo asesor de {a} recomienda dejar afuera a los jugadores de signo incompatible. Sleeper todavía no ofrece esa estadística.'],
-  ['Se acabó la paciencia en el chat','En esta crónica de ficción, {a} propuso declarar ilegal el trash talk de {b}. La medida fue rechazada por unanimidad de los otros seis.'],
-  ['El gerente pidió otro waiver','En nuestro universo alternativo, {a} intentó reclamar un jugador del equipo de {b} sin ofrecer nada a cambio. Lo llamó “mercado de oportunidades”.'],
-  ['Celebración prematura','Esta parodia imagina a {a} encargando una copa antes del kickoff. La organización aclaró que la compra no suma puntos al ranking.'],
-  ['Una multa por exceso de optimismo','La comisión ficticia castigó a {a} por anunciar que era campeón en septiembre. El manager presentó apelación en forma de meme.']
+  ['Cumbre de emergencia en el vestuario','En una reunión de vestuario, {a} habría planteado que “los puntos esperados también deberían dar victorias”. Nadie se animó a preguntarle por las derrotas.'],
+  ['El GM pidió una auditoría de la suerte','{a} elevó una queja a la comisión porque la aplicación le muestra un récord injusto. Propuso contar como triunfo cada partido en el que se sintió superior.'],
+  ['Una negociación que terminó en pizza','Las negociaciones entre {a} y {b} parecían encaminadas, hasta que ambos GM discutieron quién pagaba la muzzarella. No hubo trade y sobró hambre.'],
+  ['Operativo encubierto en los waivers','En los pasillos de la liga cuentan que {a} instaló tres alarmas para levantar un corredor suplente. Cuando abrió Sleeper, el jugador ya lo había agarrado {b}.'],
+  ['Una conferencia sin autocrítica','El GM de {a} reunió a la prensa durante 40 minutos. Su única conclusión fue: “Si mis jugadores anotaban más, ganábamos”.'],
+  ['La oficina de las excusas amplía horario','El gerente de {a} anunció una nueva oficina de excusas. Trabajará los lunes después del partido y los martes después de las correcciones de puntos.'],
+  ['Un scouting revolucionario','La nueva política de scouting de {a}: elegir siempre al que hizo 30 puntos la semana anterior. Los analistas intentaron explicarle el concepto de regresión a la media.'],
+  ['Tensión diplomática entre franquicias','{a} y {b} protagonizaron una crisis diplomática: uno dejó el mensaje en visto y el otro interpretó que era una oferta formal de trade.'],
+  ['El vestuario exige responsabilidades','Tras el entrenamiento, el plantel de {a} pidió explicaciones por el último flex. El GM respondió que lo eligió “por vibra”.'],
+  ['La comisión investiga un milagro','La comisión abrió un expediente sobre {a}: su mánager habría celebrado antes del último Monday Night. El fútbol americano tiene memoria.'],
+  ['Se filtró un plan táctico insólito','El plan táctico de {a} incluiría pedirle personalmente al rival que deje a su mejor receptor en el banco. La negociación continúa sin avances.'],
+  ['Una oferta imposible de rechazar','{a} llamó a {b} para ofrecerle “un futuro prometedor” a cambio de tres titulares. Ambos pidieron que se elimine la grabación.'],
+  ['Entrevista exclusiva con el sillón vacío','El GM de {a} faltó a la conferencia de prensa. El sillón contestó más preguntas que él y fue elegido figura de la semana.'],
+  ['Una apuesta por la astrología fantasy','El nuevo asesor que circula por los pasillos de {a} recomienda dejar afuera a los jugadores de signo incompatible. Sleeper todavía no ofrece esa estadística.'],
+  ['Se acabó la paciencia en el chat','{a} presentó una propuesta para declarar ilegal el trash talk de {b}. La medida fue rechazada por unanimidad de los otros seis.'],
+  ['El gerente pidió otro waiver','{a} intentó reclamar un jugador del equipo de {b} sin ofrecer nada a cambio. Lo llamó “mercado de oportunidades”.'],
+  ['Celebración prematura','{a} ya habría encargado una copa antes del kickoff. La organización aclaró que la compra no suma puntos al ranking.'],
+  ['Una multa por exceso de optimismo','La comisión disciplinaria sancionó a {a} por anunciar que era campeón en septiembre. El manager presentó apelación en forma de meme.']
  ];
  const idx=((Math.floor(seed*1.6180339))%jokes.length+jokes.length)%jokes.length;
  return Array.from({length:Math.min(6,jokes.length)},(_,n)=>{
   const j=jokes[(idx+n*5)%jokes.length], a=teams[(seed+n*3)%teams.length], b=teams[(seed+n*3+3)%teams.length];
   const replace=s=>s.replace(/\{a\}/g,a.manager+' ('+a.name+')').replace(/\{b\}/g,b.manager+' ('+b.name+')');
-  return {category:'FICCIÓN',title:replace(j[0]),description:replace(j[1]),satire:true,updated_at:new Date().toISOString(),id:`satire-${date}-${n}`};
+  return {category:'LFA',title:replace(j[0]),description:replace(j[1]),satire:true,updated_at:new Date().toISOString(),id:`satire-${date}-${n}`};
  });
 }
 
@@ -79,7 +79,7 @@ function v4RenderNews(){
  });
  if(!live.ready&&!(window.LFA_V4.nflNews||[]).length)stories=satire;
  const date=new Intl.DateTimeFormat('es-AR',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'America/Argentina/Buenos_Aires'}).format(new Date());
- const masthead=`<div class="newspaper-banner"><div class="paper-vol">FANTASY FOOTBALL · LA REDACCIÓN DE LA LFA</div><h2>ÚLTIMA HORA <span>LFA</span></h2><div class="paper-date">${esc(date)} · Crónicas, rumores paródicos y noticias de NFL</div></div>`;
+ const masthead=`<div class="newspaper-banner"><div class="paper-vol">FANTASY FOOTBALL · LA REDACCIÓN DE LA LFA</div><h2>ÚLTIMA HORA <span>LFA</span></h2><div class="paper-date">${esc(date)} · Actualidad de la liga y noticias NFL</div></div>`;
  $('homeNews').innerHTML=masthead+'<div class="paper-grid">'+stories.slice(0,7).map((s,i)=>v4StoryArticle(s,i)).join('')+'</div>';
  $('newsGrid').innerHTML='<div class="paper-grid">'+stories.map((s,i)=>v4StoryArticle(s,i)).join('')+'</div>';
  $('newsStatus').textContent=(window.LFA_V4.nflNews||[]).length?'Noticias NFL · Diario LFA · Edición del día':'Edición LFA · Las noticias externas pueden no estar disponibles';
