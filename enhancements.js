@@ -223,26 +223,53 @@ function v4RenderComparison(){
 }
 
 function v4HistoricalRows(){
- const legacy=D.legacy_stats_review||[];
+ const source=D.legacy_stats_review||[],finished=live.ready?completedGames().filter(g=>g.type==='regular'):[];
+ const before=finished.filter(g=>g.week>=1&&g.week<=8),after=finished.filter(g=>g.week>8);
  return D.franchises.map(f=>{
-  const s=legacy.find(x=>x.franchise_id===f.id);
-  const wins=Number(s?.wins_reported),rate=Number(s?.win_rate_reported);
-  const total=Number.isFinite(wins)&&Number.isFinite(rate)&&rate>0?Math.round(wins/(rate/100)):null;
-  const losses=total!=null?Math.max(0,total-wins):null;
-  return {f,wins:Number.isFinite(wins)?wins:null,losses,rate:Number.isFinite(rate)?rate:null,source:s};
+  const current=live.rosters.find(r=>assigned(r)?.id===f.id),rid=current?.roster_id;
+  const baseScore=before.reduce((sum,g)=>sum+(g.a===Number(rid)?g.pa:g.b===Number(rid)?g.pb:0),0);
+  let s=source.find(x=>x.franchise_id===f.id),inferred=false;
+  if(!s&&rid!=null&&before.length>=28){
+   const choices=source.filter(x=>!x.franchise_id&&Math.abs(Number(x.season_points?.['2026'])-baseScore)<.06);
+   if(choices.length===1){s=choices[0];inferred=true}
+  }
+  const oldWins=Number(s?.wins_reported),oldRate=Number(s?.win_rate_reported),basePF=Number(s?.points_total_reported);
+  const ok=!!s&&rid!=null&&before.length>=28&&Math.abs(Number(s.season_points?.['2026'])-baseScore)<.06;
+  const extra=ok?after.filter(g=>g.a===Number(rid)||g.b===Number(rid)):[];
+  const deltaWins=extra.reduce((sum,g)=>sum+((g.a===Number(rid)?g.pa>g.pb:g.pb>g.pa)?1:0),0);
+  const deltaLosses=extra.reduce((sum,g)=>sum+((g.a===Number(rid)?g.pa<g.pb:g.pb<g.pa)?1:0),0);
+  const deltaPF=extra.reduce((sum,g)=>sum+(g.a===Number(rid)?g.pa:g.pb),0);
+  const baseGames=Number.isFinite(oldWins)&&Number.isFinite(oldRate)&&oldRate>0?Math.round(oldWins/(oldRate/100)):null;
+  const baseLosses=baseGames!=null?Math.max(0,baseGames-oldWins):null;
+  const wins=Number.isFinite(oldWins)?oldWins+deltaWins:null;
+  const losses=baseLosses!=null?baseLosses+deltaLosses:null;
+  const games=baseGames!=null?baseGames+extra.length:null;
+  const rate=games&&wins!=null?100*wins/games:oldRate;
+  const baseIndex=Number((D.legacy_rankings_review||[]).find(x=>x.franchise_id===f.id)?.legacy_score);
+  const ptsBonus=ok&&Number.isFinite(basePF)?Math.floor((basePF+deltaPF)/250)-Math.floor(basePF/250):0;
+  const score=Number.isFinite(baseIndex)&&baseGames!=null?(baseIndex*baseGames+10*deltaWins+ptsBonus)/Math.max(1,games):null;
+  return {f,wins,losses,rate,games,score,source:s,verifiedFromWeek8:ok,inferred,deltaGames:extra.length,deltaWins,deltaPF};
  });
 }
-
 function v4EnhanceHistory(){
  const stories=[...D.editorial];
  const finals=D.seasons.filter(s=>s.official).map(s=>({year:s.year,type:'editorial',title:`${s.year}: ${s.champion_name} escribe su capítulo`,description:`${s.champion_name} levantó el título frente a ${s.runner_up_name}, por ${fmt(s.final_score.champion)} a ${fmt(s.final_score.runner_up)}. Los campeonatos se recuerdan; las excusas se guardan para la próxima edición.`,fact:`Final ${s.year} · Diferencia ${fmt(Math.abs(s.final_score.champion-s.final_score.runner_up))} puntos`}));
+ if(live.ready&&live.picks.length){
+  const top=live.picks.slice().sort((a,b)=>Number(a.pick_no)-Number(b.pick_no))[0];
+  if(top?.player_id)stories.push({year:2026,type:'editorial',title:'El primer nombre de la noche del draft',description:`${rname(top.roster_id)} abrió el tablero del Draft 2026 seleccionando a ${playerName(top.player_id)}. La elección queda escrita en el libro de las primeras decisiones.`,fact:'Elección #1 del Draft LFA 2026'});
+ }
+ if(live.ready){
+  const cancelled=Object.values(live.transactions).flat().filter(t=>t.type==='trade'&&['failed','vetoed','cancelled'].includes(t.status));
+  if(cancelled.length){
+   const x=cancelled[0];stories.push({year:2026,type:'editorial',title:'Un trade que quedó en el camino',description:`La operación entre ${x.roster_ids?.map(rname).join(' y ')||'dos franquicias'} no terminó completada. La oficina del comisionado tiene una historia más para contar.`,fact:`Estado de operación registrado: ${x.status}`});
+  }
+ }
  const all=[...stories,...finals].sort((a,b)=>b.year-a.year);
  $('historicalStories').innerHTML='<div class="oldpaper-banner"><span>EL ARCHIVO · DESDE 2019</span><h2>CRÓNICAS DE OTRA ÉPOCA</h2><p>Glorias, humillaciones y rachas que dejaron huella en la LFA</p></div><div class="paper-grid">'+all.map((s,i)=>v4StoryArticle({...s,category:`${s.year} · ARCHIVO`,updated_at:null},i)).join('')+'</div>';
- const historic=v4HistoricalRows().filter(v=>v.wins!=null).sort((a,b)=>b.rate-a.rate);
- $('legacyRanks').innerHTML=table(['#','Franquicia','Índice legado'],D.legacy_rankings_review.slice().sort((a,b)=>b.legacy_score-a.legacy_score).map((r,i)=>[i+1,logoImg(r.franchise_id)+esc(teamName(r.franchise_id)),fmt(Number(r.legacy_score))]));
- const el=$('historicalOverall');if(el)el.innerHTML=`<div class="tablewrap">${table(['Equipo','Victorias*','Derrotas*','% G'],historic.map(r=>[logoImg(r.f.id)+esc(r.f.name),r.wins,r.losses??'—',r.rate==null?'—':`${fmt(r.rate)}%`]))}</div><p class="muted small">*Cifras del registro histórico disponible; derrotas estimadas a partir del porcentaje, pendientes de cotejo. No se suman a 2026 para evitar duplicados.</p>`;
+ const historic=v4HistoricalRows().filter(v=>v.wins!=null).sort((a,b)=>(b.score??0)-(a.score??0));
+ $('legacyRanks').innerHTML=`<div class="tablewrap">${table(['#','Franquicia','Índice*','G–P acumulado'],historic.map((r,i)=>[i+1,logoImg(r.f.id)+esc(r.f.name),Number.isFinite(r.score)?fmt(r.score):'—',`${r.wins}–${r.losses??'—'}`]))}</div><p class="muted small">*Índice histórico orientativo: se incorporan resultados nuevos desde la semana 9 de 2026 cuando coinciden con el registro inicial. Las bonificaciones antiguas conservan su valor registrado.</p>`;
+ const el=$('historicalOverall');if(el)el.innerHTML=`<div class="tablewrap">${table(['Franquicia','G','P','% victorias','Último agregado'],historic.map(r=>[logoImg(r.f.id)+esc(r.f.name),r.wins,r.losses??'—',r.rate==null?'—':`${fmt(r.rate)}%`,r.verifiedFromWeek8?(r.deltaGames?`+${r.deltaGames} fechas`:'Hasta semana 8'):'Pendiente']))}</div><p class="muted small">Cifras históricas provisionales; las derrotas se reconstruyen del porcentaje anterior. La coincidencia de puntos hasta la semana 8 permite sumar nuevas fechas sin duplicarlas.</p>`;
 }
-
 function v4ShowFranchise(id){
  document.querySelectorAll('[data-franchise]').forEach(b=>b.classList.toggle('selected',b.dataset.franchise===id));
  const f=franchise(id);if(!f)return;
@@ -297,5 +324,6 @@ function v4Init(){
  v4FetchNflNews();
  const now=v4DayKey();window.LFA_V4.day=now;
  setInterval(()=>{if(window.LFA_V4.day!==v4DayKey()){window.LFA_V4.day=v4DayKey();v4RenderNews()}},30*60*1000);
+ setInterval(()=>{if(!document.hidden)v4FetchNflNews()},30*60*1000);
 }
 v4Init();
