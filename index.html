@@ -5,15 +5,15 @@
 <meta name="theme-color" content="#0b9bc9"><meta name="description" content="LFA — la temporada 2026, el mercado, el draft board completo, las noticias, el archivo histórico y los récords de las ocho franquicias.">
 <title>LFA · Fantasy Football — El deporte más personal</title>
 <link rel="icon" href="assets/lfa.webp" type="image/webp"><link rel="stylesheet" href="styles.css">
-<script src="data/bootstrap.js" defer></script><script src="data/live_bootstrap.js" defer></script><script src="app.js" defer></script><script src="enhancements.js" defer></script><script src="edition.js" defer></script>
+<script src="data/bootstrap.js" defer></script><script src="data/live_bootstrap.js" defer></script><script src="app.js" defer></script><script src="enhancements.js" defer></script><script src="edition.js" defer></script><script src="mobile.js" defer></script>
 </head>
 <body>
 <header class="masthead">
   <div class="masthead-inner">
     <button class="brand" type="button" data-go="inicio" title="Ir a la portada"><img src="assets/lfa.webp" alt="LFA"><span><strong>LFA</strong><small>FANTASY FOOTBALL · DESDE 2019</small></span></button>
-    <div class="header-right"><span class="status"><i id="apiDot"></i><span id="apiText">Consultando Sleeper…</span></span><button type="button" id="refresh" class="tinybtn">↻ Actualizar</button></div>
+    <div class="header-right"><span class="status" title="Estado de Sleeper"><i id="apiDot"></i><span id="apiText">Consultando Sleeper…</span></span><button type="button" id="refresh" class="tinybtn" aria-label="Actualizar datos de Sleeper" title="Actualizar datos">↻ <span class="refresh-text">Actualizar</span></button><button id="mobileMenuToggle" class="mobile-menu-toggle" type="button" aria-label="Abrir menú de secciones" aria-controls="mainNavigation" aria-expanded="false"><span aria-hidden="true">☰</span><span class="menu-label">Menú</span></button></div>
   </div>
-  <nav class="mainnav" aria-label="Secciones principales">
+  <nav id="mainNavigation" class="mainnav" aria-label="Secciones principales">
     <button data-page="inicio" class="navbutton active">Portada</button>
     <button data-page="temporada" class="navbutton">Temporada 2026</button>
     <button data-page="rosters" class="navbutton">Rosters</button>
@@ -27,6 +27,7 @@
     <button data-page="hechos" class="navbutton">Hechos históricos</button>
   </nav>
 </header>
+<div id="mobileNavBackdrop" class="mobile-nav-backdrop" hidden></div>
 <main class="content">
  <div class="utilitybar"><span class="tinylabel">LFA / <span id="breadcrumb">PORTADA</span></span><span id="syncInfo" class="muted small">Temporada 2026</span></div>
  <section class="view active" data-view="inicio">
@@ -77,5 +78,11 @@
  <div hidden aria-hidden="true"><span id="sourceStatus"></span><span id="sourceDetails"></span></div>
  <footer>© LFA · FANTASY FOOTBALL DESDE 2019 · LA LIGA ES PARA SIEMPRE</footer>
 </main>
+<nav id="mobileDock" class="mobile-dock" aria-label="Accesos rápidos">
+ <button class="dock-button is-selected" type="button" data-go="inicio" aria-label="Portada"><span class="dock-symbol" aria-hidden="true">⌂</span><span>Portada</span></button>
+ <button class="dock-button" type="button" data-go="temporada" aria-label="Temporada 2026"><span class="dock-symbol" aria-hidden="true">▦</span><span>Temporada</span></button>
+ <button class="dock-button" type="button" data-go="noticias" aria-label="Diario LFA"><span class="dock-symbol" aria-hidden="true">✦</span><span>Diario</span></button>
+ <button class="dock-button" type="button" id="mobileDockMenu" aria-label="Mostrar todas las secciones" aria-controls="mainNavigation" aria-expanded="false"><span class="dock-symbol" aria-hidden="true">☰</span><span>Secciones</span></button>
+</nav>
 </body>
 </html>
