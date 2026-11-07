@@ -6,6 +6,7 @@ on:
       - 'app.js'
       - 'enhancements.js'
       - 'edition.js'
+      - 'mobile.js'
       - 'data/live_bootstrap.js'
       - 'index.html'
       - 'styles.css'
@@ -23,11 +24,13 @@ jobs:
           node --check app.js
           node --check enhancements.js
           node --check edition.js
+          node --check mobile.js
           node --check data/live_bootstrap.js
       - name: Verificar recursos principales
         run: |
           test -f index.html
           test -f styles.css
+          test -f mobile.js
           test -f data/bootstrap.js
           test -f data/live_snapshot.json
           test -f data/player_catalog.json
@@ -38,4 +41,12 @@ jobs:
           const snap=env.window.LFA_INITIAL_SNAPSHOT;
           if(String(snap?.league_id)!=='1388976988894543872'||snap.rosters.length!==8||!Object.keys(snap.matchups).length)throw Error('El respaldo LFA no es válido');
           console.log('Respaldo LFA verificado, semana',snap.week);
+          const html=fs.readFileSync('index.html','utf8');
+          const css=fs.readFileSync('styles.css','utf8');
+          const mobile=fs.readFileSync('mobile.js','utf8');
+          for(const id of ['mobileMenuToggle','mobileDockMenu','mobileDock','mobileNavBackdrop','mainNavigation']){
+            if(!html.includes('id="'+id+'"'))throw Error('Falta control movil '+id);
+          }
+          if(!html.includes('src="mobile.js"')||!css.includes('.mobile-stack-table')||!css.includes('.mobile-draft-board')||!mobile.includes('MutationObserver'))throw Error('Recursos responsivos incompletos');
+          console.log('Navegación móvil y vistas responsivas verificadas.');
           NODE
