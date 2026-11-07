@@ -5,6 +5,7 @@ on:
     paths:
       - 'app.js'
       - 'enhancements.js'
+      - 'edition.js'
       - 'index.html'
       - 'styles.css'
       - '.github/workflows/validar-web.yml'
@@ -20,6 +21,7 @@ jobs:
         run: |
           node --check app.js
           node --check enhancements.js
+          node --check edition.js
       - name: Verificar recursos principales
         run: |
           test -f index.html
