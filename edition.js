@@ -189,7 +189,7 @@
   }
   if(!window.franchise(b)||a===b){output.innerHTML='<p class="note">Elegí dos equipos distintos.</p>';return}
   const r=statsFor(b);
-  output.innerHTML=`<div class="rivalry-hero">${window.logoImg(a)}<strong>${ESC(window.teamName(a))}</strong><span>${ESC(r.now)}</span><strong>${ESC(window.teamName(b))}</strong>${window.logoImg(b)}</div><p class="rivalry-foot">2026 · ${r.games.length} cruces disputados · Balance anterior: ${ESC(r.old)}</p>`;
+  output.innerHTML=`<div class="rivalry-hero">${window.logoImg(a)}<strong>${ESC(window.teamName(a))}</strong><span>${ESC(r.now)}</span><strong>${ESC(window.teamName(b))}</strong>${window.logoImg(b)}</div><p class="rivalry-foot">2026 · ${r.games.length} cruces disputados · Historial registrado: ${ESC(r.old)}</p>`;
  };
  window.v4EnhanceHistory=function(){
   if(typeof prevHistory==='function')prevHistory();
@@ -204,7 +204,7 @@
    rank.innerHTML=table(['#','Franquicia','Índice LFA','G–P histórico','Títulos'],rows.map((v,i)=>[
     i+1,`<span class="cellteam">${window.logoImg(v.f.id)}<strong>${ESC(v.f.name)}</strong></span>`,
     Number.isFinite(v.index)?fmt(v.index):'—',v.wins!=null?`${v.wins}–${v.losses??'—'}`:'—',window.titles(v.f.id)
-   ]))+'<p class="ranking-foot">Índice histórico con las reglas del ranking LFA. Cifras históricas sujetas a validación del archivo anterior.</p>';
+   ]))+'<p class="ranking-foot">Índice LFA histórico · Cifras provisionales en revisión.</p>';
   }
   const archive=$('historicalStories');if(!archive)return;
   const stories=(D.editorial||[]).map(s=>({title:s.title,description:s.description,year:s.year,category:s.status==='historical_document_review'?'ARCHIVO EN REVISIÓN':`${s.year} · HISTORIA`}));
