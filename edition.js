@@ -163,7 +163,7 @@
  window.v4RenderComparison=function(){
   const output=$('h2hResult'),mode=$('h2hMode')?.value==='all'?'all':'duel';
   const a=$('h2hA')?.value||'',b=$('h2hB')?.value||'';
-  const field=$('h2hBField');if(field)field.hidden=mode==='all';
+  const field=$('h2hBField');if(field){field.hidden=mode==='all';field.style.display=mode==='all'?'none':'';}
   if(!output)return;
   if(!window.franchise(a)){output.innerHTML='<p class="empty">Elegí una franquicia.</p>';return}
   const history=Array.isArray(D.legacy_h2h_review)?D.legacy_h2h_review:[];
@@ -233,7 +233,7 @@
  window.renderDraft=window.v4RenderDraft;
  window.renderComparison=window.v4RenderComparison;
  // Captura de eventos para impedir que el handler antiguo procese la vista 'uno contra siete'.
- for(const id of ['h2hA','h2hB']){
+ for(const id of ['h2hA','h2hB','h2hMode']){
   $(id)?.addEventListener('change',e=>{e.stopImmediatePropagation();window.v4RenderComparison()},true);
  }
  // Poner los nuevos renderizadores en acción sin esperar una sincronización de Sleeper.
@@ -246,4 +246,7 @@
  window.v4EnhanceHistory();
  // Preferencia española, traducción solo si se consigue verificar y nunca en texto visible inglés.
  window.v4FetchNflNews();
+ // El módulo anterior pudo iniciar una consulta justo antes de cargar esta edición.
+ // Reintentar después de su timeout para asegurar titulares en español desde la primera visita.
+ setTimeout(()=>window.v4FetchNflNews(),12000);
 })();
