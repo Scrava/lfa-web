@@ -2,10 +2,10 @@
 <html lang="es-AR">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b9bc9"><meta name="description" content="LFA — la temporada 2026, el mercado, el draft board completo, las noticias, el archivo histórico y los récords de las ocho franquicias.">
+<meta name="theme-color" content="#122f49"><meta name="description" content="LFA — la temporada 2026, el mercado, el draft board completo, las noticias, el archivo histórico y los récords de las ocho franquicias.">
 <title>LFA · Fantasy Football — El deporte más personal</title>
 <link rel="icon" href="assets/lfa.webp" type="image/webp"><link rel="stylesheet" href="styles.css">
-<script src="data/bootstrap.js" defer></script><script src="data/live_bootstrap.js" defer></script><script src="app.js" defer></script><script src="enhancements.js" defer></script><script src="edition.js" defer></script><script src="mobile.js" defer></script><script src="rivalry-core.js" defer></script><script src="rivalries.js" defer></script>
+<script src="data/bootstrap.js" defer></script><script src="data/live_bootstrap.js" defer></script><script src="app.js" defer></script><script src="enhancements.js" defer></script><script src="edition.js" defer></script><script src="mobile.js" defer></script><script src="rivalry-core.js" defer></script><script src="rivalries.js" defer></script><script src="lfa-stats-core.js" defer></script><script src="lfa-v6.js" defer></script>
 </head>
 <body>
 <header class="masthead">
@@ -37,7 +37,12 @@
    <div class="panel"><div class="panel-header"><h2>La fecha actual <span id="homeWeekLabel" class="chip">2026</span></h2><button class="textlink" type="button" data-go="temporada">Resultados ↗</button></div><div id="homeGames" class="empty">Cargando enfrentamientos…</div></div>
   </div>
   <div class="diario-callout">
-    <div class="diario-callout-mark">LFA <span>✦</span></div>
+    <div class="diario-paper-cover" aria-hidden="true">
+      <div class="diario-cover-date">LA VOZ DE LA LIGA · 2026</div>
+      <div class="diario-cover-name">DIARIO <strong>LFA</strong></div>
+      <div class="diario-cover-body"><img src="assets/lfa.webp" alt=""><div class="diario-cover-lines"><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="diario-cover-footer">FANTASY FOOTBALL · EDICIÓN Nº8</div>
+    </div>
     <div><div class="eyetop">LA REDACCIÓN DE LA LIGA</div><h2>Leé el Diario LFA</h2><p>Actualidad NFL, titulares de las franquicias y las noticias más comentadas de la liga. Nueva edición cada tres días.</p></div>
     <button type="button" data-go="noticias" class="diario-callout-button">Entrar al diario <span aria-hidden="true">↗</span></button>
   </div>
@@ -48,11 +53,13 @@
  <section class="view" data-view="temporada">
   <div class="eyetop">LA TEMPORADA EN JUEGO</div><h1 class="pagetitle">La carrera de 2026</h1><p class="intro">Resultados, alineaciones, posiciones y el camino al título.</p>
   <div class="note" id="liveNotice">Conectando…</div><div class="grid four spaced" id="liveStats"></div>
-  <div class="grid two spaced"><div class="panel"><div class="panel-header"><h3>Posiciones</h3><span class="chip">Sleeper 2026</span></div><div class="tablewrap" id="standingsLive"><div class="empty">Sin información verificada</div></div></div>
-  <div class="panel"><div class="panel-header"><h3>La fecha, partido a partido</h3><label class="selector-label">Semana <select id="weekSelect" class="select"></select></label></div><div id="matchupsLive" class="empty">Consultando…</div></div></div>
-  <div class="panel spaced playoff-panel"><h3>Camino a los playoffs</h3><div id="playoffView" class="empty">Aún no hay cuadro confirmado.</div></div>
+  <div class="season-top-grid spaced">
+   <div class="panel season-standings-panel"><div class="panel-header"><h3>Posiciones</h3><span class="chip">Sleeper 2026</span></div><div class="tablewrap" id="standingsLive"><div class="empty">Sin información verificada</div></div><p class="playoff-legend">◆ Zona de playoffs: primeros 4 puestos</p></div>
+   <div class="panel playoff-panel"><h3>Rumbo a los playoffs</h3><div id="playoffView" class="empty">Aún no hay cuadro confirmado.</div></div>
+  </div>
+  <div class="panel spaced season-matchups-panel"><div class="panel-header"><h3>La fecha, partido a partido</h3><div class="row wrap gap"><button type="button" id="goNextWeek" class="next-week-btn">Próxima fecha</button><label class="selector-label">Semana <select id="weekSelect" class="select"></select></label></div></div><p class="matchup-projection-help">Abrí cada enfrentamiento para ver titulares, banco, rival NFL y proyecciones PPR disponibles.</p><div id="matchupsLive" class="empty">Consultando…</div></div>
  </section>
- <section class="view" data-view="rosters"><div class="eyetop">LOS OCHO PLANTELES</div><h1 class="pagetitle">Rosters de la LFA</h1><p class="intro">Titulares, suplentes, reserva y proyecciones para la próxima semana.</p>
+ <section class="view" data-view="rosters"><div class="eyetop">LOS OCHO PLANTELES</div><h1 class="pagetitle">Rosters de la LFA</h1><p class="intro">Titulares, suplentes, puntos PPR de temporada y posiciones en el ranking NFL.</p>
   <div class="panel spaced" id="rosterGrid"><div class="empty">Consultando planteles…</div></div>
   <details class="mapping-tools"><summary>Ajustar la identificación de un equipo</summary><div id="mappingArea"></div></details>
  </section>
