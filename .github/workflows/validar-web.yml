@@ -89,6 +89,6 @@ jobs:
       - name: Verificar continuidad entre temporadas
         run: |
           python -m py_compile scripts/season_manager.py scripts/sync_sleeper.py
-          python -m unittest discover -s scripts -p 'test-season-manager.py' -v
+          python scripts/test-season-manager.py -v
       - name: Probar edición LFA 8 y funciones NFL
         run: node scripts/test-v6.cjs
