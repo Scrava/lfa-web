@@ -9,6 +9,9 @@ on:
       - 'mobile.js'
       - 'rivalries.js'
       - 'rivalry-core.js'
+      - 'lfa-stats-core.js'
+      - 'lfa-v6.js'
+      - 'scripts/test-v6.cjs'
       - 'scripts/test-rivalries.cjs'
       - 'data/live_bootstrap.js'
       - 'index.html'
@@ -30,6 +33,9 @@ jobs:
           node --check mobile.js
           node --check rivalries.js
           node --check rivalry-core.js
+          node --check lfa-stats-core.js
+          node --check lfa-v6.js
+          node --check scripts/test-v6.cjs
           node --check scripts/test-rivalries.cjs
           node --check data/live_bootstrap.js
       - name: Verificar recursos principales
@@ -68,3 +74,5 @@ jobs:
           NODE
       - name: Probar consistencia del cuadro y buscador de paternidades
         run: node scripts/test-rivalries.cjs
+      - name: Probar edición LFA 8 y funciones NFL
+        run: node scripts/test-v6.cjs
