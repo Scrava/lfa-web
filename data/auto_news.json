@@ -1,21 +1,31 @@
 [
   {
-    "id": "standings-9",
+    "id": "standings-10",
     "category": "PANORAMA",
     "title": "El termómetro de la LFA",
-    "description": "Tiburoncin UH JA JA está primero (6–2). Fantasy Gods cierra la tabla (1–7). Los puntos no dan lugar a la interpretación; los memes, sí.",
-    "fact": "Standings de Sleeper · corte 07/11/2026 18:09 UTC",
-    "updated_at": "2026-11-07T18:09:48.081259+00:00",
+    "description": "Tiburoncin UH JA JA está primero (7–2). Fantasy Gods cierra la tabla (1–8). Los puntos no dan lugar a la interpretación; los memes, sí.",
+    "fact": "Standings de Sleeper · corte 10/11/2026 13:14 UTC",
+    "updated_at": "2026-11-10T13:14:50.882341+00:00",
     "source": "Sleeper API",
     "season": 2026
   },
   {
-    "id": "rout-8",
+    "id": "rout-9",
     "category": "FOLKLORE",
     "title": "La peor paliza de la última fecha",
-    "description": "The Scravengers le ganó a All Bros  por 23.44 puntos. El calendario no declara en el tribunal de las excusas.",
-    "fact": "Sleeper, semana 8 · resultado final",
-    "updated_at": "2026-11-07T18:09:48.081259+00:00",
+    "description": "All Bros  le ganó a Nakillers por 86.84 puntos. El calendario no declara en el tribunal de las excusas.",
+    "fact": "Sleeper, semana 9 · resultado final",
+    "updated_at": "2026-11-10T13:14:50.882341+00:00",
+    "source": "Sleeper API",
+    "season": 2026
+  },
+  {
+    "id": "tx-1425252635983843328",
+    "category": "MERCADO",
+    "title": "Se confirmó un movimiento de agente libre",
+    "description": "Cougars FT registró una operación completada. Los jugadores adquiridos: T.J. Hockenson.",
+    "fact": "Sleeper · ID 1425252635983843328 · fecha 08/11/2026",
+    "updated_at": "2026-11-10T13:14:50.882341+00:00",
     "source": "Sleeper API",
     "season": 2026
   },
@@ -25,7 +35,7 @@
     "title": "Se confirmó un movimiento de agente libre",
     "description": "Fantasy Gods registró una operación completada. Los jugadores adquiridos: Devin Singletary.",
     "fact": "Sleeper · ID 1424615607004856320 · fecha 07/11/2026",
-    "updated_at": "2026-11-07T18:09:48.081259+00:00",
+    "updated_at": "2026-11-10T13:14:50.882341+00:00",
     "source": "Sleeper API",
     "season": 2026
   },
@@ -35,37 +45,27 @@
     "title": "Se confirmó un movimiento de agente libre",
     "description": "All Bros  registró una operación completada. Los jugadores adquiridos: Adonai Mitchell.",
     "fact": "Sleeper · ID 1423758120601108480 · fecha 04/11/2026",
-    "updated_at": "2026-11-07T18:09:48.081259+00:00",
+    "updated_at": "2026-11-10T13:14:50.882341+00:00",
     "source": "Sleeper API",
     "season": 2026
   },
   {
-    "id": "tx-1423564504544862208",
-    "category": "MERCADO",
-    "title": "Se confirmó un waiver",
-    "description": "Fantasy Evils registró una operación completada. Los jugadores adquiridos: Tyler Allgeier.",
-    "fact": "Sleeper · ID 1423564504544862208 · fecha 04/11/2026",
-    "updated_at": "2026-11-07T18:09:48.081259+00:00",
-    "source": "Sleeper API",
-    "season": 2026
-  },
-  {
-    "id": "status-12514-9",
+    "id": "status-5859-10",
     "category": "PLANTELES",
-    "title": "Emeka Egbuka: estado a seguir",
-    "description": "The Scravengers tiene a Emeka Egbuka con etiqueta “Questionable” en Sleeper. Es una clasificación de esa plataforma, no un parte médico independiente.",
-    "fact": "Estado del roster consultado 07/11/2026 18:09 UTC",
-    "updated_at": "2026-11-07T18:09:48.081259+00:00",
+    "title": "A.J. Brown: estado a seguir",
+    "description": "All Bros  tiene a A.J. Brown con etiqueta “Out” en Sleeper. Es una clasificación de esa plataforma, no un parte médico independiente.",
+    "fact": "Estado del roster consultado 10/11/2026 13:14 UTC",
+    "updated_at": "2026-11-10T13:14:50.882341+00:00",
     "source": "Sleeper API",
     "season": 2026
   },
   {
-    "id": "status-8137-9",
+    "id": "status-8146-10",
     "category": "PLANTELES",
-    "title": "George Pickens: estado a seguir",
-    "description": "Fantasy Gods tiene a George Pickens con etiqueta “Questionable” en Sleeper. Es una clasificación de esa plataforma, no un parte médico independiente.",
-    "fact": "Estado del roster consultado 07/11/2026 18:09 UTC",
-    "updated_at": "2026-11-07T18:09:48.081259+00:00",
+    "title": "Garrett Wilson: estado a seguir",
+    "description": "All Bros  tiene a Garrett Wilson con etiqueta “Out” en Sleeper. Es una clasificación de esa plataforma, no un parte médico independiente.",
+    "fact": "Estado del roster consultado 10/11/2026 13:14 UTC",
+    "updated_at": "2026-11-10T13:14:50.882341+00:00",
     "source": "Sleeper API",
     "season": 2026
   }
