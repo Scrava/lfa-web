@@ -53,7 +53,7 @@ const values={
 const windowMock={LFA_RIVALRY_CORE:core,renderStandings:()=>true};
 const ctx={
  window:windowMock,document:{getElementById:id=>values[id]||null},
- D:{franchises:teams,legacy_h2h_review:hist},
+ D:{franchises:teams,legacy_h2h_review:hist},ACTIVE_SEASON:Number(data.window.LFA_DATA.league.current_season),
  live:{rosters:fixture,ready:true},
  completedGames:()=>games,
  assigned:r=>({id:r.franchise_id}),

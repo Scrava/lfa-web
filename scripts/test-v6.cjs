@@ -58,7 +58,7 @@ const matchupPairs=w=>{const groups={};for(const r of live.matchups[w]||[])(grou
 const windowObj={LFA_STATS_CORE:core,LFA_V4:{openMatch:null,selectedRoster:null},renderStandings:()=>undefined,renderAll:()=>undefined,renderHistory:()=>undefined};
 const context={
  window:windowObj,document:{getElementById:el,addEventListener:()=>{}},
- live,D,esc,fmt,roster,assigned,logoImg,rchip,record,sortedRosters,matchupPairs,playerName,titles,table,
+ live,D,ACTIVE_SEASON:Number(D.league.current_season),esc,fmt,roster,assigned,logoImg,rchip,record,sortedRosters,matchupPairs,playerName,titles,table,
  rname:userName,typeName:type=>type,dt:()=> 'Fecha',
  console,fetch:async()=>{throw Error('No se debe usar la red durante el test')},setTimeout:()=>null,clearTimeout:()=>{},sessionStorage:{getItem:()=>null,setItem:()=>{}},
  Event:function(){},Date,Math,Number,String,Array,Object,Map,Set,
