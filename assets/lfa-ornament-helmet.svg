@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 280" fill="none" aria-hidden="true">
+
+<defs><linearGradient id="h" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8e3a2"/><stop offset=".43" stop-color="#a36c2d"/><stop offset=".7" stop-color="#e4be70"/><stop offset="1" stop-color="#a36c2d"/></linearGradient></defs>
+<g stroke="url(#h)" stroke-linecap="round" stroke-linejoin="round">
+<path d="M62 153C42 99 79 47 132 32C195 14 253 43 273 99C282 125 277 145 269 161L226 160L216 191L177 215L139 188L103 192L82 174Z" stroke-width="6"/>
+<path d="M82 153C98 161 124 167 154 167" stroke-width="3" opacity=".7"/>
+<path d="M215 152C228 150 243 145 256 143" stroke-width="4"/>
+<path d="M229 162L286 179L285 218L243 226L210 210" stroke-width="5"/>
+<path d="M230 180L284 192M225 200L283 211M260 177L253 221" stroke-width="4"/>
+<circle cx="203" cy="155" r="11" stroke-width="5"/>
+<path d="M176 214L151 234L119 215M153 96C181 87 202 85 228 103" stroke-width="3.5" opacity=".6"/>
+</g>
+
+</svg>

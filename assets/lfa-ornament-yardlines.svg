@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" fill="none" aria-hidden="true">
+
+<defs><linearGradient id="line" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#a36c2d" stop-opacity="0"/><stop offset=".24" stop-color="#e4be70" stop-opacity=".43"/><stop offset=".52" stop-color="#f8e3a2" stop-opacity=".58"/><stop offset=".82" stop-color="#e4be70" stop-opacity=".35"/><stop offset="1" stop-color="#a36c2d" stop-opacity="0"/></linearGradient></defs>
+<g stroke="url(#line)" stroke-width="1.5">
+<path d="M0 90H1200M0 250H1200M0 410H1200M0 570H1200M0 730H1200M0 890H1200"/>
+</g>
+<g stroke="#e4be70" stroke-opacity=".18" stroke-width="1.5">
+<path d="M120 25V900M1080 25V900" stroke-dasharray="8 16"/>
+<path d="M192 65V115M288 65V115M384 65V115M480 65V115M576 65V115M672 65V115M768 65V115M864 65V115M960 65V115"/>
+<path d="M192 225V275M288 225V275M384 225V275M480 225V275M576 225V275M672 225V275M768 225V275M864 225V275M960 225V275"/>
+<path d="M192 385V435M288 385V435M384 385V435M480 385V435M576 385V435M672 385V435M768 385V435M864 385V435M960 385V435"/>
+<path d="M192 545V595M288 545V595M384 545V595M480 545V595M576 545V595M672 545V595M768 545V595M864 545V595M960 545V595"/>
+<path d="M192 705V755M288 705V755M384 705V755M480 705V755M576 705V755M672 705V755M768 705V755M864 705V755M960 705V755"/>
+</g>
+<g font-family="Arial,sans-serif" font-size="42" font-weight="900" fill="#e4be70" fill-opacity=".16" letter-spacing="4">
+<text x="40" y="240">10</text><text x="1100" y="240">10</text><text x="40" y="555">20</text><text x="1100" y="555">20</text><text x="40" y="870">30</text><text x="1100" y="870">30</text>
+</g>
+
+</svg>
