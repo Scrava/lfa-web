@@ -413,6 +413,26 @@ def main():
     # No se modifican ni el sitio ni la lista de franquicias en 2026.
     # Solo después del archivo verificado y de detectar la nueva liga real.
     updated_franchises, newcomers = prepare_successor(snap, successor, D["franchises"])
+    # Los debuts confirmados entran también al archivo de Hechos Históricos.
+    if newcomers:
+        editorial = read_json(DATA / "editorial.json")
+        for team in newcomers:
+            uid = team["sleeper_user_id"]
+            story_id = "debut-lfa-" + str(new_year) + "-" + uid
+            if any(item.get("id") == story_id for item in editorial):
+                continue
+            editorial.append({
+                "id": story_id, "year": new_year, "type": "editorial",
+                "status": "historical_verified",
+                "related": [team["id"]],
+                "title": team["name"] + " se sienta en la mesa grande de LFA",
+                "description": team["manager"] + " y " + team["name"] +
+                    " ingresan oficialmente a la LFA en " + str(new_year) +
+                    ". Su historial arranca en cero: sin títulos prestados, sin derrotas heredadas y con todas las excusas por estrenar.",
+                "fact": "Ingreso confirmado por Sleeper · edición " + str(new_year),
+            })
+        write_json(DATA / "editorial.json", editorial)
+        D["editorial"] = editorial
     current_pairs = read_json(DATA / "legacy_h2h_review.json")
     updated_pairs = extend_h2h(current_pairs, updated_franchises, new_year)
     cfg["current_teams"] = len(updated_franchises)
@@ -428,6 +448,8 @@ def main():
         for key in ("label", "source"):
             if isinstance(entry.get(key), str):
                 entry[key] = entry[key].replace(str(active), str(new_year))
+    if "site_map" in D:
+        write_json(DATA / "site_map.json", D["site_map"])
     write_bootstrap(boot, D)
     print("LFA: transición verificada a " + str(new_year) + " (liga " +
           str(successor["league_id"]) + "), " + str(len(updated_franchises)) +
