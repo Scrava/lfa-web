@@ -159,12 +159,12 @@ function v4RenderRosters(){
 }
 
 async function v4FetchProjections(){
- const state=window.LFA_V4,week=Math.min(18,live.currentWeek+1),key=`2026-${week}`;
+ const state=window.LFA_V4,week=Math.min(18,live.currentWeek+1),key=`${ACTIVE_SEASON}-${week}`;
  if(!live.ready||state.projectionBusy||state.projectionKey===key)return;
  state.projectionBusy=true;state.projectionKey=key;
  try{
   const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),11000);
-  let resp;try{resp=await fetch(`https://api.sleeper.com/projections/nfl/2026/${week}?season_type=regular`,{signal:ctrl.signal})}finally{clearTimeout(timer)}
+  let resp;try{resp=await fetch(`https://api.sleeper.com/projections/nfl/${ACTIVE_SEASON}/${week}?season_type=regular`,{signal:ctrl.signal})}finally{clearTimeout(timer)}
   if(!resp.ok)throw Error('Sin feed de proyecciones');
   const json=await resp.json(),raw=Array.isArray(json)?json:Array.isArray(json?.players)?json.players:Object.values(json||{});
   const map={};

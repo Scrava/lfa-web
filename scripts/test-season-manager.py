@@ -17,7 +17,8 @@ spec.loader.exec_module(manager)
 class LfaSeasonTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.current=json.loads((ROOT/'data'/'live_snapshot.json').read_text())
+        archive=ROOT/'data'/'archive'/'2026.json'
+        cls.current=json.loads(archive.read_text())['snapshot'] if archive.exists() else json.loads((ROOT/'data'/'live_snapshot.json').read_text())
         cls.franchises=json.loads((ROOT/'data'/'franchises.json').read_text())
 
     def completed(self):
@@ -92,6 +93,9 @@ class LfaSeasonTests(unittest.TestCase):
                 manager.DATA=Path(folder)
                 for name in ['seasons.json','editorial.json','legacy_h2h_review.json']:
                     (manager.DATA/name).write_text((ROOT/'data'/name).read_text())
+                if any(int(x['year'])==2026 for x in manager.read_json(manager.DATA/'seasons.json')):
+                    prior=[x for x in manager.read_json(manager.DATA/'seasons.json') if int(x['year'])!=2026]
+                    manager.write_json(manager.DATA/'seasons.json',prior)
                 D=manager.read_bootstrap(ROOT/'data'/'bootstrap.js')
                 manager.update_archive_files(2026,archive,D)
                 self.assertTrue((manager.DATA/'archive'/'2026.json').exists())

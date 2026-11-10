@@ -21,6 +21,7 @@ on:
       - 'data/seasons.json'
       - 'data/archive/**'
       - 'scripts/test-v6.cjs'
+      - 'scripts/test-live-refresh.cjs'
       - 'scripts/test-rivalries.cjs'
       - 'data/live_bootstrap.js'
       - 'index.html'
@@ -47,6 +48,7 @@ jobs:
           node --check lfa-live-refresh.js
           node --check lfa-season-ui.js
           node --check scripts/test-v6.cjs
+          node --check scripts/test-live-refresh.cjs
           node --check scripts/test-rivalries.cjs
           node --check data/live_bootstrap.js
       - name: Verificar recursos principales
@@ -90,5 +92,7 @@ jobs:
         run: |
           python -m py_compile scripts/season_manager.py scripts/sync_sleeper.py
           python scripts/test-season-manager.py -v
+      - name: Probar refresco en vivo sin publicar en Netlify
+        run: node scripts/test-live-refresh.cjs
       - name: Probar edición LFA 8 y funciones NFL
         run: node scripts/test-v6.cjs

@@ -69,7 +69,7 @@ values.h2hMode.value='all';
 windowMock.LFA_RIVALRIES.renderLookup();
 assert.equal((values.h2hResult.innerHTML.match(/data-focus-a=/g)||[]).length,7,'La consulta contra los siete rivales falla');
 values.h2hMode.value='duel';
-values.matrixScope.value='2026';
+values.matrixScope.value=String(data.window.LFA_DATA.league.current_season);
 windowMock.LFA_RIVALRIES.renderAll();
 assert.ok(values.rivalryMatrix.innerHTML.includes('2–0 (1 E)'),'Matriz 2026 incorrecta');
 assert.ok(values.h2hResult.innerHTML.includes('2–0 (1 E)'),'Buscador 2026 diferente al cuadro');

@@ -17,7 +17,9 @@ for(const fragment of ['id="goNextWeek"','season-top-grid','Rumbo a los playoffs
  assert.ok(html.includes(fragment),'Falta elemento '+fragment);
 }
 assert.equal((html.match(/id="standingsLive"/g)||[]).length,1);
-const snapshot=JSON.parse(fs.readFileSync('data/live_snapshot.json','utf8'));
+const current=JSON.parse(fs.readFileSync('data/live_snapshot.json','utf8'));
+const archivedFixture=fs.existsSync('data/archive/2026.json')?JSON.parse(fs.readFileSync('data/archive/2026.json','utf8')).snapshot:null;
+const snapshot=current?.picks?.length?current:(archivedFixture||current);
 const boot=fs.readFileSync('data/bootstrap.js','utf8');
 const D=JSON.parse(boot.trim().replace(/^window\.LFA_DATA\s*=\s*/,'').replace(/;$/,''));
 const refs={};

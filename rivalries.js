@@ -37,7 +37,7 @@
  function detailItem(a,b,p,scopeKey){
    const value=p[scopeKey];
    const text=scopeKey==='old'?formatArchive(value):formatSeason(value);
-   const label=scopeKey==='old'?'Histórico registrado':'Temporada 2026';
+   const label=scopeKey==='old'?'Histórico registrado':'Temporada '+ACTIVE_SEASON;
    return '<div class="rivalry-detail-stat"><small>'+label+'</small><b>'+safe(text)+'</b></div>';
  }
  function renderLookup(){

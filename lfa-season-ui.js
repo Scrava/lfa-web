@@ -12,6 +12,7 @@
  text('.view[data-view="draft"] .eyetop','DRAFT NIGHT · '+year);
  const draftHeader=document.querySelector('.view[data-view="draft"] .panel-header h3');
  if(draftHeader&&draftHeader.firstChild)draftHeader.firstChild.textContent='Draft '+year+' ';
+ text('.view[data-view="records"] .panel-header h3','Marcas destacadas · '+year);
  text('.diario-cover-date','LA VOZ DE LA LIGA · '+year);
  text('.diario-cover-footer','FANTASY FOOTBALL · EDICIÓN Nº'+edition);
  const seasonRecords=document.querySelector('#seasonRecordYear');

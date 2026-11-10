@@ -196,12 +196,12 @@
     const s=statsFor(f.id);
     return [`<span class="cellteam">${window.logoImg(f.id)}${ESC(f.name)}</span>`,s.now,s.old,s.games.map(g=>'S'+g.week).join(', ')||'—'];
    });
-   output.innerHTML=`<h3>${ESC(window.teamName(a))} frente a toda la LFA</h3><div class="tablewrap">${table(['Rival','Balance 2026','Historial','Semanas jugadas'],rows)}</div>`;
+   output.innerHTML=`<h3>${ESC(window.teamName(a))} frente a toda la LFA</h3><div class="tablewrap">${table(['Rival','Balance '+ACTIVE_SEASON,'Historial','Semanas jugadas'],rows)}</div>`;
    return;
   }
   if(!window.franchise(b)||a===b){output.innerHTML='<p class="note">Elegí dos equipos distintos.</p>';return}
   const r=statsFor(b);
-  output.innerHTML=`<div class="rivalry-hero">${window.logoImg(a)}<strong>${ESC(window.teamName(a))}</strong><span>${ESC(r.now)}</span><strong>${ESC(window.teamName(b))}</strong>${window.logoImg(b)}</div><p class="rivalry-foot">2026 · ${r.games.length} cruces disputados · Historial registrado: ${ESC(r.old)}</p>`;
+  output.innerHTML=`<div class="rivalry-hero">${window.logoImg(a)}<strong>${ESC(window.teamName(a))}</strong><span>${ESC(r.now)}</span><strong>${ESC(window.teamName(b))}</strong>${window.logoImg(b)}</div><p class="rivalry-foot">${ACTIVE_SEASON} · ${r.games.length} cruces disputados · Historial registrado: ${ESC(r.old)}</p>`;
  };
  window.v4EnhanceHistory=function(){
   if(typeof prevHistory==='function')prevHistory();
