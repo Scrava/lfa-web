@@ -18,6 +18,25 @@
   return ({QUESTIONABLE:'Q',DOUBTFUL:'D',OUT:'OUT',IR:'IR',INJURED_RESERVE:'IR',SUSPENDED:'SUSP',PUP:'PUP',NFI:'NFI'})[x]||x.slice(0,9);
  }
  function dateLocal(){return new Date().toLocaleDateString('es-AR')}
+ async function getFeed(kind,week){
+  const year='2026';
+  const prefix=kind==='stats'?'stats':'projections';
+  const endpoints=kind==='stats'?[
+   'https://api.sleeper.app/v1/stats/nfl/regular/'+year,
+   'https://api.sleeper.com/stats/nfl/'+year+'?season_type=regular'
+  ]:[
+   'https://api.sleeper.app/v1/projections/nfl/regular/'+year+'/'+week,
+   'https://api.sleeper.com/projections/nfl/'+year+'/'+week+'?season_type=regular'
+  ];
+  let error;
+  for(const url of endpoints){
+   try{
+    const body=await getJSON(url,18000);
+    if(core.mapPpr(body).points&&Object.keys(core.mapPpr(body).points).length)return body;
+   }catch(e){error=e}
+  }
+  throw error||Error('Datos NFL PPR no publicados');
+ }
  async function getJSON(url,ms=13000){
   const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),ms);
   try{
@@ -34,7 +53,7 @@
   try{cached=JSON.parse(sessionStorage.getItem(key)||'null')}catch{}
   try{
    const result=cached?.at&&Date.now()-cached.at<3*3600e3?cached.value:core.mapPpr(
-    await getJSON('https://api.sleeper.com/stats/nfl/2026?season_type=regular',18000)
+    await getFeed('stats')
    );
    if(!Object.keys(result.points||{}).length)throw Error('PPR no publicado');
    season.points=result.points;season.positions=result.positions;
@@ -52,9 +71,9 @@
   const tag='lfa_2026_week_extras_'+w;
   let old;
   try{old=JSON.parse(sessionStorage.getItem(tag)||'null')}catch{}
-  if(old?.at&&Date.now()-old.at<2*3600e3){weekCache.set(w,old.value);busy.delete(w);return}
+  if(old?.at&&Date.now()-old.at<2*3600e3){weekCache.set(w,old.value);busy.delete(w);if(live.ready){window.v4RenderRosters();if(Number(live.selectedWeek)===w)window.v4RenderMatchups()}return}
   const [pr,sch]=await Promise.allSettled([
-   getJSON('https://api.sleeper.com/projections/nfl/2026/'+w+'?season_type=regular',18000),
+   getFeed('projections',w),
    getJSON('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week='+w,13000)
   ]);
   if(pr.status==='fulfilled'){
@@ -125,6 +144,7 @@
   const reserve=new Set((current.reserve||[]).map(String));
   const sorted=players.slice().sort((a,b)=>(starts.includes(a)?0:reserve.has(a)?2:1)-(starts.includes(b)?0:reserve.has(b)?2:1)||String(live.players[a]?.position||'').localeCompare(String(live.players[b]?.position||''))||playerName(a).localeCompare(playerName(b)));
   const tabs=sortedRosters().map(r=>`<button class="roster-tab ${String(r.roster_id)===String(state.selectedRoster)?'selected':''}" type="button" data-roster-open="${esc(r.roster_id)}">${rchip(r.roster_id)}</button>`).join('');
+  if(season.ready)season.ranks=core.ranks(season.points,season.positions,live.players);
   const rows=sorted.map(id=>{
    const p=live.players[id]||{},pos=esc(p.position||'—');
    const role=starts.includes(id)?'TITULAR':reserve.has(id)?'RESERVA':'SUPLENTE';
