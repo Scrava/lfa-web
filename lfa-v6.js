@@ -111,9 +111,18 @@
   const top=Math.min(Number(live.league?.settings?.playoff_teams||4),live.rosters.length);
   const rows=[...$('homeLive').querySelectorAll('.rank-row')];
   rows.forEach((row,i)=>{
-   row.classList.toggle('playoff-spot',i<top);
-   if(i<top&&!row.querySelector('.playoff-gold-marker'))
-    row.insertAdjacentHTML('afterbegin','<span class="playoff-gold-marker" title="Puesto de playoffs" aria-label="Puesto de playoffs">◆</span>');
+   const qualified=i<top,slot=row.querySelector('.inline-logo');
+   row.classList.toggle('playoff-spot',qualified);
+   // El espacio del indicador es idéntico para los ocho equipos.
+   // Va dentro de la columna del nombre, nunca como tercer hijo de la fila.
+   const marker=slot?.querySelector('.playoff-gold-marker');
+   if(marker){
+    marker.classList.toggle('playoff-marker-empty',!qualified);
+    marker.setAttribute('aria-hidden',String(!qualified));
+   }else if(slot){
+    slot.insertAdjacentHTML('afterbegin',
+     '<span class="playoff-gold-marker'+(qualified?'':' playoff-marker-empty')+'" aria-hidden="'+(!qualified)+'" title="'+(qualified?'Zona de playoffs':'')+'">◆</span>');
+   }
   });
   const tableRows=[...$('standingsLive').querySelectorAll('tbody tr')];
   tableRows.forEach((row,i)=>{
@@ -197,13 +206,17 @@
    return raw;
   };
   const col=historical?['Puesto','Jugador','PTS']:['Puesto','Jugador','Rival NFL','PTS','Proy. PPR'];
+  const lineupTable=(players,isStarter)=>
+   table(col,makeRows(players,isStarter)).replace('<table>',`<table class="matchup-player-table ${historical?'matchup-3cols':'matchup-5cols'}">`);
   return `<div class="lineup-team"><h4>${rchip(row.roster_id)} <em>${row.points!=null?numeric(Number(row.points)):'—'} pts</em></h4>${!historical?`<div class="team-projection">Proyección del equipo (PPR) · <b>${projectionLabel}</b>${total&&!total.complete?` <small>(${total.available}/${total.required} disponibles)</small>`:''}</div>`:''}
-   <div class="lineup-label">TITULARES</div><div class="tablewrap lineup-scroll">${table(col,makeRows(starts,true))}</div>
-   <div class="lineup-label">SUPLENTES / BANCO</div><div class="tablewrap lineup-scroll">${table(col,makeRows(bench,false))}</div>
+   <div class="lineup-label">TITULARES</div><div class="tablewrap lineup-scroll">${lineupTable(starts,true)}</div>
+   <div class="lineup-label">SUPLENTES / BANCO</div><div class="tablewrap lineup-scroll">${lineupTable(bench,false)}</div>
    ${!starts.length?'<p class="muted small">Alineación todavía no publicada por Sleeper.</p>':''}</div>`;
  };
  window.v4RenderMatchups=function(){
   const w=Number(live.selectedWeek||live.currentWeek),pairs=matchupPairs(w);
+  const focusedId=window.LFA_V4.openMatch;
+  const focus=pairs.find(([a])=>w+'-'+a.matchup_id===focusedId);
   const renderPair=pair=>{
    const [a,b]=pair,key=w+'-'+a.matchup_id,open=window.LFA_V4.openMatch===key;
    const stage=w<live.currentWeek?'FINAL':w===live.currentWeek?'EN JUEGO':'PRÓXIMA FECHA';
@@ -215,7 +228,12 @@
    };
    return `<div class="matchbox matchbox-clickable"><button type="button" class="match-open" data-open-match="${esc(key)}" aria-expanded="${open?'true':'false'}"><div class="muted small">SEMANA ${w} · ${stage} <span class="open-indicator">${open?'− Cerrar':'+ Ver alineaciones'}</span></div><div class="matchline">${rchip(a.roster_id)}<span class="match-score">${projected(a)}<b>${a.points==null?'—':numeric(Number(a.points))}</b></span></div><div class="divider"></div><div class="matchline">${rchip(b.roster_id)}<span class="match-score">${projected(b)}<b>${b.points==null?'—':numeric(Number(b.points))}</b></span></div></button>${open?`<div class="lineups-grid">${window.v4GameLineup(a,w)}${window.v4GameLineup(b,w)}</div>`:''}</div>`;
   };
-  $('matchupsLive').innerHTML=pairs.length?`<div class="matchups-grid">${pairs.map(renderPair).join('')}</div>`:'<div class="empty">Sleeper todavía no publicó los cruces completos de esta semana.</div>';
+  const shown=focus?[focus]:pairs;
+  const topbar=focus?`<div class="matchup-detail-toolbar">
+   <button type="button" data-close-match class="matchup-back-btn" aria-label="Cerrar enfrentamiento y volver a los cuatro partidos">← Volver a los ${pairs.length} partidos</button>
+   <span>SEMANA ${w} · ENFRENTAMIENTO DETALLADO</span>
+  </div>`:'';
+  $('matchupsLive').innerHTML=pairs.length?topbar+`<div class="matchups-grid ${focus?'matchups-grid--focused':''}">${shown.map(renderPair).join('')}</div>`:'<div class="empty">Sleeper todavía no publicó los cruces completos de esta semana.</div>';
   $('homeWeekLabel').textContent='SEMANA '+live.currentWeek;
   const homePairs=matchupPairs(live.currentWeek);
   $('homeGames').innerHTML=homePairs.length?homePairs.map(([a,b])=>`<div class="matchbox"><button class="match-open" type="button" data-home-match="${esc(a.matchup_id)}"><div class="matchline">${rchip(a.roster_id)}<b>${a.points==null?'—':numeric(Number(a.points))}</b></div><div class="divider"></div><div class="matchline">${rchip(b.roster_id)}<b>${b.points==null?'—':numeric(Number(b.points))}</b></div><span class="open-indicator">Abrir partido ↗</span></button></div>`).join(''):'<div class="empty">Sin enfrentamientos publicados.</div>';
@@ -311,6 +329,11 @@
  const oldRenderHistory=window.renderHistory;
  if(typeof oldRenderHistory==='function')window.renderHistory=function(...args){const r=oldRenderHistory(...args);paintRings();return r};
  document.addEventListener('click',event=>{
+  if(event.target.closest('[data-close-match]')){
+   window.LFA_V4.openMatch=null;
+   window.v4RenderMatchups();
+   return;
+  }
   const go=event.target.closest('[data-page],[data-go]');
   if(go&&['rosters','temporada'].includes(go.dataset.page||go.dataset.go))ensureExtras();
  });

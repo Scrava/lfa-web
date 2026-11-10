@@ -83,6 +83,19 @@ assert.ok(el('playoffView').innerHTML.includes('lfa-ring-icon'),'El playoff no t
 assert.ok(!el('playoffView').innerHTML.includes('🏆'),'Se mantiene el trofeo anterior');
 windowObj.v4RenderMatchups();
 assert.ok(el('matchupsLive').innerHTML.includes('matchbox-clickable'),'No se cargaron partidos');
+const initialMatches=matchupPairs(live.currentWeek);
+assert.equal(initialMatches.length,4,'La fecha de muestra debe tener cuatro partidos');
+assert.equal((el('matchupsLive').innerHTML.match(/data-open-match=/g)||[]).length,4,'La vista normal debe mostrar los cuatro partidos');
+windowObj.LFA_V4.openMatch=live.currentWeek+'-'+initialMatches[1][0].matchup_id;
+windowObj.v4RenderMatchups();
+const expanded=el('matchupsLive').innerHTML;
+assert.ok(expanded.includes('matchups-grid--focused'),'No se expande el partido seleccionado');
+assert.ok(expanded.includes('data-close-match'),'No existe el botón para volver a los partidos');
+assert.equal((expanded.match(/data-open-match=/g)||[]).length,1,'Los otros tres partidos deben ocultarse');
+assert.ok(expanded.includes('matchup-5cols'),'Las alineaciones abiertas deben mostrar las cinco columnas');
+windowObj.LFA_V4.openMatch=null;
+windowObj.v4RenderMatchups();
+assert.equal((el('matchupsLive').innerHTML.match(/data-open-match=/g)||[]).length,4,'La vista completa no se recupera al cerrar');
 const sample=matchupPairs(live.currentWeek)[0][0];
 assert.ok(windowObj.v4GameLineup(sample,live.currentWeek).includes('Rival NFL'),'No se añadió rival NFL');
 assert.ok(windowObj.v4GameLineup(sample,live.currentWeek).includes('Proy. PPR'),'No se añadió proyección');
@@ -95,4 +108,8 @@ assert.ok(el('titleChart').innerHTML.includes('lfa-ring-icon'),'Historia no util
 const order=Object.entries(snapshot.draft.draft_order);
 assert.equal(order.length,8,'Deben mapearse ocho turnos');
 assert.equal(new Set(order.map(x=>x[1])).size,8,'Orden de turnos duplicado');
+const styles=fs.readFileSync('styles.css','utf8');
+assert.ok(styles.includes('#homeLive .playoff-marker-empty'),'Falta la reserva de espacio de los equipos fuera de playoffs');
+assert.ok(styles.includes('.season-matchups-panel .lineup-scroll table.matchup-player-table'),'La tabla expandida no está adaptada al ancho');
+assert.ok(styles.includes('.season-standings-panel #standingsLive tbody tr{height:53px}'),'Las filas de temporada deben tener altura uniforme');
 console.log('OK: Portada, Temporada, Rosters, Mercado, ocho columnas de Draft, logo NFL, anillos y core PPR.');

@@ -787,3 +787,141 @@ footer{color:#acc8da;border-color:#4d7087}
  .diario-cover-footer{font-size:4.1px}
  .ring-display .lfa-ring-icon{height:30px;width:30px}
 }
+
+
+/* LFA · Ajustes de alineación y partido expandido (v6.1) */
+/* Una sola columna de nombre: el rombo siempre ocupa su propia posición interna. */
+#homeLive .rank-row{
+ display:flex;align-items:center;justify-content:space-between;
+ border-left:2px solid transparent;padding-left:8px;
+ gap:9px;min-width:0;
+}
+#homeLive .rank-row.playoff-spot{
+ border-left-color:#dfb65d;padding-left:8px;
+}
+#homeLive .rank-row>.inline-logo{display:flex;align-items:center;gap:5px;flex:1 1 auto;min-width:0;text-align:left}
+#homeLive .rank-row>.inline-logo .cellteam{flex:1;min-width:0;text-align:left}
+#homeLive .rank-row>.inline-logo .cellteam span{overflow-wrap:anywhere}
+#homeLive .rank-row>.inline-logo>.muted{min-width:19px;text-align:right;flex:none}
+#homeLive .rank-row em{margin-left:auto;flex:none;text-align:right}
+#homeLive .playoff-gold-marker{display:inline-flex;width:14px;min-width:14px;align-items:center;justify-content:center;font-size:11px}
+#homeLive .playoff-marker-empty{visibility:hidden}
+/* Dar prioridad a Posiciones y asegurar columnas y líneas de igual ancho en las ocho filas. */
+.season-top-grid{grid-template-columns:minmax(0,1.8fr) minmax(255px,.65fr);gap:13px}
+.season-standings-panel{width:100%;min-width:0}
+.season-standings-panel #standingsLive{width:100%;max-width:100%}
+.season-standings-panel #standingsLive table{
+ width:100%!important;min-width:0!important;table-layout:fixed!important;
+ border-collapse:collapse;
+}
+.season-standings-panel #standingsLive table tr{height:53px}
+.season-standings-panel #standingsLive table th,
+.season-standings-panel #standingsLive table td{
+ box-sizing:border-box;vertical-align:middle;border-bottom:1px solid #48697e;
+ padding:7px 4px;line-height:1.2;
+}
+.season-standings-panel #standingsLive table th:nth-child(1){width:6%}
+.season-standings-panel #standingsLive table th:nth-child(2),
+.season-standings-panel #standingsLive table td:nth-child(2){width:39%;min-width:0!important;white-space:normal!important}
+.season-standings-panel #standingsLive table th:nth-child(3),
+.season-standings-panel #standingsLive table th:nth-child(4),
+.season-standings-panel #standingsLive table th:nth-child(5){width:7%}
+.season-standings-panel #standingsLive table th:nth-child(6),
+.season-standings-panel #standingsLive table th:nth-child(7){width:17%}
+.season-standings-panel #standingsLive .cellteam{display:flex;gap:6px;align-items:center;white-space:normal;min-width:0}
+.season-standings-panel #standingsLive .cellteam img{flex:none}
+.season-standings-panel #standingsLive tbody tr{height:53px}
+.season-standings-panel #standingsLive td:not(:nth-child(2)){text-align:center;font-variant-numeric:tabular-nums}
+.season-standings-panel #standingsLive th:not(:nth-child(2)){text-align:center}
+.season-top-grid>.playoff-panel{width:100%;min-width:0;padding:13px 10px}
+.season-top-grid .playoff-panel>h3{font-size:16px;margin-top:3px}
+/* Al abrir un cruce, los otros desaparecen y el partido ocupa todo el panel. */
+.season-matchups-panel .matchups-grid--focused{display:grid;grid-template-columns:minmax(0,1fr)!important;gap:0}
+.season-matchups-panel .matchups-grid--focused>.matchbox{width:100%;max-width:100%;min-width:0}
+.season-matchups-panel .matchups-grid--focused .match-open{width:100%;text-align:left}
+.matchup-detail-toolbar{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;margin:3px 0 13px;padding-bottom:10px;border-bottom:1px solid #4a6d83}
+.matchup-detail-toolbar>span{font-size:10px;color:#b6d0e0;letter-spacing:.45px;font-weight:800}
+.matchup-back-btn{background:#244d69;border:1px solid #e1b968;color:#ffdc91;font-size:12px;font-weight:900;min-height:42px;padding:9px 13px;border-radius:9px;cursor:pointer}
+.matchup-back-btn:hover,.matchup-back-btn:focus-visible{background:#376582;outline:2px solid #e6bf7e;outline-offset:2px}
+.season-matchups-panel .lineups-grid{grid-template-columns:repeat(2,minmax(0,1fr));width:100%;max-width:100%}
+.season-matchups-panel .lineup-team{width:100%;max-width:100%;min-width:0}
+.season-matchups-panel .lineup-scroll{width:100%;max-width:100%;overflow-x:visible!important}
+.season-matchups-panel .lineup-scroll table.matchup-player-table{
+ min-width:0!important;width:100%!important;max-width:100%!important;
+ table-layout:fixed!important;border-collapse:collapse;
+}
+.season-matchups-panel .lineup-scroll table th,
+.season-matchups-panel .lineup-scroll table td{
+ padding:8px 4px!important;white-space:normal!important;
+ overflow-wrap:anywhere;vertical-align:middle;
+ line-height:1.25;font-size:10px;
+}
+.season-matchups-panel .matchup-5cols th:nth-child(1){width:15%}
+.season-matchups-panel .matchup-5cols th:nth-child(2){width:39%}
+.season-matchups-panel .matchup-5cols th:nth-child(3){width:16%}
+.season-matchups-panel .matchup-5cols th:nth-child(4){width:14%}
+.season-matchups-panel .matchup-5cols th:nth-child(5){width:16%}
+.season-matchups-panel .matchup-3cols th:nth-child(1){width:23%}
+.season-matchups-panel .matchup-3cols th:nth-child(2){width:55%}
+.season-matchups-panel .matchup-3cols th:nth-child(3){width:22%}
+.season-matchups-panel .lineup-scroll table .game-player{display:flex;align-items:center;gap:5px;min-width:0}
+.season-matchups-panel .lineup-scroll .game-player strong{white-space:normal;overflow-wrap:anywhere}
+.season-matchups-panel .lineup-scroll .game-player small{white-space:normal;overflow-wrap:anywhere}
+.season-matchups-panel .lineup-scroll .game-nfl-shield{width:22px;height:22px;flex:none}
+@media(max-width:1120px){
+ .season-top-grid{grid-template-columns:minmax(0,1fr)!important}
+ .season-matchups-panel .lineups-grid{grid-template-columns:minmax(0,1fr)!important}
+}
+@media(max-width:820px){
+ .season-standings-panel #standingsLive table.mobile-compact-table{
+  min-width:0!important;width:100%!important;table-layout:fixed!important;
+ }
+ .season-standings-panel #standingsLive table.mobile-compact-table th:nth-child(2),
+ .season-standings-panel #standingsLive table.mobile-compact-table td:nth-child(2){
+  min-width:0!important;width:39%!important;
+ }
+ .season-standings-panel #standingsLive .cellteam img{width:21px!important;height:21px!important;max-width:21px!important}
+ .season-standings-panel #standingsLive .cellteam{gap:4px;font-size:10px}
+ .season-standings-panel #standingsLive table.mobile-compact-table th,
+ .season-standings-panel #standingsLive table.mobile-compact-table td{padding:7px 2px!important;font-size:9px!important}
+ .season-standings-panel #standingsLive table tr{height:58px}
+ .season-standings-panel #standingsLive tbody tr{height:58px}
+ .season-matchups-panel .lineup-team{padding:7px!important}
+ .season-matchups-panel .lineups-grid{grid-template-columns:minmax(0,1fr)!important}
+ .season-matchups-panel .lineup-scroll{overflow:visible!important}
+ .season-matchups-panel .lineup-scroll table.matchup-player-table{
+  min-width:0!important;max-width:100%!important;width:100%!important;
+  table-layout:fixed!important;
+ }
+ .season-matchups-panel .lineup-scroll table th,
+ .season-matchups-panel .lineup-scroll table td{
+  padding:7px 2px!important;font-size:9px!important;white-space:normal!important;
+  overflow-wrap:anywhere!important;line-height:1.2;
+ }
+ .season-matchups-panel .lineup-scroll table th{font-size:8px!important;letter-spacing:0}
+ .season-matchups-panel .matchup-5cols th:nth-child(1){width:15%}
+ .season-matchups-panel .matchup-5cols th:nth-child(2){width:37%}
+ .season-matchups-panel .matchup-5cols th:nth-child(3){width:17%}
+ .season-matchups-panel .matchup-5cols th:nth-child(4){width:14%}
+ .season-matchups-panel .matchup-5cols th:nth-child(5){width:17%}
+ .season-matchups-panel .game-nfl-shield{width:17px!important;height:17px!important}
+ .season-matchups-panel .game-player{gap:3px!important}
+ .season-matchups-panel .game-player strong{font-size:9px!important;line-height:1.2}
+ .season-matchups-panel .game-player small{font-size:8px!important}
+ .season-matchups-panel .lineup-slot{font-size:8px!important;padding:2px!important}
+ .season-matchups-panel .nfl-opponent{font-size:9px}
+ .matchup-detail-toolbar{gap:8px}
+ .matchup-detail-toolbar>span{font-size:9px}
+ .matchup-back-btn{width:100%;text-align:center}
+}
+@media(max-width:365px){
+ .season-matchups-panel .lineup-team{padding:5px!important}
+ .season-matchups-panel .lineup-scroll table th,
+ .season-matchups-panel .lineup-scroll table td{font-size:8.5px!important;padding:6px 1px!important}
+ .season-matchups-panel .matchup-5cols th:nth-child(1){width:14%}
+ .season-matchups-panel .matchup-5cols th:nth-child(2){width:36%}
+ .season-matchups-panel .matchup-5cols th:nth-child(3){width:18%}
+ .season-matchups-panel .matchup-5cols th:nth-child(4){width:15%}
+ .season-matchups-panel .matchup-5cols th:nth-child(5){width:17%}
+ .season-matchups-panel .game-nfl-shield{width:15px!important;height:15px!important}
+}
