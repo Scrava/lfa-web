@@ -55,13 +55,19 @@ def roster_franchises(snapshot, franchises):
     users = {str(x.get("user_id")): x for x in snapshot["users"]}
     mapping = {}
     for r in snapshot["rosters"]:
-        user = users.get(str(r.get("owner_id")), {})
-        values = [r.get("metadata", {}).get("team_name"),
-                  user.get("metadata", {}).get("team_name"),
-                  user.get("display_name")]
-        matches = [f for f in franchises if any(norm(v) and norm(v) in {
-            norm(z) for z in [f.get("name"), f.get("manager"), *(f.get("aliases") or []), *(f.get("manager_aliases") or [])]
-        } for v in values)]
+        owner = str(r.get("owner_id") or "")
+        stable = [f for f in franchises if f.get("sleeper_user_id") and str(f["sleeper_user_id"]) == owner]
+        if stable:
+            matches = stable
+        else:
+            user = users.get(owner, {})
+            values = [(r.get("metadata") or {}).get("team_name"),
+                      (user.get("metadata") or {}).get("team_name"),
+                      user.get("display_name")]
+            matches = [f for f in franchises if any(norm(v) and norm(v) in {
+                norm(z) for z in [f.get("name"), f.get("manager"), *(f.get("aliases") or []),
+                                  *(f.get("manager_aliases") or [])]
+            } for v in values)]
         if len(matches) != 1:
             raise ValueError("No se puede asociar inequívocamente roster " + str(r.get("roster_id")) + " a franquicia LFA")
         mapping[str(r["roster_id"])] = matches[0]["id"]
