@@ -19,7 +19,9 @@ for(const fragment of ['id="goNextWeek"','season-top-grid','Rumbo a los playoffs
 assert.equal((html.match(/id="standingsLive"/g)||[]).length,1);
 const current=JSON.parse(fs.readFileSync('data/live_snapshot.json','utf8'));
 const archivedFixture=fs.existsSync('data/archive/2026.json')?JSON.parse(fs.readFileSync('data/archive/2026.json','utf8')).snapshot:null;
-const snapshot=current?.picks?.length?current:(archivedFixture||current);
+const latestRounds=Object.values(current?.matchups||{}).filter(Array.isArray);
+const hasMatchups=latestRounds.some(rows=>rows.length>=current.rosters.length);
+const snapshot=current?.picks?.length&&hasMatchups?current:(archivedFixture||current);
 const boot=fs.readFileSync('data/bootstrap.js','utf8');
 const D=JSON.parse(boot.trim().replace(/^window\.LFA_DATA\s*=\s*/,'').replace(/;$/,''));
 const refs={};
@@ -86,8 +88,9 @@ assert.ok(!el('playoffView').innerHTML.includes('🏆'),'Se mantiene el trofeo a
 windowObj.v4RenderMatchups();
 assert.ok(el('matchupsLive').innerHTML.includes('matchbox-clickable'),'No se cargaron partidos');
 const initialMatches=matchupPairs(live.currentWeek);
-assert.equal(initialMatches.length,4,'La fecha de muestra debe tener cuatro partidos');
-assert.equal((el('matchupsLive').innerHTML.match(/data-open-match=/g)||[]).length,4,'La vista normal debe mostrar los cuatro partidos');
+const expectedMatches=live.rosters.length/2;
+assert.equal(initialMatches.length,expectedMatches,'La fecha de muestra debe tener todos los partidos');
+assert.equal((el('matchupsLive').innerHTML.match(/data-open-match=/g)||[]).length,expectedMatches,'La vista normal debe mostrar todos los partidos');
 windowObj.LFA_V4.openMatch=live.currentWeek+'-'+initialMatches[1][0].matchup_id;
 windowObj.v4RenderMatchups();
 const expanded=el('matchupsLive').innerHTML;
@@ -97,7 +100,7 @@ assert.equal((expanded.match(/data-open-match=/g)||[]).length,1,'Los otros tres 
 assert.ok(expanded.includes('matchup-5cols'),'Las alineaciones abiertas deben mostrar las cinco columnas');
 windowObj.LFA_V4.openMatch=null;
 windowObj.v4RenderMatchups();
-assert.equal((el('matchupsLive').innerHTML.match(/data-open-match=/g)||[]).length,4,'La vista completa no se recupera al cerrar');
+assert.equal((el('matchupsLive').innerHTML.match(/data-open-match=/g)||[]).length,expectedMatches,'La vista completa no se recupera al cerrar');
 const sample=matchupPairs(live.currentWeek)[0][0];
 assert.ok(windowObj.v4GameLineup(sample,live.currentWeek).includes('Rival NFL'),'No se añadió rival NFL');
 assert.ok(windowObj.v4GameLineup(sample,live.currentWeek).includes('Proy. PPR'),'No se añadió proyección');
