@@ -55,8 +55,8 @@
          '<td><button class="rivalry-action" type="button" data-focus-a="'+safe(a)+'" data-focus-b="'+safe(t.id)+'">Ver cruce</button></td></tr>';
      }).join('');
      output.innerHTML='<h3>'+safe(teamName(a))+' frente a los otros siete</h3>'+
-       '<div class="rivalry-results-scroll"><table class="rivalry-result-table"><thead><tr><th>Rival</th><th>Histórico</th><th>2026</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
-       '<p class="rivalry-foot">Histórico: temporada regular y playoffs registrados. El año 2026 se muestra por separado.</p>';
+       '<div class="rivalry-results-scroll"><table class="rivalry-result-table"><thead><tr><th>Rival</th><th>Histórico</th><th>'+ACTIVE_SEASON+'</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
+       '<p class="rivalry-foot">Histórico: temporada regular y playoffs registrados. El año '+ACTIVE_SEASON+' se muestra por separado.</p>';
      return;
    }
    if(a===b||!teams.find(t=>t.id===b)){output.innerHTML='<p class="note">Elegí dos franquicias distintas.</p>';return}

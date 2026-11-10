@@ -18,7 +18,9 @@ import time
 ROOT=Path(__file__).resolve().parents[1]
 DATA=ROOT/'data'
 API='https://api.sleeper.app/v1/'
-LEAGUE_ID='1388976988894543872'
+LEAGUE_CONFIG=json.loads((DATA/'league.json').read_text(encoding='utf-8'))
+LEAGUE_ID=str(LEAGUE_CONFIG['sleeper_league_id'])
+SEASON=str(LEAGUE_CONFIG['current_season'])
 
 def get(path:str):
     req=Request(API+path,headers={'Accept':'application/json','User-Agent':'LFA-archive/1.0 (noncommercial)'})
@@ -78,7 +80,7 @@ def completed_matchups(matchups,week,playoff_start):
 def build_news(now,league,users,rosters,matchups,transactions,players,week):
     stamp=now.isoformat();news=[]
     def add(category,title,description,fact,tag):
-        news.append({'id':tag,'category':category,'title':title,'description':description,'fact':fact,'updated_at':stamp,'source':'Sleeper API','season':2026})
+        news.append({'id':tag,'category':category,'title':title,'description':description,'fact':fact,'updated_at':stamp,'source':'Sleeper API','season':int(SEASON)})
     stands=sorted(rosters,key=lambda r:(-int(r.get('settings',{}).get('wins') or 0),int(r.get('settings',{}).get('losses') or 0),-float(r.get('settings',{}).get('fpts') or 0)))
     if stands:
         top,bot=stands[0],stands[-1]
@@ -114,14 +116,14 @@ def main():
     now=datetime.now(timezone.utc)
     # La validación de temporada va antes de escribir cualquier archivo.
     league=get(f'league/{LEAGUE_ID}')
-    if not isinstance(league,dict) or str(league.get('league_id'))!=LEAGUE_ID or str(league.get('season'))!='2026':
-        raise RuntimeError('Sleeper no confirmó la liga 2026: no se actualizará nada.')
+    if not isinstance(league,dict) or str(league.get('league_id'))!=LEAGUE_ID or str(league.get('season'))!=SEASON:
+        raise RuntimeError('Sleeper no confirmó la temporada '+SEASON+': no se actualizará nada.')
     with ThreadPoolExecutor(max_workers=4) as pool:
         futures={k:pool.submit(get,k) for k in [f'league/{LEAGUE_ID}/users',f'league/{LEAGUE_ID}/rosters','state/nfl',f'league/{LEAGUE_ID}/drafts',f'league/{LEAGUE_ID}/winners_bracket']}
         answers={k:f.result() for k,f in futures.items()}
     users=answers[f'league/{LEAGUE_ID}/users'];rosters=answers[f'league/{LEAGUE_ID}/rosters'];nfl=answers['state/nfl']
     if not isinstance(users,list) or not isinstance(rosters,list) or len(rosters)<1:raise RuntimeError('Sleeper devolvió usuarios/rosters incompletos.')
-    week=max(1,min(18,int(nfl.get('week') or 1)))
+    week=max(1,min(18,int(nfl.get('week') or 1))) if str(nfl.get('season'))==SEASON and league.get('status') not in ('pre_draft','drafting') else 1
     paths=[(i,f'league/{LEAGUE_ID}/{kind}/{i}') for i in range(1,week+1) for kind in ('matchups','transactions')]
     matchups={};transactions={}
     with ThreadPoolExecutor(max_workers=5) as pool:
@@ -132,7 +134,7 @@ def main():
             except Exception as exc:raise RuntimeError(f'Error de sincronización en {p}: {exc}')
             (matchups if '/matchups/' in p else transactions)[str(i)]=data
     drafts=answers[f'league/{LEAGUE_ID}/drafts'] or []
-    draft=next((d for d in drafts if str(d.get('draft_id'))==str(league.get('draft_id'))),None) or next((d for d in drafts if str(d.get('season'))=='2026'),None)
+    draft=next((d for d in drafts if str(d.get('draft_id'))==str(league.get('draft_id'))),None) or next((d for d in drafts if str(d.get('season'))==SEASON),None)
     picks=get(f'draft/{draft["draft_id"]}/picks') if draft else []
     bracket=answers[f'league/{LEAGUE_ID}/winners_bracket'] or []
     try:players,fetched=update_catalog(now)
@@ -148,6 +150,7 @@ def main():
     news=build_news(now,league,users,rosters,matchups,transactions,players,week)
     write_json(DATA/'live_snapshot.json',snap)
     write_json(DATA/'auto_news.json',news)
+    (DATA/'live_bootstrap.js').write_text('/* Respaldo verificable LFA '+SEASON+' desde Sleeper. */\nwindow.LFA_INITIAL_SNAPSHOT='+json.dumps(snap,ensure_ascii=False,separators=(',',':'))+';\n',encoding='utf-8')
     print(f'LFA {LEAGUE_ID}: temporada {league["season"]}, semana {week}, {len(rosters)} rosters, {len(picks)} picks, {len(news)} noticias. Catálogo: {len(players)} jugadores. {now.isoformat()}')
 
 if __name__=='__main__':main()

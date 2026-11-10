@@ -11,6 +11,15 @@ on:
       - 'rivalry-core.js'
       - 'lfa-stats-core.js'
       - 'lfa-v6.js'
+      - 'lfa-live-refresh.js'
+      - 'lfa-season-ui.js'
+      - 'scripts/season_manager.py'
+      - 'scripts/sync_sleeper.py'
+      - 'scripts/test-season-manager.py'
+      - 'data/league.json'
+      - 'data/bootstrap.js'
+      - 'data/seasons.json'
+      - 'data/archive/**'
       - 'scripts/test-v6.cjs'
       - 'scripts/test-rivalries.cjs'
       - 'data/live_bootstrap.js'
@@ -35,6 +44,8 @@ jobs:
           node --check rivalry-core.js
           node --check lfa-stats-core.js
           node --check lfa-v6.js
+          node --check lfa-live-refresh.js
+          node --check lfa-season-ui.js
           node --check scripts/test-v6.cjs
           node --check scripts/test-rivalries.cjs
           node --check data/live_bootstrap.js
@@ -54,7 +65,8 @@ jobs:
           const env={window:{}};
           vm.runInNewContext(fs.readFileSync('data/live_bootstrap.js','utf8'),env);
           const snap=env.window.LFA_INITIAL_SNAPSHOT;
-          if(String(snap?.league_id)!=='1388976988894543872'||snap.rosters.length!==8||!Object.keys(snap.matchups).length)throw Error('El respaldo LFA no es válido');
+          const cfg=JSON.parse(fs.readFileSync('data/league.json','utf8'));
+          if(String(snap?.league_id)!==String(cfg.sleeper_league_id)||snap.rosters.length!==8||!Object.keys(snap.matchups).length)throw Error('El respaldo LFA no es válido');
           console.log('Respaldo LFA verificado, semana',snap.week);
           const html=fs.readFileSync('index.html','utf8');
           const css=fs.readFileSync('styles.css','utf8');
@@ -74,5 +86,9 @@ jobs:
           NODE
       - name: Probar consistencia del cuadro y buscador de paternidades
         run: node scripts/test-rivalries.cjs
+      - name: Verificar continuidad entre temporadas
+        run: |
+          python -m py_compile scripts/season_manager.py scripts/sync_sleeper.py
+          python -m unittest discover -s scripts -p 'test-season-manager.py' -v
       - name: Probar edición LFA 8 y funciones NFL
         run: node scripts/test-v6.cjs

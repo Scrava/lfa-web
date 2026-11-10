@@ -67,7 +67,7 @@ vm.runInNewContext(fs.readFileSync('lfa-v6.js','utf8'),context);
 live.ready=true;
 windowObj.LFA_V4.selectedRoster=String(live.rosters[0].roster_id);
 windowObj.v4RenderRosters();
-assert.ok(el('rosterGrid').innerHTML.includes('PTS PPR 2026'),'No aparece PPR total en Rosters');
+assert.ok(el('rosterGrid').innerHTML.includes('PTS PPR '+D.league.current_season),'No aparece PPR total en Rosters');
 assert.ok(el('rosterGrid').innerHTML.includes('Rank PPR'),'No aparece ranking PPR');
 assert.ok(!el('rosterGrid').innerHTML.includes('<th>Estado</th>'),'Persistió columna Estado');
 assert.ok(!el('rosterGrid').innerHTML.includes('<th>Proyección PPR</th>'),'Persistió proyección en Rosters');

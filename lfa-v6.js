@@ -74,7 +74,7 @@
   if(old?.at&&Date.now()-old.at<2*3600e3){weekCache.set(w,old.value);busy.delete(w);if(live.ready){window.v4RenderRosters();if(Number(live.selectedWeek)===w)window.v4RenderMatchups()}return}
   const [pr,sch]=await Promise.allSettled([
    getFeed('projections',w),
-   getJSON('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=2026&seasontype=2&week='+w,13000)
+   getJSON('https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates='+ACTIVE_SEASON+'&seasontype=2&week='+w,13000)
   ]);
   if(pr.status==='fulfilled'){
    record.projections=core.mapPpr(pr.value).points;
