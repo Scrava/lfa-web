@@ -152,7 +152,7 @@ function v4RenderRosters(){
  const order=id=>starts.includes(id)?0:reserve.has(id)?2:1;
  const sorted=players.slice().sort((a,b)=>order(a)-order(b)||String(live.players[a]?.position||'').localeCompare(String(live.players[b]?.position||''))||playerName(a).localeCompare(playerName(b)));
  const tabs=sortedRosters().map(r=>`<button type="button" class="roster-tab ${String(r.roster_id)===state.selectedRoster?'selected':''}" data-roster-open="${esc(r.roster_id)}">${rchip(r.roster_id)}</button>`).join('');
- target.innerHTML=`<div class="roster-switcher">${tabs}</div><div class="roster-header"><div><span class="eyetop">PLANTEL 2026</span><h2>${rchip(current.roster_id)}</h2><p>${players.length} jugadores · ${starts.length} titulares · ${reserve.size} en reserva</p></div><div class="projection-note">Proyecciones PPR · Semana ${next}<small>${Object.keys(state.projections||{}).length?'Valores publicados en el feed de proyecciones de Sleeper; pueden diferir de la puntuación personalizada de LFA.':'Proyecciones no disponibles actualmente'}</small></div></div>
+ target.innerHTML=`<div class="roster-switcher">${tabs}</div><div class="roster-header"><div><span class="eyetop">PLANTEL ${ACTIVE_SEASON}</span><h2>${rchip(current.roster_id)}</h2><p>${players.length} jugadores · ${starts.length} titulares · ${reserve.size} en reserva</p></div><div class="projection-note">Proyecciones PPR · Semana ${next}<small>${Object.keys(state.projections||{}).length?'Valores publicados en el feed de proyecciones de Sleeper; pueden diferir de la puntuación personalizada de LFA.':'Proyecciones no disponibles actualmente'}</small></div></div>
  <div class="tablewrap">${table(['Rol','Jugador','NFL','Estado','Proyección PPR'],sorted.map(id=>{const p=live.players[id]||{};const role=starts.includes(id)?'TITULAR':reserve.has(id)?'RESERVA':'BANCO';const projected=score(id);
  return [`<span class="lineup-slot">${role}</span>`,`<strong>${esc(playerName(id))}</strong> <small>${esc(p.position||'—')}</small>`,esc(p.team||'FA'),`<span class="${p.injury_status?'status-tag':''}">${esc(p.injury_status||'—')}</span>`,Number.isFinite(projected)?fmt(projected):'—'];
  }))}</div>`;
@@ -226,7 +226,7 @@ function v4RenderComparison(){
 }
 
 function v4HistoricalRows(){
- const source=D.legacy_stats_review||[],finished=live.ready?completedGames().filter(g=>g.type==='regular'):[];
+ const source=D.legacy_stats_review||[],finished=ACTIVE_SEASON===2026&&live.ready?completedGames().filter(g=>g.type==='regular'):[];
  const before=finished.filter(g=>g.week>=1&&g.week<=8),after=finished.filter(g=>g.week>8);
  return D.franchises.map(f=>{
   const current=live.rosters.find(r=>assigned(r)?.id===f.id),rid=current?.roster_id;
@@ -259,12 +259,12 @@ function v4EnhanceHistory(){
  const finals=D.seasons.filter(s=>s.official).map(s=>({year:s.year,type:'editorial',title:`${s.year}: ${s.champion_name} escribe su capítulo`,description:`${s.champion_name} levantó el título frente a ${s.runner_up_name}, por ${fmt(s.final_score.champion)} a ${fmt(s.final_score.runner_up)}. Los campeonatos se recuerdan; las excusas se guardan para la próxima edición.`,fact:`Final ${s.year} · Diferencia ${fmt(Math.abs(s.final_score.champion-s.final_score.runner_up))} puntos`}));
  if(live.ready&&live.picks.length){
   const top=live.picks.slice().sort((a,b)=>Number(a.pick_no)-Number(b.pick_no))[0];
-  if(top?.player_id)stories.push({year:2026,type:'editorial',title:'El primer nombre de la noche del draft',description:`${rname(top.roster_id)} abrió el tablero del Draft 2026 seleccionando a ${playerName(top.player_id)}. La elección queda escrita en el libro de las primeras decisiones.`,fact:'Elección #1 del Draft LFA 2026'});
+  if(top?.player_id)stories.push({year:ACTIVE_SEASON,type:'editorial',title:'El primer nombre de la noche del draft',description:`${rname(top.roster_id)} abrió el tablero del Draft ${ACTIVE_SEASON} seleccionando a ${playerName(top.player_id)}. La elección queda escrita en el libro de las primeras decisiones.`,fact:`Elección #1 del Draft LFA ${ACTIVE_SEASON}`});
  }
  if(live.ready){
   const cancelled=Object.values(live.transactions).flat().filter(t=>t.type==='trade'&&['failed','vetoed','cancelled'].includes(t.status));
   if(cancelled.length){
-   const x=cancelled[0];stories.push({year:2026,type:'editorial',title:'Un trade que quedó en el camino',description:`La operación entre ${x.roster_ids?.map(rname).join(' y ')||'dos franquicias'} no terminó completada. La oficina del comisionado tiene una historia más para contar.`,fact:`Estado de operación registrado: ${x.status}`});
+   const x=cancelled[0];stories.push({year:ACTIVE_SEASON,type:'editorial',title:'Un trade que quedó en el camino',description:`La operación entre ${x.roster_ids?.map(rname).join(' y ')||'dos franquicias'} no terminó completada. La oficina del comisionado tiene una historia más para contar.`,fact:`Estado de operación registrado: ${x.status}`});
   }
  }
  const all=[...stories,...finals].sort((a,b)=>b.year-a.year);
@@ -280,15 +280,21 @@ function v4ShowFranchise(id){
  const champion=D.seasons.filter(s=>s.official&&s.champion_franchise_id===id).map(s=>s.year),runner=D.seasons.filter(s=>s.official&&s.runner_up_franchise_id===id).map(s=>s.year),regular=D.standings_2025.find(s=>s.franchise_id===id);
  const current=live.rosters.find(r=>assigned(r)?.id===id),now=current?record(current):null;
  $('franchiseDetail').innerHTML=`<div class="franchise-profile"><div class="franchise-profile-head">${logoImg(id)}<div><div class="eyetop">PERFIL DE FRANQUICIA</div><h2>${esc(f.name)}</h2><p>General Manager: <strong>${esc(f.manager)}</strong></p></div></div>
- <div class="franchise-summary"><div><span>TÍTULOS</span><strong>${titles(id)}</strong></div><div><span>FINALES</span><strong>${finals(id)}</strong></div><div><span>RECORD 2026</span><strong>${now?`${now.wins}–${now.losses}`:'—'}</strong></div><div><span>HISTÓRICO*</span><strong>${recordLegacy?.wins!=null?`${recordLegacy.wins}–${recordLegacy.losses??'?'}`:'—'}</strong></div></div>
- <div class="grid two spaced"><div class="franchise-section"><h3>Palmarés</h3><p><b>Campeonatos:</b> ${champion.length?champion.join(', '):'Sin campeonatos'}</p><p><b>Subcampeonatos:</b> ${runner.length?runner.join(', '):'Sin subcampeonatos registrados'}</p></div><div class="franchise-section"><h3>Rendimiento por temporada</h3><p><b>2025:</b> ${regular?`${regular.wins} G – ${regular.losses} P · ${fmt(regular.pf)} PF`:'Sin registros completos'}</p><p><b>2026:</b> ${now?`${fmt(now.pf)} PF · ${fmt(now.pa)} PA`:'Esperando resultados'}</p></div></div>
+ <div class="franchise-summary"><div><span>TÍTULOS</span><strong>${titles(id)}</strong></div><div><span>FINALES</span><strong>${finals(id)}</strong></div><div><span>RÉCORD ACTUAL</span><strong>${now?`${now.wins}–${now.losses}`:'—'}</strong></div><div><span>HISTÓRICO*</span><strong>${recordLegacy?.wins!=null?`${recordLegacy.wins}–${recordLegacy.losses??'?'}`:'—'}</strong></div></div>
+ <div class="grid two spaced"><div class="franchise-section"><h3>Palmarés</h3><p><b>Campeonatos:</b> ${champion.length?champion.join(', '):'Sin campeonatos'}</p><p><b>Subcampeonatos:</b> ${runner.length?runner.join(', '):'Sin subcampeonatos registrados'}</p></div><div class="franchise-section"><h3>Rendimiento por temporada</h3><p><b>2025:</b> ${regular?`${regular.wins} G – ${regular.losses} P · ${fmt(regular.pf)} PF`:'Sin registros completos'}</p><p><b>Actual:</b> ${now?`${fmt(now.pf)} PF · ${fmt(now.pa)} PA`:'Esperando resultados'}</p></div></div>
  <small class="muted">*Récord histórico provisional.</small></div>`;
 }
 
 function v4RenderSeasons(){
  const select=$('seasonRecordYear');if(!select)return;
  const year=Number(select.value);
- if(year===2026){const rows=sortedRosters().map((r,i)=>{const x=record(r);return [i+1,rchip(r.roster_id),x.wins,x.losses,fmt(x.pf),fmt(x.pa)]});$('seasonRecords').innerHTML=`<div class="tablewrap">${table(['#','Equipo','G','P','PF','PA'],rows)}</div>`;return}
+ if(year===ACTIVE_SEASON){const rows=sortedRosters().map((r,i)=>{const x=record(r);return [i+1,rchip(r.roster_id),x.wins,x.losses,fmt(x.pf),fmt(x.pa)]});$('seasonRecords').innerHTML=`<div class="tablewrap">${table(['#','Equipo','G','P','PF','PA'],rows)}</div>`;return}
+ const archived=D.archived_seasons?.[String(year)];
+ if(archived?.standings?.length){
+  const rows=archived.standings.map(r=>[r.rank,logoImg(r.franchise_id)+esc(teamName(r.franchise_id)),r.wins,r.losses,fmt(r.pf),fmt(r.pa)]);
+  $('seasonRecords').innerHTML=`<div class="tablewrap">${table(['#','Equipo','G','P','PF','PA'],rows)}</div><p class="muted small">Temporada ${year} · Resultados finales archivados desde Sleeper.</p>`;
+  return;
+ }
  if(year===2025){const rows=D.standings_2025.map(r=>[r.rank,logoImg(r.franchise_id)+esc(teamName(r.franchise_id)),r.wins,r.losses,fmt(r.pf),fmt(r.pa)]);$('seasonRecords').innerHTML=`<div class="tablewrap">${table(['#','Equipo','G','P','PF','PA'],rows)}</div>`;return}
  const rows=(D.legacy_stats_review||[]).filter(r=>r.franchise_id&&r.season_points?.[year]!=null&&Number(r.season_points[year])>0).sort((a,b)=>Number(b.season_points[year])-Number(a.season_points[year])).map((r,i)=>[i+1,logoImg(r.franchise_id)+esc(teamName(r.franchise_id)),fmt(Number(r.season_points[year]))]);
  $('seasonRecords').innerHTML=`<div class="tablewrap">${table(['#','Franquicia','Puntos a favor registrados'],rows)}</div><p class="muted small">Para este año no hay resultados semanales completos en el archivo disponible.</p>`;

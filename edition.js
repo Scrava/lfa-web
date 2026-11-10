@@ -118,7 +118,7 @@
    return [`<span class="lineup-slot">${role}</span>`,`<b>${ESC(p.position||'—')}</b>`,`<span class="roster-player-cell">${icon}<strong>${ESC(window.playerName(id))}</strong></span>`,`<span class="roster-nfl-name">${ESC(nflName(p.team))}</span>`,`<span class="${p.injury_status?'status-tag':''}">${ESC(p.injury_status||'—')}</span>`,projected];
   });
   target.innerHTML=`<div class="roster-switcher">${tabs}</div>
-   <div class="roster-header"><div><span class="eyetop">PLANTEL 2026</span><h2>${window.rchip(current.roster_id)}</h2><p>${players.length} jugadores · ${starts.length} titulares · ${reserve.size} en reserva</p></div>
+   <div class="roster-header"><div><span class="eyetop">PLANTEL ${ACTIVE_SEASON}</span><h2>${window.rchip(current.roster_id)}</h2><p>${players.length} jugadores · ${starts.length} titulares · ${reserve.size} en reserva</p></div>
    <div class="projection-note">Proyección · Semana ${week}<small>Proyección PPR si Sleeper la publica. Puede diferir de la puntuación propia de la LFA.</small></div></div>
    <div class="tablewrap roster-table">${table(['Rol','Posición','Jugador','Equipo NFL','Estado','Proyección PPR'],rows)}</div>`;
  };

@@ -19,7 +19,7 @@
  // Mostramos 0–0 cuando hay un registro histórico formal de 0 encuentros.
  const formatArchive=v=>v?v.wins+'–'+v.losses:'—';
  const formatSeason=v=>v&&v.count?v.wins+'–'+v.losses+(v.ties?' ('+v.ties+' E)':''):'—';
- const tableView=()=>scope.value==='2026'?'year':'old';
+ const tableView=()=>scope.value===String(ACTIVE_SEASON)?'year':'old';
  function ensureOptions(){
    if(!teams.length)return;
    const valid=new Set(teams.map(f=>f.id));
@@ -68,10 +68,10 @@
      'Sin registros históricos';
    const yearSubtitle=year?.count?
      year.count+' cruces cerrados · Semanas '+(year.weeks||[]).join(', '):
-     'Sin enfrentamientos de 2026 cerrados';
+     'Sin enfrentamientos cerrados en '+ACTIVE_SEASON;
    output.innerHTML='<div class="rivalry-duel">'+
      '<div class="rivalry-duel-team">'+teamLogo(a)+'<strong>'+safe(teamName(a))+'</strong></div>'+
-     '<div class="rivalry-duel-score"><small>'+safe(focus==='old'?'HISTORIAL REGISTRADO':'2026')+'</small><b>'+safe(primary)+'</b></div>'+
+     '<div class="rivalry-duel-score"><small>'+safe(focus==='old'?'HISTORIAL REGISTRADO':String(ACTIVE_SEASON))+'</small><b>'+safe(primary)+'</b></div>'+
      '<div class="rivalry-duel-team">'+teamLogo(b)+'<strong>'+safe(teamName(b))+'</strong></div></div>'+
      '<div class="rivalry-detail-grid">'+detailItem(a,b,p,'old')+detailItem(a,b,p,'year')+'</div>'+
      '<p class="rivalry-foot">'+safe(oldSubtitle)+'<span class="rivalry-foot-divider"> · </span>'+safe(yearSubtitle)+'</p>';
@@ -81,8 +81,8 @@
   if(teams.length!==8){matrix.innerHTML='<p class="empty">Cuadro no disponible.</p>';return}
   const focus=tableView();
   note.textContent=focus==='old'?
-   'Historial registrado: fase regular y playoffs. La temporada 2026 se consulta por separado.':
-   'Temporada 2026: solamente enfrentamientos finalizados de fase regular.';
+   'Historial registrado: fase regular y playoffs. La temporada '+ACTIVE_SEASON+' se consulta por separado.':
+   'Temporada '+ACTIVE_SEASON+': solamente enfrentamientos finalizados de fase regular.';
   const heads=teams.map(t=>'<th scope="col" title="'+safe(t.name)+'"><span class="matrix-team">'+teamLogo(t.id)+'<small>'+safe(t.name)+'</small></span></th>').join('');
   const rows=teams.map(a=>'<tr><th scope="row"><span class="matrix-row-team">'+teamLogo(a.id)+'<b>'+safe(a.name)+'</b></span></th>'+
    teams.map(b=>{

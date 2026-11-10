@@ -1,6 +1,8 @@
 /* LFA V3 — sin dependencias. Datos 2026 desde Sleeper; históricos documentados o en revisión. */
 'use strict';
 const D=window.LFA_DATA;
+const ACTIVE_SEASON=Number(D.league.current_season||2026);
+window.LFA_ACTIVE_SEASON=ACTIVE_SEASON;
 const $=id=>document.getElementById(id);
 const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const normal=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -11,10 +13,10 @@ const teamName=id=>franchise(id)?.name||id||'Sin identificar';
 const logo=id=>franchise(id)?.logo||'';
 const logoImg=(id,cls='')=>logo(id)?`<img class="${cls}" src="${esc(logo(id))}" alt="Escudo ${esc(teamName(id))}" loading="lazy">`:'';
 const table=(head,rows)=>`<table><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(cell=>`<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-const LIVE_ID=D.league.sleeper_league_id;
+const LIVE_ID=String(D.league.sleeper_league_id);
 const API_ROOT='https://api.sleeper.app/v1/';
 let live={ready:false,league:null,users:[],rosters:[],nfl:null,currentWeek:1,selectedWeek:1,bracket:[],draft:null,picks:[],matchups:{},transactions:{},players:{},news:[],syncedAt:null,snapshot:false,mappings:{}};
-try{live.mappings=JSON.parse(localStorage.getItem('lfa_roster_map_2026')||'{}')||{}}catch{live.mappings={}}
+try{live.mappings=JSON.parse(localStorage.getItem('lfa_roster_map_'+ACTIVE_SEASON)||'{}')||{}}catch{live.mappings={}}
 function roster(id){return live.rosters.find(r=>String(r.roster_id)===String(id))}
 function user(r){return live.users.find(u=>String(u.user_id)===String(r?.owner_id))||{}}
 function sleeperName(r){const u=user(r);return String(r?.metadata?.team_name||u.metadata?.team_name||u.display_name||`Roster #${r?.roster_id||'?'}`)}
@@ -32,7 +34,7 @@ function api(path,timeout=15000){const ctrl=new AbortController(),timer=setTimeo
 async function jsonLocal(path){const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw Error('Sin snapshot');return r.json()}
 function setStatus(ok,message,snapshot=false){$('apiDot').classList.toggle('ok',ok);$('apiText').textContent=message;
  $('sourceStatus').textContent=ok?message:'Sin conexión verificada';$('liveNotice').textContent=ok?`${live.league?.name||'LFA'} · ${snapshot?'Última actualización guardada':'En vivo'} · ${live.syncedAt?dt(new Date(live.syncedAt).getTime()):'—'}`:'Datos en vivo no disponibles temporalmente.';
- $('syncInfo').textContent=ok?`2026 · ${snapshot?'Snapshot':'Sleeper en vivo'} · ${live.syncedAt?dt(new Date(live.syncedAt).getTime()):'consultando'}`:'Sleeper: sin conexión';
+ $('syncInfo').textContent=ok?`${ACTIVE_SEASON} · ${snapshot?'Snapshot':'Sleeper en vivo'} · ${live.syncedAt?dt(new Date(live.syncedAt).getTime()):'consultando'}`:'Sleeper: sin conexión';
 }
 function nav(page){if(!document.querySelector(`.view[data-view="${page}"]`))return;
  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.dataset.view===page));
@@ -50,7 +52,7 @@ function renderHistory(){const seasons=D.seasons.filter(s=>s.official),ranking=D
  $('championsList').innerHTML='<div class="tablewrap archive-tables">'+table(['Año','Campeón','Subcampeón','Final'],seasons.slice().reverse().map(s=>[s.year,`<span class="cellteam">${s.champion_franchise_id?logoImg(s.champion_franchise_id):''}<strong>${esc(s.champion_name||'—')}</strong></span>`,esc(s.runner_up_name||'—'),s.final_score?`${fmt(s.final_score.champion)} – ${fmt(s.final_score.runner_up)}`:'—']))+'</div>';
  $('titleChart').innerHTML=ranking.map(f=>`<div class="rank-row"><span class="inline-logo">${logoImg(f.id)} <b>${esc(f.name)}</b></span><div class="meter"><i style="width:${titles(f.id)/2*100}%"></i></div><em>${titles(f.id)}</em></div>`).join('');
  $('champRank').innerHTML=ranking.map((f,i)=>`<div class="rank-row"><span class="inline-logo"><span class="muted">${i+1}.</span>${logoImg(f.id)}<b>${esc(f.name)}</b></span><em>${titles(f.id)} título${titles(f.id)===1?'':'s'}</em></div>`).join('');
- $('legacyRanks').innerHTML=D.legacy_rankings_review.slice().sort((a,b)=>b.legacy_score-a.legacy_score).map((v,i)=>`<div class="rank-row"><span>${i+1}. <b>${esc(v.manager_source)}</b></span><em>${fmt(v.legacy_score)}*</em></div>`).join('')+'<p class="muted small">*Ranking anterior sin corte certificado. No corresponde a la clasificación 2026.</p>';
+ $('legacyRanks').innerHTML=D.legacy_rankings_review.slice().sort((a,b)=>b.legacy_score-a.legacy_score).map((v,i)=>`<div class="rank-row"><span>${i+1}. <b>${esc(v.manager_source)}</b></span><em>${fmt(v.legacy_score)}*</em></div>`).join('')+'<p class="muted small">*Ranking anterior sin corte certificado. No corresponde a la clasificación actual.</p>';
  $('standings2025').innerHTML=table(['#','Equipo','G','P','PF','PA','Dif.'],D.standings_2025.map(s=>[s.rank,`<span class="cellteam">${logoImg(s.franchise_id)}${esc(teamName(s.franchise_id))}</span>`,s.wins,s.losses,fmt(s.pf),fmt(s.pa),(s.difference>=0?'+':'')+fmt(s.difference)]));
  const top=D.standings_2025.reduce((a,b)=>b.pf>a.pf?b:a);
  const cards=[['Final más ajustada','0,76','All Bros 125,24–Cougars FT 124,48 (2023)'],['Mayor anotación en una final documentada','174,22','Boom or Bust, final de 2020'],['Mejor récord en 2025','13–2','Boom or Bust'],['Más PF en 2025',fmt(top.pf),teamName(top.franchise_id)],['Bicampeones de la era', '2 títulos', 'All Bros y Fantasy Gods'],['2018 no profesional','Nuevos Santos','Temporada cero, fuera del palmarés']];
@@ -66,7 +68,7 @@ function renderHistory(){const seasons=D.seasons.filter(s=>s.official),ranking=D
 function showFranchise(id){document.querySelectorAll('[data-franchise]').forEach(b=>b.classList.toggle('selected',b.dataset.franchise===id));const f=franchise(id);if(!f)return;
  const won=D.seasons.filter(s=>s.official&&s.champion_franchise_id===id).map(s=>s.year),runners=D.seasons.filter(s=>s.official&&s.runner_up_franchise_id===id).map(s=>s.year),s=D.standings_2025.find(x=>x.franchise_id===id);
  const liveR=live.rosters.find(r=>assigned(r)?.id===id);const ls=liveR?record(liveR):null;
- $('franchiseDetail').innerHTML=`<div class="detail-head">${logoImg(id)}<div><div class="eyetop">FRANQUICIA HISTÓRICA</div><h2>${esc(f.name)}</h2><p>Manager: <b>${esc(f.manager)}</b> · Mismo dueño desde el inicio profesional</p><div class="detail-metrics"><div><b>${titles(id)}</b><span>anillos oficiales</span></div><div><b>${finals(id)}</b><span>finales</span></div><div><b>${ls?`${ls.wins}–${ls.losses}`:'—'}</b><span>2026 actual</span></div></div></div></div><hr><div class="grid two"><div><h3>Archivo de la franquicia</h3><p>Campeonatos: ${won.length?won.join(', '):'ninguno hasta 2025'}</p><p>Subcampeonatos: ${runners.length?runners.join(', '):'ninguno documentado'}</p></div><div><h3>Temporada 2025</h3><p>${s?`Puesto ${s.rank} · ${s.wins}–${s.losses} · ${fmt(s.pf)} PF · ${fmt(s.pa)} PA`:'Datos pendientes'}</p><p class="muted small">Los escudos de los 8 equipos son los proporcionados por la liga.</p></div></div>`;
+ $('franchiseDetail').innerHTML=`<div class="detail-head">${logoImg(id)}<div><div class="eyetop">FRANQUICIA HISTÓRICA</div><h2>${esc(f.name)}</h2><p>Manager: <b>${esc(f.manager)}</b> · Mismo dueño desde el inicio profesional</p><div class="detail-metrics"><div><b>${titles(id)}</b><span>anillos oficiales</span></div><div><b>${finals(id)}</b><span>finales</span></div><div><b>${ls?`${ls.wins}–${ls.losses}`:'—'}</b><span>Temporada actual</span></div></div></div></div><hr><div class="grid two"><div><h3>Archivo de la franquicia</h3><p>Campeonatos: ${won.length?won.join(', '):'ninguno hasta 2025'}</p><p>Subcampeonatos: ${runners.length?runners.join(', '):'ninguno documentado'}</p></div><div><h3>Temporada 2025</h3><p>${s?`Puesto ${s.rank} · ${s.wins}–${s.losses} · ${fmt(s.pf)} PF · ${fmt(s.pa)} PA`:'Datos pendientes'}</p><p class="muted small">Los escudos de los 8 equipos son los proporcionados por la liga.</p></div></div>`;
 }
 function selectedH2H(){const a=$('h2hA').value,b=$('h2hB').value;return D.legacy_h2h_review.find(h=>[h.franchise_a_id,h.franchise_b_id].includes(a)&&[h.franchise_a_id,h.franchise_b_id].includes(b));}
 function completedGames(){const games=[];const current=live.currentWeek;for(const [wk,rows] of Object.entries(live.matchups)){const week=Number(wk);if(week>=current||!Array.isArray(rows))continue;
@@ -80,7 +82,7 @@ function renderComparison(){const a=$('h2hA').value,b=$('h2hB').value;if(a===b){
  const ra=live.rosters.find(r=>assigned(r)?.id===a)?.roster_id,rb=live.rosters.find(r=>assigned(r)?.id===b)?.roster_id;
  const games=completedGames().filter(g=>[g.a,g.b].includes(Number(ra))&&[g.a,g.b].includes(Number(rb))&&ra!=null&&rb!=null);
  let aa=0,bb=0,ties=0;for(const g of games){const ax=g.a===Number(ra)?g.pa:g.pb,bx=g.a===Number(ra)?g.pb:g.pa;if(ax>bx)aa++;else if(ax<bx)bb++;else ties++}
- $('h2hResult').innerHTML=`<div class="grid two"><div class="stat"><span>Archivo anterior · sin fecha de corte</span><strong>${wa==null?'—':`${wa}–${wb}`}</strong><p>${esc(teamName(a))} / ${esc(teamName(b))} · fase regular</p></div><div class="stat"><span>2026 verificado · partidos ya cerrados</span><strong>${aa}–${bb}${ties?` · ${ties} empate(s)`:''}</strong><p>${games.length} partido(s) · Sleeper · no se suman al legado</p></div></div>`;
+ $('h2hResult').innerHTML=`<div class="grid two"><div class="stat"><span>Archivo anterior · sin fecha de corte</span><strong>${wa==null?'—':`${wa}–${wb}`}</strong><p>${esc(teamName(a))} / ${esc(teamName(b))} · fase regular</p></div><div class="stat"><span>Temporada actual · partidos cerrados</span><strong>${aa}–${bb}${ties?` · ${ties} empate(s)`:''}</strong><p>${games.length} partido(s) · Sleeper · no se suman al legado</p></div></div>`;
 }
 function render2026H2H(){const games=completedGames().filter(g=>g.type==='regular');const rows=[];
  for(let i=0;i<D.franchises.length;i++)for(let j=i+1;j<D.franchises.length;j++){
@@ -108,7 +110,7 @@ function renderTransactions(){const week=Number($('transactionWeek').value),type
  $('transactionData').innerHTML=items.length?items.map(txDetail).join(''):`<div class="empty">No hay operaciones completadas de este tipo en la semana ${week}.</div>`;
  const recent=transactionsList().slice(0,3);$('homeMoves').innerHTML=recent.length?recent.map(txDetail).join(''):'<div class="empty">Todavía no hay movimientos confirmados para mostrar.</div>';
 }
-function renderDraft(){if(!live.draft){$('draftData').innerHTML='<div class="empty">Aún no se recibió el draft 2026 desde Sleeper.</div>';return;}
+function renderDraft(){if(!live.draft){$('draftData').innerHTML='<div class="empty">Aún no se recibió el draft de la temporada desde Sleeper.</div>';return;}
  const picks=live.picks.slice().sort((a,b)=>a.pick_no-b.pick_no);const slots=Math.max(live.rosters.length||8,...picks.map(p=>Number(p.draft_slot)||0)),rounds=Math.max(0,...picks.map(p=>Number(p.round)||0),Number(live.draft.settings?.rounds||0));
  $('draftTotal').textContent=`${picks.length} picks · ${rounds} rondas`;
  const select=$('draftRound');const previous=select.value;select.innerHTML='<option value="all">Todas las rondas</option>'+Array.from({length:rounds},(_,i)=>`<option value="${i+1}">Ronda ${i+1}</option>`).join('');if(previous&&[...select.options].some(o=>o.value===previous))select.value=previous;
@@ -136,14 +138,14 @@ function renderStandings(){const sorted=sortedRosters();$('homeLive').innerHTML=
  $('liveStats').innerHTML=[['Liga',live.league.name||'LFA'],['Franquicias',live.rosters.length],['Semana NFL',live.currentWeek],['Estado',live.league.status||'—']].map(([l,v])=>`<div class="stat"><span>${esc(l)}</span><strong>${esc(v)}</strong></div>`).join('');
 }
 function renderCurrentRecords(){const games=completedGames();const weekScores=games.flatMap(g=>[{id:g.a,points:g.pa,week:g.week},{id:g.b,points:g.pb,week:g.week}]);
- if(!games.length){$('currentRecords').innerHTML='<div class="empty">Se calculan al cerrar los primeros partidos de 2026 y al vincular los rosters.</div>';$('ranking2026').innerHTML='<div class="empty">Sin semanas cerradas.</div>';render2026H2H();return;}
+ if(!games.length){$('currentRecords').innerHTML='<div class="empty">Se calculan al cerrar los primeros partidos de la temporada y al vincular los rosters.</div>';$('ranking2026').innerHTML='<div class="empty">Sin semanas cerradas.</div>';render2026H2H();return;}
  const max=weekScores.slice().sort((a,b)=>b.points-a.points)[0],min=weekScores.slice().sort((a,b)=>a.points-b.points)[0],largest=games.slice().sort((a,b)=>Math.abs(b.pa-b.pb)-Math.abs(a.pa-a.pb))[0],closest=games.slice().sort((a,b)=>Math.abs(a.pa-a.pb)-Math.abs(b.pa-b.pb))[0];
  const cards=[['Mayor puntaje semanal',fmt(max.points),`${rname(max.id)} · semana ${max.week}`],['Menor puntaje semanal',fmt(min.points),`${rname(min.id)} · semana ${min.week}`],['Paliza más amplia',fmt(Math.abs(largest.pa-largest.pb)),`${rname(largest.a)} vs ${rname(largest.b)} · semana ${largest.week}`],['Partido más cerrado',fmt(Math.abs(closest.pa-closest.pb)),`Semana ${closest.week}: ${rname(closest.a)} / ${rname(closest.b)}`]];
  $('currentRecords').innerHTML=`<div class="grid four">${cards.map(([a,b,c])=>`<div class="recordcard"><label>${esc(a)}</label><b>${esc(b)}</b><p>${esc(c)}</p></div>`).join('')}</div><p class="muted small">Semanas finalizadas: 1–${Math.max(0,live.currentWeek-1)}.</p>`;
  $('recordsCutoff').textContent=`${games.length} encuentros verificados`;
  const regular=games.filter(g=>g.type==='regular'),stats=new Map();for(const g of regular){for(const [rid,score,other] of [[g.a,g.pa,g.pb],[g.b,g.pb,g.pa]]){const id=assigned(roster(rid))?.id||`roster-${rid}`;if(!stats.has(id))stats.set(id,{id,pf:0,games:0,wins:0,loses:0});const s=stats.get(id);s.pf+=score;s.games++;s.wins+=score>other?1:0;s.loses+=score<other?1:0}}
  const rank=[...stats.values()].map(s=>({...s,score:(10*s.wins+Math.floor(s.pf/250))/Math.max(1,s.games)})).sort((a,b)=>b.score-a.score);
- $('ranking2026').innerHTML=rank.length?table(['Pos.','Equipo','G-P','Puntos 2026','Índice parcial'],rank.map((s,i)=>[i+1,esc(teamName(s.id)),`${s.wins}–${s.loses}`,fmt(s.pf),fmt(s.score)])):'<div class="empty">Sin partidos de temporada regular cerrados.</div>';
+ $('ranking2026').innerHTML=rank.length?table(['Pos.','Equipo','G-P','Puntos '+ACTIVE_SEASON,'Índice parcial'],rank.map((s,i)=>[i+1,esc(teamName(s.id)),`${s.wins}–${s.loses}`,fmt(s.pf),fmt(s.score)])):'<div class="empty">Sin partidos de temporada regular cerrados.</div>';
  render2026H2H();
 }
 function generatedStories(){const now=live.syncedAt||new Date().toISOString();const recent=transactionsList();const stories=[];
@@ -167,7 +169,7 @@ function renderNews(){const seen=new Set(),merged=[...generatedStories(),...(liv
 }
 function renderMapping(){if(!live.ready)return;const opts='<option value="">Automático / sin asignar</option>'+D.franchises.map(f=>`<option value="${f.id}">${esc(f.name)} · ${esc(f.manager)}</option>`).join('');
  $('mappingArea').innerHTML='<p class="muted small">Solo si Sleeper usa apodos distintos: vinculá cada roster a su franquicia. Este ajuste se guarda localmente en este navegador.</p>'+live.rosters.map(r=>`<div class="mapping-row"><div>Roster #${r.roster_id}<br><small class="muted">${esc(sleeperName(r))}</small></div><select class="select" data-roster-map="${r.roster_id}">${opts}</select></div>`).join('');
- document.querySelectorAll('[data-roster-map]').forEach(sel=>{const r=roster(sel.dataset.rosterMap);sel.value=live.mappings[sel.dataset.rosterMap]||'';sel.title=assigned(r)?`Identificado: ${assigned(r).name}`:'Sin asociación inequívoca';sel.addEventListener('change',()=>{if(sel.value)live.mappings[sel.dataset.rosterMap]=sel.value;else delete live.mappings[sel.dataset.rosterMap];localStorage.setItem('lfa_roster_map_2026',JSON.stringify(live.mappings));renderAll();})});
+ document.querySelectorAll('[data-roster-map]').forEach(sel=>{const r=roster(sel.dataset.rosterMap);sel.value=live.mappings[sel.dataset.rosterMap]||'';sel.title=assigned(r)?`Identificado: ${assigned(r).name}`:'Sin asociación inequívoca';sel.addEventListener('change',()=>{if(sel.value)live.mappings[sel.dataset.rosterMap]=sel.value;else delete live.mappings[sel.dataset.rosterMap];localStorage.setItem('lfa_roster_map_'+ACTIVE_SEASON,JSON.stringify(live.mappings));renderAll();})});
 }
 function renderAll(){renderStandings();renderMatchups();renderTransactions();renderDraft();renderBracket();renderCurrentRecords();renderNews();for(const f of D.franchises){/* no-op */}const selected=document.querySelector('.teamcard.selected')?.dataset.franchise||'all-bros';showFranchise(selected)}
 function populateWeeks(){for(let w=1;w<=18;w++){const option=`<option value="${w}">${w}</option>`;$('weekSelect').insertAdjacentHTML('beforeend',option);$('transactionWeek').insertAdjacentHTML('beforeend',option)}
@@ -254,9 +256,9 @@ async function connect(force=false){
    api('league/'+LIVE_ID),api('league/'+LIVE_ID+'/users'),
    api('league/'+LIVE_ID+'/rosters'),api('state/nfl')
   ]);
-  if(!league?.league_id||String(league.season)!=='2026'||!Array.isArray(users)||!Array.isArray(rosters))
-   throw Error('Sleeper no confirmó la temporada 2026');
-  const week=Math.max(1,Math.min(18,Number(nfl.week||1)));
+  if(!league?.league_id||String(league.season)!==String(ACTIVE_SEASON)||!Array.isArray(users)||!Array.isArray(rosters))
+   throw Error('Sleeper no confirmó la temporada '+ACTIVE_SEASON);
+  const week=String(nfl.season)===String(ACTIVE_SEASON)&&!['pre_draft','drafting'].includes(league.status)?Math.max(1,Math.min(18,Number(nfl.week||1))):1;
   const old=live;
   live={...old,ready:true,league,users,rosters,nfl,currentWeek:week,
    snapshot:false,syncedAt:new Date().toISOString(),
@@ -280,7 +282,7 @@ async function connect(force=false){
   if(bracket.status==='fulfilled'&&Array.isArray(bracket.value))live.bracket=bracket.value;
   if(drafts.status==='fulfilled'){
    const dd=drafts.value||[];
-   live.draft=dd.find(x=>String(x.draft_id)===String(league.draft_id))||dd.find(x=>String(x.season)==='2026')||live.draft;
+   live.draft=dd.find(x=>String(x.draft_id)===String(league.draft_id))||dd.find(x=>String(x.season)===String(ACTIVE_SEASON))||live.draft;
    if(live.draft)try{
     live.picks=await api('draft/'+live.draft.draft_id+'/picks');
     for(const p of live.picks)if(p.player_id&&p.metadata?.first_name)

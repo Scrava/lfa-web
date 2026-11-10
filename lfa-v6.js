@@ -19,7 +19,7 @@
  }
  function dateLocal(){return new Date().toLocaleDateString('es-AR')}
  async function getFeed(kind,week){
-  const year='2026';
+  const year=String(ACTIVE_SEASON);
   const prefix=kind==='stats'?'stats':'projections';
   const endpoints=kind==='stats'?[
    'https://api.sleeper.app/v1/stats/nfl/regular/'+year,
@@ -48,7 +48,7 @@
  async function fetchSeason(){
   if(season.ready||season.loading)return;
   season.loading=true;
-  const key='lfa_2026_ppr_totals_v6';
+  const key='lfa_'+ACTIVE_SEASON+'_ppr_totals_v6';
   let cached;
   try{cached=JSON.parse(sessionStorage.getItem(key)||'null')}catch{}
   try{
@@ -68,7 +68,7 @@
   if(!Number.isInteger(w)||w<1||w>18||busy.has(w)||weekCache.has(w))return;
   busy.add(w);
   const record={projections:{},opponents:{},haveProjection:false,haveSchedule:false};
-  const tag='lfa_2026_week_extras_'+w;
+  const tag='lfa_'+ACTIVE_SEASON+'_week_extras_'+w;
   let old;
   try{old=JSON.parse(sessionStorage.getItem(tag)||'null')}catch{}
   if(old?.at&&Date.now()-old.at<2*3600e3){weekCache.set(w,old.value);busy.delete(w);if(live.ready){window.v4RenderRosters();if(Number(live.selectedWeek)===w)window.v4RenderMatchups()}return}
@@ -131,7 +131,7 @@
     row.children[1]?.insertAdjacentHTML('afterbegin','<span class="playoff-gold-marker" title="Puesto de playoffs">◆</span>');
   });
   const last=$('liveStats').querySelector('.stat:last-child');
-  if(last){const label=last.querySelector('span'),strong=last.querySelector('strong');if(label)label.textContent='Edición';if(strong)strong.textContent='EDICIÓN Nº8';last.classList.add('edition-stat')}
+  if(last){const label=last.querySelector('span'),strong=last.querySelector('strong');if(label)label.textContent='Edición';if(strong)strong.textContent='EDICIÓN Nº'+(ACTIVE_SEASON-2018);last.classList.add('edition-stat')}
  }
  const oldStandings=window.renderStandings;
  window.renderStandings=function(...args){const result=oldStandings(...args);marks();return result};
@@ -164,7 +164,7 @@
    const rank=season.ready?esc(season.ranks[id]||'—'):'—';
    return [`<span class="lineup-slot">${role}</span>`,`<b>${pos}</b>`,player,esc(p.team||'FA'),`<strong class="ppr-total">${total}</strong>`,`<b class="ppr-rank">${rank}</b>`];
   });
-  box.innerHTML=`<div class="roster-switcher">${tabs}</div><div class="roster-header"><div><span class="eyetop">PLANTEL 2026</span><h2>${rchip(current.roster_id)}</h2><p>${players.length} jugadores · ${starts.length} titulares · ${reserve.size} en reserva</p></div><span class="chip">PPR · ${season.ready?'Temporada 2026':'Consultando estadísticas'}</span></div><div class="tablewrap roster-table">${table(['Rol','Pos.','Jugador','NFL','PTS PPR 2026','Rank PPR'],rows)}</div><p class="roster-ranking-note">${season.ready?'Clasificación por posición entre jugadores NFL con estadísticas PPR registradas.':'Las estadísticas PPR están pendientes de la fuente; los valores no disponibles se muestran como —.'}</p>`;
+  box.innerHTML=`<div class="roster-switcher">${tabs}</div><div class="roster-header"><div><span class="eyetop">PLANTEL ${ACTIVE_SEASON}</span><h2>${rchip(current.roster_id)}</h2><p>${players.length} jugadores · ${starts.length} titulares · ${reserve.size} en reserva</p></div><span class="chip">PPR · ${season.ready?'Temporada ${ACTIVE_SEASON}':'Consultando estadísticas'}</span></div><div class="tablewrap roster-table">${table(['Rol','Pos.','Jugador','NFL','PTS PPR '+ACTIVE_SEASON,'Rank PPR'],rows)}</div><p class="roster-ranking-note">${season.ready?'Clasificación por posición entre jugadores NFL con estadísticas PPR registradas.':'Las estadísticas PPR están pendientes de la fuente; los valores no disponibles se muestran como —.'}</p>`;
  };
  function matchPlayer(id,role,week,points,projRow){
   const p=live.players[String(id)]||{},pid=String(id);
