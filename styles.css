@@ -925,3 +925,17 @@ footer{color:#acc8da;border-color:#4d7087}
  .season-matchups-panel .matchup-5cols th:nth-child(5){width:17%}
  .season-matchups-panel .game-nfl-shield{width:15px!important;height:15px!important}
 }
+
+/* LFA 2027+ únicamente: la temporada 2026 y su maqueta de ocho equipos no cambian. */
+.lfa-ten-franchises .rivalry-matrix-ten{min-width:1080px;table-layout:fixed}
+.lfa-ten-franchises .rivalry-matrix-ten th:first-child{width:150px}
+.lfa-ten-franchises .rivalry-matrix-ten .matrix-team{min-height:88px}
+.lfa-ten-franchises .rivalry-matrix-ten .matrix-team small{overflow-wrap:anywhere;max-width:92px}
+.lfa-ten-franchises .rivalry-matrix-ten .matrix-cell{min-height:52px}
+.lfa-ten-franchises .playoff-teams-count{text-align:center;margin:8px 0;color:#e8d39e}
+.lfa-ten-franchises .playoff-shortlist{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:820px){
+ .lfa-ten-franchises .rivalry-matrix-ten{min-width:1020px!important}
+ .lfa-ten-franchises .rivalry-matrix-ten th:first-child{width:120px!important}
+ .lfa-ten-franchises .playoff-shortlist{grid-template-columns:repeat(2,minmax(0,1fr))}
+}

@@ -21,6 +21,11 @@ function roster(id){return live.rosters.find(r=>String(r.roster_id)===String(id)
 function user(r){return live.users.find(u=>String(u.user_id)===String(r?.owner_id))||{}}
 function sleeperName(r){const u=user(r);return String(r?.metadata?.team_name||u.metadata?.team_name||u.display_name||`Roster #${r?.roster_id||'?'}`)}
 function assigned(r){if(!r)return null;const manual=live.mappings[String(r.roster_id)];if(manual&&franchise(manual))return franchise(manual);
+ // La cuenta Sleeper del GM se mantiene aunque cambie su nombre o número de roster.
+ if(ACTIVE_SEASON>=2027&&r.owner_id){
+  const linked=D.franchises.filter(f=>f.sleeper_user_id&&String(f.sleeper_user_id)===String(r.owner_id));
+  if(linked.length===1)return linked[0];
+ }
  const u=user(r),names=[r.metadata?.team_name,u.metadata?.team_name,u.display_name,u.username].filter(Boolean).map(normal);
  const matches=D.franchises.filter(f=>[f.name,f.manager,...(f.aliases||[]),...(f.manager_aliases||[])].map(normal).some(alias=>names.includes(alias)));
  return matches.length===1?matches[0]:null;
@@ -68,7 +73,7 @@ function renderHistory(){const seasons=D.seasons.filter(s=>s.official),ranking=D
 function showFranchise(id){document.querySelectorAll('[data-franchise]').forEach(b=>b.classList.toggle('selected',b.dataset.franchise===id));const f=franchise(id);if(!f)return;
  const won=D.seasons.filter(s=>s.official&&s.champion_franchise_id===id).map(s=>s.year),runners=D.seasons.filter(s=>s.official&&s.runner_up_franchise_id===id).map(s=>s.year),s=D.standings_2025.find(x=>x.franchise_id===id);
  const liveR=live.rosters.find(r=>assigned(r)?.id===id);const ls=liveR?record(liveR):null;
- $('franchiseDetail').innerHTML=`<div class="detail-head">${logoImg(id)}<div><div class="eyetop">FRANQUICIA HISTÓRICA</div><h2>${esc(f.name)}</h2><p>Manager: <b>${esc(f.manager)}</b> · Mismo dueño desde el inicio profesional</p><div class="detail-metrics"><div><b>${titles(id)}</b><span>anillos oficiales</span></div><div><b>${finals(id)}</b><span>finales</span></div><div><b>${ls?`${ls.wins}–${ls.losses}`:'—'}</b><span>Temporada actual</span></div></div></div></div><hr><div class="grid two"><div><h3>Archivo de la franquicia</h3><p>Campeonatos: ${won.length?won.join(', '):'ninguno hasta 2025'}</p><p>Subcampeonatos: ${runners.length?runners.join(', '):'ninguno documentado'}</p></div><div><h3>Temporada 2025</h3><p>${s?`Puesto ${s.rank} · ${s.wins}–${s.losses} · ${fmt(s.pf)} PF · ${fmt(s.pa)} PA`:'Datos pendientes'}</p><p class="muted small">Los escudos de los 8 equipos son los proporcionados por la liga.</p></div></div>`;
+ $('franchiseDetail').innerHTML=`<div class="detail-head">${logoImg(id)}<div><div class="eyetop">FRANQUICIA HISTÓRICA</div><h2>${esc(f.name)}</h2><p>Manager: <b>${esc(f.manager)}</b> · ${f.debut_year?'Desde '+f.debut_year:'Mismo dueño desde el inicio profesional'}</p><div class="detail-metrics"><div><b>${titles(id)}</b><span>anillos oficiales</span></div><div><b>${finals(id)}</b><span>finales</span></div><div><b>${ls?`${ls.wins}–${ls.losses}`:'—'}</b><span>Temporada actual</span></div></div></div></div><hr><div class="grid two"><div><h3>Archivo de la franquicia</h3><p>Campeonatos: ${won.length?won.join(', '):'ninguno hasta 2025'}</p><p>Subcampeonatos: ${runners.length?runners.join(', '):'ninguno documentado'}</p></div><div><h3>Temporada 2025</h3><p>${s?`Puesto ${s.rank} · ${s.wins}–${s.losses} · ${fmt(s.pf)} PF · ${fmt(s.pa)} PA`:'Datos pendientes'}</p><p class="muted small">${f.debut_year?'Franquicia incorporada desde '+f.debut_year+'. Logo provisorio hasta recibir su escudo.':'Los escudos de los 8 equipos son los proporcionados por la liga.'}</p></div></div>`;
 }
 function selectedH2H(){const a=$('h2hA').value,b=$('h2hB').value;return D.legacy_h2h_review.find(h=>[h.franchise_a_id,h.franchise_b_id].includes(a)&&[h.franchise_a_id,h.franchise_b_id].includes(b));}
 function completedGames(){const games=[];const current=live.currentWeek;for(const [wk,rows] of Object.entries(live.matchups)){const week=Number(wk);if(week>=current||!Array.isArray(rows))continue;
@@ -197,7 +202,9 @@ async function fetchPlayers(){
    respaldo incrustado que viene del mismo último corte validado en GitHub. */
 function snapshotIsValid(snap){
  return !!(snap&&String(snap.league_id)===String(LIVE_ID)&&String(snap.league?.league_id)===String(LIVE_ID)
- &&Array.isArray(snap.rosters)&&snap.rosters.length===8&&Array.isArray(snap.users));
+ &&String(snap.league?.season)===String(ACTIVE_SEASON)
+ &&Array.isArray(snap.rosters)&&snap.rosters.length===Number(D.league.current_teams||8)
+ &&Array.isArray(snap.users)&&snap.users.length>=snap.rosters.length);
 }
 function useSnapshot(snap){
  if(!snapshotIsValid(snap))return false;

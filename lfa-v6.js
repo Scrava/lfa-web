@@ -240,6 +240,24 @@
  };
  function ringSvg(){return `<svg viewBox="0 0 64 64" class="lfa-ring-icon" aria-hidden="true"><defs><linearGradient id="lfaRingGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b3"/><stop offset=".5" stop-color="#daa34b"/><stop offset="1" stop-color="#936126"/></linearGradient></defs><path d="M20 32v13c0 13 24 13 24 0V32" fill="none" stroke="url(#lfaRingGold)" stroke-width="10"/><path d="M12 16 21 7h22l9 9v19l-20 11-20-11Z" fill="url(#lfaRingGold)" stroke="#fff0ad" stroke-width="2"/><path d="M32 10 46 21 32 36 18 21Z" fill="#2a81ad" stroke="#edf8ff" stroke-width="2"/><text x="32" y="25" text-anchor="middle" fill="white" font-size="9" font-weight="900">LFA</text></svg>`}
  window.v4RenderBracket=function(){
+  // La temporada 2026 conserva EXACTAMENTE el diseño vigente de cuatro clasificados.
+  // Sólo al pasar a una liga real de 10 en 2027 se construye el cuadro flexible.
+  if(ACTIVE_SEASON>=2027&&D.franchises.length===10){
+   const bracket=Array.isArray(live.bracket)?live.bracket:[];
+   const spots=Math.min(live.rosters.length,Math.max(2,Number(live.league?.settings?.playoff_teams||4)));
+   const group=sortedRosters().slice(0,spots);
+   const rounds=[...new Set(bracket.map(g=>Number(g.r||1)))].sort((a,b)=>a-b);
+   const official=bracket.some(g=>g.t1!=null&&g.t2!=null);
+   const roundGames=official?bracket.filter(g=>Number(g.r)===Math.min(...rounds)):[];
+   const byes=!official&&spots===6?group.slice(0,2):[];
+   const roundMarkup=roundGames.length?roundGames.map((g,i)=>`<div class="mini-semifinal"><small>CRUCE ${i+1}</small><div>${[g.t1,g.t2].map(id=>id==null?'<span class="pending-team">Por definir</span>':rchip(id)).join('<span class="playoff-vs">VS</span>')}</div></div>`).join(''):'<p class="muted small">Los cruces oficiales aparecerán cuando Sleeper publique el cuadro. No se inventan enfrentamientos.</p>';
+   $('playoffView').innerHTML=`<div class="playoff-mini-head">${ringSvg()}<span>${official?'CUADRO OFICIAL DE SLEEPER':'ZONA DE CLASIFICACIÓN PROVISORIA'}</span></div>
+    <p class="muted small playoff-teams-count">Clasifican ${spots} de ${live.rosters.length} equipos${byes.length?' · los primeros 2 tendrían descanso inicial':''}.</p>
+    <div class="playoff-mini-grid">${roundMarkup}</div>
+    <div class="playoff-final-note">${ringSvg()} <b>FINAL · POR EL ANILLO LFA</b></div>
+    <div class="playoff-shortlist">${group.map((r,i)=>`<span class="playoff-shortlist-team"><b>${i+1}</b>${rchip(r.roster_id)}</span>`).join('')}</div>`;
+   return;
+  }
   const group=sortedRosters().slice(0,4),bracket=Array.isArray(live.bracket)?live.bracket:[];
   const official=bracket.some(g=>g.t1!=null&&g.t2!=null);
   const games=official?bracket.filter(g=>Number(g.r)===1).map(g=>[g.t1,g.t2]):group.length===4?[[group[0].roster_id,group[3].roster_id],[group[1].roster_id,group[2].roster_id]]:[];

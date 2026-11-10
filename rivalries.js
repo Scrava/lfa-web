@@ -54,7 +54,7 @@
          '<td class="'+(focus==='year'?'rivalry-focus':'')+'">'+safe(formatSeason(p.year))+'</td>'+
          '<td><button class="rivalry-action" type="button" data-focus-a="'+safe(a)+'" data-focus-b="'+safe(t.id)+'">Ver cruce</button></td></tr>';
      }).join('');
-     output.innerHTML='<h3>'+safe(teamName(a))+' frente a los otros siete</h3>'+
+     output.innerHTML='<h3>'+safe(teamName(a))+' frente a los otros '+(teams.length-1)+'</h3>'+
        '<div class="rivalry-results-scroll"><table class="rivalry-result-table"><thead><tr><th>Rival</th><th>Histórico</th><th>'+ACTIVE_SEASON+'</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
        '<p class="rivalry-foot">Histórico: temporada regular y playoffs registrados. El año '+ACTIVE_SEASON+' se muestra por separado.</p>';
      return;
@@ -78,7 +78,7 @@
  }
  function renderMatrix(){
   ensureOptions();
-  if(teams.length!==8){matrix.innerHTML='<p class="empty">Cuadro no disponible.</p>';return}
+  if(![8,10].includes(teams.length)){matrix.innerHTML='<p class="empty">Cuadro no disponible.</p>';return}
   const focus=tableView();
   note.textContent=focus==='old'?
    'Historial registrado: fase regular y playoffs. La temporada '+ACTIVE_SEASON+' se consulta por separado.':
@@ -93,7 +93,7 @@
      const css=neutral?'matrix-empty':value&&value.wins>value.losses?'matrix-ahead':value&&value.wins<value.losses?'matrix-behind':'matrix-even';
      return '<td class="'+css+'"><button type="button" class="matrix-cell" data-rival-a="'+safe(a.id)+'" data-rival-b="'+safe(b.id)+'" aria-label="'+safe(a.name)+' contra '+safe(b.name)+': '+safe(label)+'">'+safe(label)+'</button></td>';
    }).join('')+'</tr>').join('');
-  matrix.innerHTML='<table class="rivalry-matrix"><thead><tr><th scope="col" class="matrix-corner">VS</th>'+heads+'</tr></thead><tbody>'+rows+'</tbody></table>';
+  matrix.innerHTML='<table class="rivalry-matrix'+(teams.length===10&&ACTIVE_SEASON>=2027?' rivalry-matrix-ten':'')+'"><thead><tr><th scope="col" class="matrix-corner">VS</th>'+heads+'</tr></thead><tbody>'+rows+'</tbody></table>';
  }
  function renderAll(){renderMatrix();renderLookup()}
  function selectDuel(a,b){

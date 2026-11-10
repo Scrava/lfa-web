@@ -2,6 +2,8 @@
 (function initLfaSeasonUI(){
  'use strict';
  const year=Number(D.league.current_season||2026),edition=year-2018;
+ // Las adaptaciones visuales de 10 equipos no se aplican a la temporada 2026.
+ document.body.classList.toggle('lfa-ten-franchises',year>=2027&&D.franchises.length===10);
  const text=(selector,value)=>{const e=document.querySelector(selector);if(e)e.textContent=value};
  text('.navbutton[data-page="temporada"]','Temporada '+year);
  text('#syncInfo','Temporada '+year);

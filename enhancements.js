@@ -230,6 +230,17 @@ function v4HistoricalRows(){
  const before=finished.filter(g=>g.week>=1&&g.week<=8),after=finished.filter(g=>g.week>8);
  return D.franchises.map(f=>{
   const current=live.rosters.find(r=>assigned(r)?.id===f.id),rid=current?.roster_id;
+  // Un debutante NO hereda los puntos, campeonatos ni balances de los ocho GM originales.
+  if(f.debut_year&&ACTIVE_SEASON>=Number(f.debut_year)){
+   const games=live.ready&&rid!=null?completedGames().filter(g=>g.a===Number(rid)||g.b===Number(rid)):[];
+   const wins=games.filter(g=>(g.a===Number(rid)?g.pa:g.pb)>(g.a===Number(rid)?g.pb:g.pa)).length;
+   const losses=games.filter(g=>(g.a===Number(rid)?g.pa:g.pb)<(g.a===Number(rid)?g.pb:g.pa)).length;
+   const ties=games.length-wins-losses;
+   const pts=games.reduce((sum,g)=>sum+(g.a===Number(rid)?g.pa:g.pb),0);
+   return {f,wins,losses,ties,games:games.length,score:games.length?(10*wins+Math.floor(pts/250))/games.length:0,
+    rate:games.length?100*wins/games.length:0,source:null,verifiedFromWeek8:false,inferred:false,
+    newcomer:true,deltaGames:games.length,deltaWins:wins,deltaPF:pts};
+  }
   const baseScore=before.reduce((sum,g)=>sum+(g.a===Number(rid)?g.pa:g.b===Number(rid)?g.pb:0),0);
   let s=source.find(x=>x.franchise_id===f.id),inferred=false;
   if(!s&&rid!=null&&before.length>=28){
@@ -271,7 +282,7 @@ function v4EnhanceHistory(){
  $('historicalStories').innerHTML='<div class="oldpaper-banner"><span>EL ARCHIVO · DESDE 2019</span><h2>CRÓNICAS DE OTRA ÉPOCA</h2><p>Glorias, humillaciones y rachas que dejaron huella en la LFA</p></div><div class="paper-grid">'+all.map((s,i)=>v4StoryArticle({...s,category:`${s.year} · ARCHIVO`,updated_at:null},i)).join('')+'</div>';
  const historic=v4HistoricalRows().filter(v=>v.wins!=null).sort((a,b)=>(b.score??0)-(a.score??0));
  $('legacyRanks').innerHTML=`<div class="tablewrap">${table(['#','Franquicia','Índice*','G–P acumulado'],historic.map((r,i)=>[i+1,logoImg(r.f.id)+esc(r.f.name),Number.isFinite(r.score)?fmt(r.score):'—',`${r.wins}–${r.losses??'—'}`]))}</div><p class="muted small">Ranking histórico provisional.</p>`;
- const el=$('historicalOverall');if(el)el.innerHTML=`<div class="tablewrap">${table(['Franquicia','G','P','% victorias','Último agregado'],historic.map(r=>[logoImg(r.f.id)+esc(r.f.name),r.wins,r.losses??'—',r.rate==null?'—':`${fmt(r.rate)}%`,r.verifiedFromWeek8?(r.deltaGames?`+${r.deltaGames} fechas`:'Hasta semana 8'):'Pendiente']))}</div><p class="muted small">Récord histórico provisional.</p>`;
+ const el=$('historicalOverall');if(el)el.innerHTML=`<div class="tablewrap">${table(['Franquicia','G','P','% victorias','Último agregado'],historic.map(r=>[logoImg(r.f.id)+esc(r.f.name),r.wins,r.losses??'—',r.rate==null?'—':`${fmt(r.rate)}%`,r.newcomer?'Desde '+r.f.debut_year:r.verifiedFromWeek8?(r.deltaGames?`+${r.deltaGames} fechas`:'Hasta semana 8'):'Pendiente']))}</div><p class="muted small">Récord histórico provisional.</p>`;
 }
 function v4ShowFranchise(id){
  document.querySelectorAll('[data-franchise]').forEach(b=>b.classList.toggle('selected',b.dataset.franchise===id));
@@ -279,9 +290,9 @@ function v4ShowFranchise(id){
  const recordLegacy=v4HistoricalRows().find(r=>r.f.id===id);
  const champion=D.seasons.filter(s=>s.official&&s.champion_franchise_id===id).map(s=>s.year),runner=D.seasons.filter(s=>s.official&&s.runner_up_franchise_id===id).map(s=>s.year),regular=D.standings_2025.find(s=>s.franchise_id===id);
  const current=live.rosters.find(r=>assigned(r)?.id===id),now=current?record(current):null;
- $('franchiseDetail').innerHTML=`<div class="franchise-profile"><div class="franchise-profile-head">${logoImg(id)}<div><div class="eyetop">PERFIL DE FRANQUICIA</div><h2>${esc(f.name)}</h2><p>General Manager: <strong>${esc(f.manager)}</strong></p></div></div>
+ $('franchiseDetail').innerHTML=`<div class="franchise-profile"><div class="franchise-profile-head">${logoImg(id)}<div><div class="eyetop">PERFIL DE FRANQUICIA</div><h2>${esc(f.name)}</h2><p>General Manager: <strong>${esc(f.manager)}</strong>${f.debut_year?' · Desde '+f.debut_year:''}</p></div></div>
  <div class="franchise-summary"><div><span>TÍTULOS</span><strong>${titles(id)}</strong></div><div><span>FINALES</span><strong>${finals(id)}</strong></div><div><span>RÉCORD ACTUAL</span><strong>${now?`${now.wins}–${now.losses}`:'—'}</strong></div><div><span>HISTÓRICO*</span><strong>${recordLegacy?.wins!=null?`${recordLegacy.wins}–${recordLegacy.losses??'?'}`:'—'}</strong></div></div>
- <div class="grid two spaced"><div class="franchise-section"><h3>Palmarés</h3><p><b>Campeonatos:</b> ${champion.length?champion.join(', '):'Sin campeonatos'}</p><p><b>Subcampeonatos:</b> ${runner.length?runner.join(', '):'Sin subcampeonatos registrados'}</p></div><div class="franchise-section"><h3>Rendimiento por temporada</h3><p><b>2025:</b> ${regular?`${regular.wins} G – ${regular.losses} P · ${fmt(regular.pf)} PF`:'Sin registros completos'}</p><p><b>Actual:</b> ${now?`${fmt(now.pf)} PF · ${fmt(now.pa)} PA`:'Esperando resultados'}</p></div></div>
+ <div class="grid two spaced"><div class="franchise-section"><h3>Palmarés</h3><p><b>Campeonatos:</b> ${champion.length?champion.join(', '):'Sin campeonatos'}</p><p><b>Subcampeonatos:</b> ${runner.length?runner.join(', '):'Sin subcampeonatos registrados'}</p></div><div class="franchise-section"><h3>Rendimiento por temporada</h3><p><b>${f.debut_year?'Año de ingreso:': '2025:'}</b> ${f.debut_year?'Debut en '+f.debut_year:regular?`${regular.wins} G – ${regular.losses} P · ${fmt(regular.pf)} PF`:'Sin registros completos'}</p><p><b>Actual:</b> ${now?`${fmt(now.pf)} PF · ${fmt(now.pa)} PA`:'Esperando resultados'}</p></div></div>
  <small class="muted">*Récord histórico provisional.</small></div>`;
 }
 
