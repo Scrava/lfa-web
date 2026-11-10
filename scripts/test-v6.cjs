@@ -77,7 +77,7 @@ assert.ok(el('rosterGrid').innerHTML.includes('roster-nfl-shield'),'Faltan escud
 windowObj.v4RenderDraft();
 const draft=el('draftData').innerHTML;
 assert.ok(draft.includes('draft-slot-franchise'),'No se identificó la franquicia de cada turno');
-assert.ok((draft.match(/class="draft-slot-franchise"/g)||[]).length===8,'Deben existir ocho cabeceras de franquicia');
+assert.ok((draft.match(/class="draft-slot-franchise"/g)||[]).length===Math.max(...live.picks.map(p=>Number(p.draft_slot)||0),live.rosters.length),'Debe figurar una cabecera por turno del draft');
 assert.ok(!draft.includes('Pick 1')&&!draft.includes('Turno 1'),'Sigue apareciendo Pick 1 o Turno 1');
 assert.ok(draft.includes('draft-nfl-shield'),'Falta el logo NFL junto a los picks');
 windowObj.v4RenderBracket();

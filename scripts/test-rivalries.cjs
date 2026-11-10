@@ -8,8 +8,9 @@ const hist=JSON.parse(fs.readFileSync('data/legacy_h2h_review.json','utf8'));
 const data={window:{}};
 vm.runInNewContext(fs.readFileSync('data/bootstrap.js','utf8'),data);
 const teams=data.window.LFA_DATA.franchises;
-assert.equal(teams.length,8,'Deben existir ocho equipos');
-assert.equal(hist.length,28,'Deben existir los 28 cruces históricos');
+assert.ok([8,10].includes(teams.length),'LFA solo admite ocho o diez equipos');
+const expectedPairs=teams.length*(teams.length-1)/2;
+assert.equal(hist.length,expectedPairs,'La matriz debe tener todos los cruces históricos');
 const sum=[];
 for(const a of teams)for(const b of teams){
  if(a.id===b.id)continue;
@@ -22,7 +23,7 @@ for(const a of teams)for(const b of teams){
  assert.equal(x.losses,x.regular.losses+x.playoffs.losses,'Suma histórica incorrecta');
  sum.push([a.id,b.id,x.wins,x.losses]);
 }
-assert.equal(sum.length,56);
+assert.equal(sum.length,teams.length*(teams.length-1));
 const fixture=[{roster_id:11,franchise_id:'tiburoncin'},{roster_id:12,franchise_id:'boom-or-bust'}];
 const games=[
  {a:11,b:12,pa:130,pb:122,type:'regular',week:1},
@@ -67,7 +68,7 @@ assert.ok(values.rivalryMatrix.innerHTML.includes(expected),'La matriz no reflej
 assert.ok(values.h2hResult.innerHTML.includes(expected),'El buscador no refleja el mismo balance histórico');
 values.h2hMode.value='all';
 windowMock.LFA_RIVALRIES.renderLookup();
-assert.equal((values.h2hResult.innerHTML.match(/data-focus-a=/g)||[]).length,7,'La consulta contra los siete rivales falla');
+assert.equal((values.h2hResult.innerHTML.match(/data-focus-a=/g)||[]).length,teams.length-1,'La consulta contra todos los rivales falla');
 values.h2hMode.value='duel';
 values.matrixScope.value=String(data.window.LFA_DATA.league.current_season);
 windowMock.LFA_RIVALRIES.renderAll();
@@ -77,4 +78,4 @@ listeners.get('rivalryMatrix:click')({target:{closest:()=>({dataset:{rivalA:'boo
 assert.equal(values.h2hA.value,'boom-or-bust','El clic en el cuadro no actualizó equipo');
 assert.equal(values.h2hB.value,'tiburoncin','El clic en el cuadro no actualizó rival');
 assert.ok(values.h2hResult.innerHTML.includes('0–2 (1 E)'),'La comparación invertida no coincide');
-console.log('OK: 28 cruces históricos, 56 perspectivas, balance 2026 y búsqueda/cuadro consistentes.');
+console.log('OK: '+expectedPairs+' cruces históricos, '+sum.length+' perspectivas, balance y buscador consistentes.');

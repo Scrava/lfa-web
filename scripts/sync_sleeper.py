@@ -122,9 +122,18 @@ def main():
         futures={k:pool.submit(get,k) for k in [f'league/{LEAGUE_ID}/users',f'league/{LEAGUE_ID}/rosters','state/nfl',f'league/{LEAGUE_ID}/drafts',f'league/{LEAGUE_ID}/winners_bracket']}
         answers={k:f.result() for k,f in futures.items()}
     users=answers[f'league/{LEAGUE_ID}/users'];rosters=answers[f'league/{LEAGUE_ID}/rosters'];nfl=answers['state/nfl']
-    if not isinstance(users,list) or not isinstance(rosters,list) or len(rosters)<1:raise RuntimeError('Sleeper devolvió usuarios/rosters incompletos.')
+    count=int(LEAGUE_CONFIG.get('current_teams') or 8)
+    if count not in (8,10):
+        raise RuntimeError('La cantidad de franquicias activa debe ser 8 o 10.')
+    if (not isinstance(users,list) or not isinstance(rosters,list)
+        or len(rosters)!=count or len(users)<count
+        or len({str(r.get('owner_id') or '') for r in rosters})!=count
+        or any(not r.get('owner_id') for r in rosters)):
+        raise RuntimeError('Sleeper todavía no confirmó los '+str(count)+' participantes; no actualizar.')
     week=max(1,min(18,int(nfl.get('week') or 1))) if str(nfl.get('season'))==SEASON and league.get('status') not in ('pre_draft','drafting') else 1
-    paths=[(i,f'league/{LEAGUE_ID}/{kind}/{i}') for i in range(1,week+1) for kind in ('matchups','transactions')]
+    # Antes del Draft no hay partidos; no bloquear la transición por endpoints inexistentes.
+    pre_draft=league.get('status') in ('pre_draft','drafting')
+    paths=[] if pre_draft else [(i,f'league/{LEAGUE_ID}/{kind}/{i}') for i in range(1,week+1) for kind in ('matchups','transactions')]
     matchups={};transactions={}
     with ThreadPoolExecutor(max_workers=5) as pool:
         ff={pool.submit(get,p): (i,p) for i,p in paths}

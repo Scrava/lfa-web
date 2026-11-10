@@ -23,6 +23,8 @@ on:
       - 'scripts/test-v6.cjs'
       - 'scripts/test-live-refresh.cjs'
       - 'scripts/test-rivalries.cjs'
+      - 'scripts/test-ten-teams.cjs'
+      - 'scripts/test-ten-teams.py'
       - 'data/live_bootstrap.js'
       - 'index.html'
       - 'styles.css'
@@ -50,6 +52,7 @@ jobs:
           node --check scripts/test-v6.cjs
           node --check scripts/test-live-refresh.cjs
           node --check scripts/test-rivalries.cjs
+          node --check scripts/test-ten-teams.cjs
           node --check data/live_bootstrap.js
       - name: Verificar recursos principales
         run: |
@@ -68,7 +71,11 @@ jobs:
           vm.runInNewContext(fs.readFileSync('data/live_bootstrap.js','utf8'),env);
           const snap=env.window.LFA_INITIAL_SNAPSHOT;
           const cfg=JSON.parse(fs.readFileSync('data/league.json','utf8'));
-          if(String(snap?.league_id)!==String(cfg.sleeper_league_id)||snap.rosters.length!==8||!Object.keys(snap.matchups).length)throw Error('El respaldo LFA no es válido');
+          const teamCount=Number(cfg.current_teams||8);
+          if(![8,10].includes(teamCount)||String(snap?.league_id)!==String(cfg.sleeper_league_id)
+             ||snap.rosters.length!==teamCount||snap.league?.season!=cfg.current_season
+             ||(!Object.keys(snap.matchups||{}).length&&!['pre_draft','drafting'].includes(snap.league?.status)))
+            throw Error('El respaldo LFA no es válido');
           console.log('Respaldo LFA verificado, semana',snap.week);
           const html=fs.readFileSync('index.html','utf8');
           const css=fs.readFileSync('styles.css','utf8');
@@ -81,10 +88,13 @@ jobs:
           const bootstrap=fs.readFileSync('data/bootstrap.js','utf8');
           const ctx={window:{}};vm.runInNewContext(bootstrap,ctx);
           const pairs=ctx.window.LFA_DATA?.legacy_h2h_review||[];
-          if(pairs.length!==28 || new Set(pairs.map(p=>[p.franchise_a_id,p.franchise_b_id].sort().join('|'))).size!==28)throw Error('Matriz histórica incompleta');
+          const expected=teamCount*(teamCount-1)/2;
+          if(ctx.window.LFA_DATA?.franchises?.length!==teamCount||pairs.length!==expected
+             ||new Set(pairs.map(p=>[p.franchise_a_id,p.franchise_b_id].sort().join('|'))).size!==expected)
+            throw Error('Matriz histórica incompleta');
           if(!html.includes('id="rivalryMatrix"')||!html.includes('src="rivalries.js"')||!rivalry.includes('matrix-cell'))throw Error('Falta matriz de rivalidades');
           if(!css.includes('.mobile-compact-table')||!css.includes('.paper-grid'))throw Error('Faltan tablas compactas');
-          console.log('Navegación móvil, 28 cruces y estilos compactos verificados.');
+          console.log('Navegación móvil, '+expected+' cruces y estilos compactos verificados.');
           NODE
       - name: Probar consistencia del cuadro y buscador de paternidades
         run: node scripts/test-rivalries.cjs
@@ -92,6 +102,9 @@ jobs:
         run: |
           python -m py_compile scripts/season_manager.py scripts/sync_sleeper.py
           python scripts/test-season-manager.py -v
+          python scripts/test-ten-teams.py -v
+      - name: Comprobar escenarios de 8 y 10 franquicias
+        run: node scripts/test-ten-teams.cjs
       - name: Probar refresco en vivo sin publicar en Netlify
         run: node scripts/test-live-refresh.cjs
       - name: Probar edición LFA 8 y funciones NFL

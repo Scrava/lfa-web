@@ -3,7 +3,18 @@
  'use strict';
  const year=Number(D.league.current_season||2026),edition=year-2018;
  // Las adaptaciones visuales de 10 equipos no se aplican a la temporada 2026.
- document.body.classList.toggle('lfa-ten-franchises',year>=2027&&D.franchises.length===10);
+ const expanded=year>=2027&&D.franchises.length===10;
+ document.body.classList.toggle('lfa-ten-franchises',expanded);
+ if(expanded){
+  // Solo cuando los 10 GM están verificados en Sleeper. En 2026 no modifica el DOM.
+  text('.view[data-view="rosters"] .eyetop','LOS DIEZ PLANTELES');
+  text('.view[data-view="equipos"] .pagetitle','Los diez sospechosos de siempre');
+  text('.view[data-view="paternidades"] .intro','El cuadro histórico de los diez equipos. Tocá cualquier cruce para conocer la rivalidad.');
+  const allOpponents=document.querySelector('#h2hMode option[value="all"]');
+  if(allOpponents)allOpponents.textContent='Un equipo contra los otros nueve';
+  const desc=document.querySelector('meta[name="description"]');
+  if(desc)desc.content=desc.content.replace('ocho franquicias','diez franquicias');
+ }
  const text=(selector,value)=>{const e=document.querySelector(selector);if(e)e.textContent=value};
  text('.navbutton[data-page="temporada"]','Temporada '+year);
  text('#syncInfo','Temporada '+year);
