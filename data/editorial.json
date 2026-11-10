@@ -110,5 +110,190 @@
     "description": "Tiburoncín se coronó en una definición recordada por la suspensión del partido de Buffalo.",
     "fact": "Final 2022: Tiburoncin 163,02 – Nakillers 122,90",
     "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2019-latuf-primera-copa",
+    "title": "Latuf abrió la liga con una corona y una orden de silencio",
+    "type": "editorial",
+    "year": 2019,
+    "related": [
+      "fantasy-gods"
+    ],
+    "description": "La primera final profesional dejó a Fantasy Gods arriba 124,72 a 81,46. Latuf se llevó la copa inaugural y, de paso, instaló un problema que sigue vigente: cada vez que alguien opina sobre Fantasy, aparece un tipo con un anillo de 2019 a explicar cómo se hace. El resto de la liga todavía busca el botón de silenciar campeón.",
+    "fact": "Final 2019 · Fantasy Gods 124,72–81,46",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2020-gaspi-174-puntos",
+    "title": "Gaspi metió 174,22 y dejó a Juani buscando una salida de emergencia",
+    "type": "editorial",
+    "year": 2020,
+    "related": [
+      "boom-or-bust",
+      "all-bros"
+    ],
+    "description": "Boom or Bust firmó 174,22 puntos en la final de 2020 contra los 139,34 de All Bros. Gaspi jugó el partido más contundente que figura entre las finales documentadas; Juani cumplió con el noble papel de espectador VIP de la coronación ajena. El famoso 'Boom' funcionó. El 'Bust', por suerte para Gaspi, lo puso el rival.",
+    "fact": "Final 2020 · 174,22–139,34",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2021-scrava-chase",
+    "title": "Ja’Marr Chase facturó 55,6; Scrava se quedó con el vuelto y un anillo",
+    "type": "editorial",
+    "year": 2021,
+    "related": [
+      "scravengers",
+      "fantasy-gods"
+    ],
+    "description": "The Scravengers superó 162,76 a 137,84 a Fantasy Gods en la final de 2021, con 55,6 puntos de Ja’Marr Chase en la definición. Scrava pudo hablar de estrategia todo el verano; Latuf tuvo que escuchar cómo un receptor le escribía la carta de despedida de su título. El tablero de tácticas quedó precioso. El resultado, no tanto.",
+    "fact": "Final 2021 · 162,76–137,84 · Chase 55,6",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2022-emilio-naki-bufalo",
+    "title": "Ni la suspensión de Buffalo impidió que Emilio saliera con el anillo",
+    "type": "editorial",
+    "year": 2022,
+    "related": [
+      "tiburoncin",
+      "nakillers"
+    ],
+    "description": "Tiburoncín terminó campeón de 2022 ante Nakillers por 163,02 a 122,90, en una definición atravesada por la suspensión del partido de Buffalo. Emilio puede hablar de destino, temple o talento: los números dicen que levantó la copa. Naki llegó a la final y se llevó algo bastante menos decorativo: cuarenta puntos de diferencia para colgar en el museo de los domingos horribles.",
+    "fact": "Final 2022 · Tiburoncin 163,02–122,90",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2023-nehue-setenta-y-seis",
+    "title": "A Nehue le faltaron 76 centésimas y le sobraron 365 días de bronca",
+    "type": "editorial",
+    "year": 2023,
+    "related": [
+      "cougars",
+      "all-bros"
+    ],
+    "description": "Cougars FT perdió la final de 2023 por 124,48 a 125,24 ante All Bros. Una diferencia de 0,76 puntos: ni para un café alcanza, pero para arruinarte un año de Fantasy sobra. Juani levantó el anillo; Nehue quedó obligado a revisar una por una todas las decisiones del domingo, incluso las que ni tomó.",
+    "fact": "Final 2023 · diferencia 0,76",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2024-latuf-dos-coronas",
+    "title": "Latuf sumó su segundo anillo y Juani volvió a salir en los créditos de otro",
+    "type": "editorial",
+    "year": 2024,
+    "related": [
+      "fantasy-gods",
+      "all-bros"
+    ],
+    "description": "Fantasy Gods se impuso 149,42 a 139,68 a All Bros en la final de 2024. Para Latuf fue la segunda corona profesional, después de la de 2019; para Juani, otro capítulo como actor de reparto en una fiesta ajena. Lo curioso no es que el campeonato haya vuelto a manos de Fantasy Gods: es que Latuf encuentre manera de mencionar los dos títulos en cualquier conversación.",
+    "fact": "Final 2024 · Fantasy Gods 149,42–139,68",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2025-gaspi-trece-dos",
+    "title": "13–2 en la tabla, 0–1 cuando había que buscar el anillo",
+    "type": "editorial",
+    "year": 2025,
+    "related": [
+      "boom-or-bust"
+    ],
+    "description": "Boom or Bust terminó primero la fase regular de 2025 con récord 13–2 y después perdió la final contra All Bros, 153,42 a 158,32. A Gaspi le sobró regularidad y le faltaron 4,90 puntos justo en el día en que los 13 triunfos anteriores ya no servían para nada. El trofeo al 'muy buena temporada, che' todavía no lo entrega nadie.",
+    "fact": "2025 · 13–2 · Subcampeón por 4,90",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2025-juani-once-cuatro",
+    "title": "Juani quedó segundo en la tabla y primero en hacerse insoportable",
+    "type": "editorial",
+    "year": 2025,
+    "related": [
+      "all-bros",
+      "boom-or-bust"
+    ],
+    "description": "All Bros cerró la fase regular 2025 con 11–4, detrás del 13–2 de Boom or Bust. En la final dio vuelta la jerarquía y ganó 158,32 a 153,42. Juani podrá explicarlo como 'mentalidad ganadora' hasta el próximo draft; Gaspi podrá explicar que la fase regular fue mejor. La joyería, por ahora, le da la razón al primero.",
+    "fact": "2025 · All Bros campeón · Final 158,32–153,42",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2025-nehue-casi-equilibrio",
+    "title": "Nehue inventó la precisión quirúrgica para terminar 6–9",
+    "type": "editorial",
+    "year": 2025,
+    "related": [
+      "cougars"
+    ],
+    "description": "Cougars FT anotó 1.962,18 puntos y recibió 1.962,96 en la fase regular 2025: una diferencia de apenas −0,78. Es casi una obra de ingeniería, salvo por el pequeño detalle de que el récord fue 6–9. Nehue construyó el equipo estadísticamente más equilibrado del planeta y descubrió que la liga no entrega playoffs por simetría.",
+    "fact": "2025 · Cougars PF 1.962,18 · PA 1.962,96 · 6–9",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2025-chevito-pecado-dos-puntos",
+    "title": "Chevito le ganó a Naki por 2,66 puntos... en la carrera por no ser el ataque más triste",
+    "type": "editorial",
+    "year": 2025,
+    "related": [
+      "fantasy-evils",
+      "nakillers"
+    ],
+    "description": "Fantasy Evils terminó 2025 con 1.754,88 puntos a favor. Nakillers hizo 1.752,22: apenas 2,66 menos a lo largo de toda la fase regular. Chevito podrá colgar ese microscópico triunfo estadístico en el despacho. El problema es que su récord terminó 6–9 y nadie recuerda haber visto una celebración con menos motivos.",
+    "fact": "2025 · Fantasy Evils PF 1.754,88 · Nakillers PF 1.752,22",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2025-naki-cinco-diez",
+    "title": "Naki descubrió que 5–10 también es una forma de participar",
+    "type": "editorial",
+    "year": 2025,
+    "related": [
+      "nakillers"
+    ],
+    "description": "Nakillers terminó la fase regular 2025 con cinco victorias y diez derrotas. Le anotaron 2.025,86 puntos, una cifra que hace pensar que la defensa había dejado la puerta abierta y una nota de 'vuelvo enseguida'. Naki siempre tiene argumentos para explicar el proyecto; al fixture le alcanzaron quince semanas para responder.",
+    "fact": "2025 · Nakillers 5–10 · PA 2.025,86",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2025-scrava-siete-ocho",
+    "title": "El campeón de 2021 llegó a 2025 con un 7–8 y un discurso de reconstrucción",
+    "type": "editorial",
+    "year": 2025,
+    "related": [
+      "scravengers"
+    ],
+    "description": "The Scravengers terminó 2025 con 7–8, 1.969,08 puntos a favor y 1.991,62 en contra. Scrava sabe perfectamente cómo se gana un anillo; también conoce el arte menos glamoroso de llamar 'proyecto' a un año con más derrotas que victorias. El título de 2021 todavía brilla. Lástima que no sume puntos en la tabla actual.",
+    "fact": "2025 · Scravengers 7–8 · PF 1.969,08 · PA 1.991,62",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2025-latuf-ocho-siete",
+    "title": "Dos anillos, ocho victorias y un ego que ocupa tres casilleros",
+    "type": "editorial",
+    "year": 2025,
+    "related": [
+      "fantasy-gods"
+    ],
+    "description": "Fantasy Gods, campeón en 2019 y 2024, cerró 2025 con un respetable pero terrenal 8–7. Latuf administra dos títulos mientras el resto intenta explicarle que una tabla nueva empieza de cero. Con 2.032,10 puntos a favor, no fue una catástrofe: fue algo peor para la propaganda del campeón, una temporada bastante normalita.",
+    "fact": "2019 y 2024 campeón · 2025 8–7 · PF 2.032,10",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2025-emilio-sotano",
+    "title": "Emilio se comió 2.127,90 puntos y todavía quiere hablar de mala suerte",
+    "type": "editorial",
+    "year": 2025,
+    "related": [
+      "tiburoncin"
+    ],
+    "description": "Tiburoncín cerró la fase regular 2025 último, con 4–11 y 2.127,90 puntos recibidos: el peor registro defensivo de la tabla. La diferencia fue −383,80. Emilio puede señalar las lesiones, el calendario o Mercurio retrógrado; sus rivales prefieren señalar el marcador. A este tiburón no lo cazaron: lo invitaron a la parrilla quince domingos.",
+    "fact": "2025 · Tiburoncín 4–11 · PA 2.127,90 · diferencia −383,80",
+    "status": "historical_verified"
+  },
+  {
+    "id": "archivo-2018-nuevos-santos-prehistoria",
+    "title": "Nuevos Santos tiene una copa que no pasa el control antidinosaurios",
+    "type": "editorial",
+    "year": 2018,
+    "related": [],
+    "description": "Nuevos Santos ganó el torneo de 2018, la prehistoria que la LFA deja fuera del palmarés profesional iniciado en 2019. Hay historias que merecen museo y otras que algunos GM intentarían meter en el conteo de anillos con tal de maquillar la vitrina. Esa copa existe, pero el reglamento de la era profesional no negocia con fósiles.",
+    "fact": "2018 · Nuevos Santos campeón · era no profesional",
+    "status": "historical_verified"
   }
 ]
