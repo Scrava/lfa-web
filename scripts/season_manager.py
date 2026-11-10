@@ -130,7 +130,8 @@ def make_archive(snapshot, franchises):
     league = snapshot.get("league") or {}
     if league.get("status") != "complete" or str(league.get("season")) != str(snapshot.get("season", league.get("season"))):
         return None
-    if len(snapshot.get("rosters") or []) != 8 or len(snapshot.get("users") or []) < 8:
+    size = len(snapshot.get("rosters") or [])
+    if size not in (8, 10) or len(snapshot.get("users") or []) < size:
         return None
     mapping = roster_franchises(snapshot, franchises)
     games = season_games(snapshot, mapping)
@@ -208,13 +209,117 @@ def promote_candidate(old_snapshot, fetch=get):
     if (not isinstance(candidate, dict)
         or str(candidate.get("previous_league_id")) != str(league["league_id"])
         or str(candidate.get("season")) != str(year)
-        or int(candidate.get("total_rosters") or 0) != 8):
+        or int(candidate.get("total_rosters") or 0) not in (8, 10)):
         return None
     rosters = fetch("league/" + str(candidate["league_id"]) + "/rosters")
     users = fetch("league/" + str(candidate["league_id"]) + "/users")
-    if not isinstance(rosters, list) or len(rosters) != 8 or not isinstance(users, list) or len(users) < 8:
+    count = int(candidate.get("total_rosters") or 0)
+    if not isinstance(rosters, list) or len(rosters) != count or not isinstance(users, list) or len(users) < count:
+        return None
+    if len({str(r.get("owner_id")) for r in rosters}) != count or any(not r.get("owner_id") for r in rosters):
         return None
     return candidate
+
+
+def extend_h2h(entries, franchises, debut_year):
+    """Conservar intactos los 28 cruces originales y crear únicamente las parejas nuevas."""
+    rows = copy.deepcopy(entries)
+    seen = set()
+    for item in rows:
+        key = frozenset((item["franchise_a_id"], item["franchise_b_id"]))
+        if len(key) != 2 or key in seen:
+            raise ValueError("El historial de paternidades contiene parejas repetidas")
+        seen.add(key)
+    for i, a in enumerate(franchises):
+        for b in franchises[i + 1:]:
+            key = frozenset((a["id"], b["id"]))
+            if key in seen:
+                continue
+            if not (a.get("debut_year", 2019) == debut_year or b.get("debut_year", 2019) == debut_year):
+                raise ValueError("Falta un cruce de las franquicias originales")
+            rows.append({
+                "franchise_a_id": a["id"], "franchise_b_id": b["id"],
+                "regular_wins_a": 0, "regular_wins_b": 0,
+                "playoff_wins_a": 0, "playoff_wins_b": 0,
+                "source": "Debut LFA " + str(debut_year) + ", sin partidos anteriores",
+                "snapshot_date": None, "status": "nuevo_equipo_sin_cruces"
+            })
+            seen.add(key)
+    if len(rows) != len(franchises) * (len(franchises) - 1) // 2:
+        raise ValueError("Matriz histórica incompleta en la nueva temporada")
+    return rows
+
+
+def prepare_successor(old_snapshot, next_league, franchises, fetch=get):
+    """Validar identidad de los GM, sumar dos debutantes SOLO si la liga tiene 10 rosters.
+
+    Los ID de usuario Sleeper son estables entre ligas; el ID numérico de roster no lo es.
+    No se adivinan identidades ni se cambia el catálogo si faltan integrantes.
+    """
+    old_mapping = roster_franchises(old_snapshot, franchises)
+    old_by_owner = {
+        str(r["owner_id"]): old_mapping[str(r["roster_id"])]
+        for r in old_snapshot["rosters"]
+    }
+    league_id = str(next_league["league_id"])
+    roster_list = fetch("league/" + league_id + "/rosters")
+    users = fetch("league/" + league_id + "/users")
+    count = int(next_league.get("total_rosters") or 0)
+    if count not in (8, 10) or not isinstance(roster_list, list) or len(roster_list) != count:
+        raise ValueError("La sucesora debe tener 8 o 10 rosters completos")
+    if not isinstance(users, list) or len(users) < count:
+        raise ValueError("Faltan usuarios para confirmar la sucesora")
+    roster_owners = [str(r.get("owner_id") or "") for r in roster_list]
+    if not all(roster_owners) or len(set(roster_owners)) != count:
+        raise ValueError("La sucesora tiene GM ausentes o duplicados")
+    if not set(old_by_owner).issubset(roster_owners):
+        raise ValueError("Hay un cambio de los ocho GM originales: requiere revisión manual")
+    expected_new = count - len(old_by_owner)
+    if expected_new not in (0, 2):
+        raise ValueError("Cantidad de incorporaciones distinta a cero o dos")
+    if any(str(f.get("sleeper_user_id")) not in ("None", uid)
+           for uid, fid in old_by_owner.items()
+           for f in franchises if f["id"] == fid):
+        raise ValueError("La identidad histórica de un GM cambió")
+    by_user = {str(u.get("user_id")): u for u in users}
+    updated = copy.deepcopy(franchises)
+    by_id = {f["id"]: f for f in updated}
+    newcomers = []
+    for roster in roster_list:
+        uid = str(roster["owner_id"])
+        if uid in old_by_owner:
+            f = by_id[old_by_owner[uid]]
+            f["sleeper_user_id"] = uid
+            f["sleeper_roster_id"] = roster["roster_id"]
+            continue
+        user = by_user.get(uid)
+        if user is None:
+            raise ValueError("No se encuentra la cuenta Sleeper de un debutante")
+        name = str((roster.get("metadata") or {}).get("team_name") or
+                   (user.get("metadata") or {}).get("team_name") or
+                   user.get("display_name") or "").strip()
+        gm = str(user.get("display_name") or user.get("username") or "").strip()
+        if not name or not gm:
+            raise ValueError("Falta el nombre de la franquicia o del GM debutante")
+        if norm(name) in {norm(x["name"]) for x in updated}:
+            raise ValueError("Dos franquicias usan el mismo nombre")
+        new = {
+            "id": "sleeper-" + uid,
+            "name": name, "manager": gm, "logo": "assets/lfa.webp",
+            "aliases": [name], "manager_aliases": [gm],
+            "owner_stable": True, "sleeper_user_id": uid,
+            "sleeper_roster_id": roster["roster_id"],
+            "debut_year": int(next_league["season"]),
+            "titles_2019_2025": 0,
+            "source": "Sleeper temporada " + str(next_league["season"]),
+            "logo_status": "provisorio_hasta_recibir_escudo"
+        }
+        updated.append(new)
+        newcomers.append(new)
+    if len(newcomers) != expected_new or len(updated) != count:
+        raise ValueError("No coinciden los participantes de la liga sucesora")
+    return updated, newcomers
+
 
 
 def update_archive_files(year, archive, D):
@@ -299,16 +404,28 @@ def main():
         print("LFA: aguardando liga " + str(active + 1) + " vinculada desde Sleeper; el archivo ya está preservado.")
         return
     new_year = active + 1
+    # No se modifican ni el sitio ni la lista de franquicias en 2026.
+    # Solo después del archivo verificado y de detectar la nueva liga real.
+    updated_franchises, newcomers = prepare_successor(snap, successor, D["franchises"])
+    current_pairs = read_json(DATA / "legacy_h2h_review.json")
+    updated_pairs = extend_h2h(current_pairs, updated_franchises, new_year)
+    cfg["current_teams"] = len(updated_franchises)
+    D["franchises"] = updated_franchises
+    D["legacy_h2h_review"] = updated_pairs
     cfg["current_season"] = new_year
     cfg["sleeper_league_id"] = str(successor["league_id"])
     write_json(DATA / "league.json", cfg)
+    write_json(DATA / "franchises.json", updated_franchises)
+    write_json(DATA / "legacy_h2h_review.json", updated_pairs)
     D["league"] = cfg
     for entry in D.get("site_map", []):
         for key in ("label", "source"):
             if isinstance(entry.get(key), str):
                 entry[key] = entry[key].replace(str(active), str(new_year))
     write_bootstrap(boot, D)
-    print("LFA: transición verificada a " + str(new_year) + " (liga " + str(successor["league_id"]) + ").")
+    print("LFA: transición verificada a " + str(new_year) + " (liga " +
+          str(successor["league_id"]) + "), " + str(len(updated_franchises)) +
+          " equipos, " + str(len(newcomers)) + " debutantes.")
 
 
 if __name__ == "__main__":
