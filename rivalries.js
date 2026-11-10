@@ -54,7 +54,7 @@
          '<td class="'+(focus==='year'?'rivalry-focus':'')+'">'+safe(formatSeason(p.year))+'</td>'+
          '<td><button class="rivalry-action" type="button" data-focus-a="'+safe(a)+'" data-focus-b="'+safe(t.id)+'">Ver cruce</button></td></tr>';
      }).join('');
-     output.innerHTML='<h3>'+safe(teamName(a))+' frente a los otros '+(teams.length-1)+'</h3>'+
+     output.innerHTML='<h3>'+safe(teamName(a))+' frente a los otros '+(teams.length===8?'siete':'nueve')+'</h3>'+
        '<div class="rivalry-results-scroll"><table class="rivalry-result-table"><thead><tr><th>Rival</th><th>Histórico</th><th>'+ACTIVE_SEASON+'</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>'+
        '<p class="rivalry-foot">Histórico: temporada regular y playoffs registrados. El año '+ACTIVE_SEASON+' se muestra por separado.</p>';
      return;

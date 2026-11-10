@@ -39,7 +39,7 @@ vm.runInNewContext(fs.readFileSync('rivalries.js','utf8'),ctx);
 assert.ok(nodes.rivalryMatrix.innerHTML.includes('rivalry-matrix-ten'));
 assert.equal((nodes.rivalryMatrix.innerHTML.match(/data-rival-a=/g)||[]).length,90);
 assert.equal((nodes.h2hResult.innerHTML.match(/data-focus-a=/g)||[]).length,9);
-assert.ok(nodes.h2hResult.innerHTML.includes('frente a los otros 9'));
+assert.ok(nodes.h2hResult.innerHTML.includes('frente a los otros nueve'));
 assert.equal(core.history(pairs,teams[8].id,teams[9].id).count,0);
 nodes.matrixScope.value='2027';window.LFA_RIVALRIES.renderAll();
 assert.ok(nodes.rivalryMatrix.innerHTML.includes('matrix-empty'));
