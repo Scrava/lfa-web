@@ -238,7 +238,8 @@
   const homePairs=matchupPairs(live.currentWeek);
   $('homeGames').innerHTML=homePairs.length?homePairs.map(([a,b])=>`<div class="matchbox"><button class="match-open" type="button" data-home-match="${esc(a.matchup_id)}"><div class="matchline">${rchip(a.roster_id)}<b>${a.points==null?'—':numeric(Number(a.points))}</b></div><div class="divider"></div><div class="matchline">${rchip(b.roster_id)}<b>${b.points==null?'—':numeric(Number(b.points))}</b></div><span class="open-indicator">Abrir partido ↗</span></button></div>`).join(''):'<div class="empty">Sin enfrentamientos publicados.</div>';
  };
- function ringSvg(){return `<svg viewBox="0 0 64 64" class="lfa-ring-icon" aria-hidden="true"><defs><linearGradient id="lfaRingGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1b3"/><stop offset=".5" stop-color="#daa34b"/><stop offset="1" stop-color="#936126"/></linearGradient></defs><path d="M20 32v13c0 13 24 13 24 0V32" fill="none" stroke="url(#lfaRingGold)" stroke-width="10"/><path d="M12 16 21 7h22l9 9v19l-20 11-20-11Z" fill="url(#lfaRingGold)" stroke="#fff0ad" stroke-width="2"/><path d="M32 10 46 21 32 36 18 21Z" fill="#2a81ad" stroke="#edf8ff" stroke-width="2"/><text x="32" y="25" text-anchor="middle" fill="white" font-size="9" font-weight="900">LFA</text></svg>`}
+ function ringSvg(){return `<img src="assets/lfa-championship-ring.svg" class="lfa-ring-icon" alt="" aria-hidden="true" loading="lazy">`}
+
  window.v4RenderBracket=function(){
   // La temporada 2026 conserva EXACTAMENTE el diseño vigente de cuatro clasificados.
   // Sólo al pasar a una liga real de 10 en 2027 se construye el cuadro flexible.

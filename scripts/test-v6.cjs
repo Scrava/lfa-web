@@ -110,6 +110,8 @@ const transaction=windowObj.txDetail({type:'waiver',status:'complete',adds:{[add
 assert.ok(transaction.includes('Jugador de prueba (DET)'),'El mercado no identifica equipo NFL');
 windowObj.renderStandings();
 assert.ok(el('titleChart').innerHTML.includes('lfa-ring-icon'),'Historia no utiliza anillos');
+assert.ok(el('titleChart').innerHTML.includes('lfa-championship-ring.svg'),'Historia debe usar el anillo de campeonato detallado');
+assert.ok(el('playoffView').innerHTML.includes('lfa-championship-ring.svg'),'Rumbo a playoffs comparte el anillo premium');
 const order=Object.entries(snapshot.draft.draft_order);
 assert.equal(order.length,8,'Deben mapearse ocho turnos');
 assert.equal(new Set(order.map(x=>x[1])).size,8,'Orden de turnos duplicado');

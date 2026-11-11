@@ -1142,3 +1142,75 @@ footer{color:#acc8da;border-color:#4d7087}
   .view::after{width:130px;height:145px;opacity:.15}
 }
 /* Sin movimiento ni animaciones nuevas: respeto a accesibilidad y batería. */
+
+/* LFA ORO DE CAMPEONATO · segunda capa metalizada (solo diseño) */
+:root{
+ --lfa-dark-gold:#8a5c29;
+ --lfa-metal-shine:#edcc7d;
+}
+.view .pagetitle{
+ position:relative;
+ text-shadow:0 1px 1px #0009,0 0 22px #b47a3226;
+}
+.view .pagetitle::after{
+ content:"";position:absolute;left:0;bottom:-9px;
+ width:min(245px,48%);height:2px;pointer-events:none;
+ background:linear-gradient(90deg,#70491c,#eec979 36%,#a87536 76%,transparent);
+ box-shadow:0 1px 8px #e8b65c3c;
+}
+.view .panel{
+ position:relative;
+ border-color:rgba(191,143,68,.54);
+ box-shadow:inset 0 1px 0 rgba(250,218,151,.20),
+ inset 0 0 0 1px rgba(89,52,22,.20),
+ 0 10px 26px rgba(0,4,13,.24),0 0 22px rgba(193,133,52,.035);
+}
+.view .panel::after{
+ content:"";position:absolute;pointer-events:none;top:-1px;right:-1px;
+ width:72px;height:40px;z-index:1;opacity:.52;
+ border-top:1px solid rgba(243,202,118,.72);
+ border-right:1px solid rgba(225,170,76,.58);
+ border-radius:0 14px 0 0;
+ background:radial-gradient(ellipse at 100% 0%,rgba(197,132,50,.17),transparent 78%);
+}
+.view .panel :is(h2,h3){
+ text-shadow:0 1px 6px rgba(207,146,54,.20);
+}
+.view :is(.sectionhead,.panel-header){
+ background-image:linear-gradient(90deg,transparent 0%,rgba(159,111,41,.43) 14%,rgba(247,216,140,.83) 49%,rgba(155,103,38,.44) 84%,transparent 100%);
+}
+.view :is(.stat,.recordcard,.teamcard,.storycard){
+ box-shadow:inset 0 1px 0 rgba(241,205,127,.15),0 3px 12px rgba(0,6,17,.11);
+}
+.view .eyetop{
+ text-shadow:0 0 12px rgba(186,116,37,.25);
+}
+.view table thead{
+ background:linear-gradient(90deg,rgba(118,77,30,.16),rgba(225,182,93,.12) 48%,rgba(108,70,27,.10));
+}
+.view .select:focus-visible,.view button:focus-visible{
+ outline-color:#f2cd7b;
+}
+.history-rings-row .inline-logo{min-width:0;flex:1 1 auto}
+.history-rings-row .ring-display{gap:4px;min-width:86px}
+.history-rings-row .ring-display .lfa-ring-icon{
+ width:46px;height:46px;object-fit:contain;flex:none;
+ filter:drop-shadow(0 3px 3px rgba(0,0,0,.55)) drop-shadow(0 0 5px rgba(232,180,82,.24));
+}
+.history-rings-row .lfa-ring-icon:hover{transform:translateY(-2px) scale(1.08)}
+.playoff-mini-head .lfa-ring-icon{width:61px;height:61px;object-fit:contain}
+.playoff-final-note .lfa-ring-icon{width:38px;height:38px;object-fit:contain}
+.playoff-mini-head .lfa-ring-icon,
+.playoff-final-note .lfa-ring-icon{
+ filter:drop-shadow(0 4px 4px #0008) drop-shadow(0 0 7px #c28a4247);
+}
+@media(max-width:820px){
+ .history-rings-row .ring-display .lfa-ring-icon{width:37px;height:37px}
+ .playoff-mini-head .lfa-ring-icon{width:52px;height:52px}
+ .playoff-final-note .lfa-ring-icon{width:32px;height:32px}
+ .view .panel::after{width:43px;height:26px;opacity:.37}
+ .view .pagetitle::after{width:min(160px,44%)}
+}
+@media(prefers-reduced-motion:reduce){
+ .history-rings-row .lfa-ring-icon:hover{transform:none}
+}

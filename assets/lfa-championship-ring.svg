@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 244" role="img" aria-label="Anillo de campeón LFA">
+<defs>
+ <linearGradient id="gold" x1=".04" y1=".04" x2=".93" y2=".94">
+  <stop offset="0" stop-color="#fff7d1"/>
+  <stop offset=".14" stop-color="#d4a14c"/>
+  <stop offset=".29" stop-color="#8b531e"/>
+  <stop offset=".44" stop-color="#f0d18a"/>
+  <stop offset=".57" stop-color="#bd8539"/>
+  <stop offset=".7" stop-color="#6f3d15"/>
+  <stop offset=".86" stop-color="#e8bd6b"/>
+  <stop offset="1" stop-color="#9b6125"/>
+ </linearGradient>
+ <linearGradient id="band" x1="0" y1="0" x2="1" y2=".7">
+  <stop offset="0" stop-color="#5e341a"/>
+  <stop offset=".13" stop-color="#f4d997"/>
+  <stop offset=".35" stop-color="#b78339"/>
+  <stop offset=".51" stop-color="#51321a"/>
+  <stop offset=".69" stop-color="#f5d98f"/>
+  <stop offset=".83" stop-color="#a16a30"/>
+  <stop offset="1" stop-color="#492714"/>
+ </linearGradient>
+ <radialGradient id="stone" cx=".37" cy=".29" r=".78">
+  <stop offset="0" stop-color="#e8ffff"/>
+  <stop offset=".21" stop-color="#9bd9e9"/>
+  <stop offset=".42" stop-color="#366c91"/>
+  <stop offset=".71" stop-color="#11253c"/>
+  <stop offset="1" stop-color="#080e20"/>
+ </radialGradient>
+ <linearGradient id="face" x1=".15" y1="0" x2=".9" y2="1">
+  <stop offset="0" stop-color="#163b59"/>
+  <stop offset=".31" stop-color="#081b33"/>
+  <stop offset=".68" stop-color="#12273e"/>
+  <stop offset="1" stop-color="#030b1d"/>
+ </linearGradient>
+ <linearGradient id="highlight" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#fff9da" stop-opacity=".9"/>
+  <stop offset=".4" stop-color="#f6cf78" stop-opacity=".15"/>
+  <stop offset="1" stop-color="#9e571b" stop-opacity=".63"/>
+ </linearGradient>
+ <filter id="shadow" x="-30%" y="-25%" width="160%" height="170%">
+  <feGaussianBlur stdDeviation="4.2"/>
+ </filter>
+</defs>
+<!-- Sombra y base tridimensional del anillo -->
+<ellipse cx="132" cy="224" rx="79" ry="11" fill="#000" opacity=".37" filter="url(#shadow)"/>
+<path d="M56 120L63 172C65 207 88 227 126 229C162 231 194 211 200 177L207 121L177 122L166 177C162 189 149 197 128 197C108 197 98 187 95 175L89 124Z"
+ fill="url(#band)" stroke="#683919" stroke-width="2.6"/>
+<path d="M93 164C93 185 108 199 129 200C152 201 167 188 169 163L165 188C155 210 102 213 93 182Z"
+ fill="#1c1010" opacity=".66"/>
+<path d="M66 166L81 193L94 203L103 180L89 139L63 138Z"
+ fill="url(#gold)" stroke="#8f642f" stroke-width="1.8"/>
+<path d="M203 161L189 196L173 205L164 180L178 137L205 137Z"
+ fill="url(#gold)" stroke="#7b461e" stroke-width="1.8"/>
+<!-- Hombreras y paneles de piedras -->
+<path d="M60 135L94 148L101 186L87 204L62 174Z" fill="#57331e" stroke="#f1ce82" stroke-width="2.4"/>
+<path d="M202 135L169 148L161 186L176 204L201 174Z" fill="#55311c" stroke="#e7bd65" stroke-width="2.4"/>
+<g fill="url(#stone)" stroke="#fae3a2" stroke-width="1.4">
+ <circle cx="78" cy="157" r="7"/><circle cx="84" cy="178" r="7"/>
+ <circle cx="184" cy="157" r="7"/><circle cx="177" cy="178" r="7"/>
+</g>
+<path d="M72 142L90 151M174 151L191 142" stroke="#fff1bd" stroke-width="2.5" opacity=".7"/>
+<!-- Marco octagonal y doble bisel metalizado -->
+<path d="M81 27L175 27L216 58L225 113L190 158L131 178L69 160L35 114L44 58Z"
+ fill="url(#gold)" stroke="#e9cf88" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M84 36L174 36L207 64L213 111L183 151L131 168L76 152L46 111L53 64Z"
+ fill="#4b2715" stroke="#fff1b2" stroke-width="1.6"/>
+<path d="M85 43L173 43L200 67L206 110L179 143L131 160L81 145L54 110L61 67Z"
+ fill="url(#gold)" stroke="#9b581b" stroke-width="2.5"/>
+<!-- Ronda completa de piedras blancas -->
+<g fill="url(#stone)" stroke="#fff7cc" stroke-width="1.7">
+ <circle cx="81" cy="44" r="5.4"/><circle cx="103" cy="39.6" r="5"/><circle cx="127" cy="39" r="5"/><circle cx="152" cy="39.6" r="5"/><circle cx="176" cy="44" r="5.4"/>
+ <circle cx="58" cy="68" r="5"/><circle cx="51" cy="92" r="5.1"/><circle cx="56" cy="113" r="5.1"/><circle cx="72" cy="133" r="5.1"/>
+ <circle cx="201" cy="68" r="5"/><circle cx="208" cy="92" r="5.1"/><circle cx="203" cy="113" r="5.1"/><circle cx="186" cy="133" r="5.1"/>
+ <circle cx="92" cy="150" r="4.8"/><circle cx="113" cy="157" r="4.8"/><circle cx="135" cy="157" r="4.8"/><circle cx="157" cy="151" r="4.8"/>
+</g>
+<!-- Esmalte azul medianoche y facetas del emblema -->
+<path d="M87 53L171 53L190 74L196 108L172 134L130 148L88 134L64 108L69 74Z"
+ fill="url(#face)" stroke="#7b4c25" stroke-width="2.4"/>
+<path d="M89 61L167 61L183 78L187 104L166 127L130 138L91 126L75 105L78 78Z"
+ fill="none" stroke="#f0d18a" stroke-width="1.8" opacity=".9"/>
+<path d="M91 69L163 69L174 81L160 86L95 84Z" fill="#68bbd3" opacity=".14"/>
+<path d="M79 117L130 141L178 113" fill="none" stroke="#fff1c2" stroke-opacity=".2" stroke-width="1.7"/>
+<!-- Estrellas, escudo y marca de campeón -->
+<g fill="#f4d899"><path d="M83 91l3-7 3 7 7 2-7 3-3 7-3-7-7-3Z"/>
+<path d="M168 91l3-7 3 7 7 2-7 3-3 7-3-7-7-3Z"/></g>
+<text x="129" y="75" font-size="10.5" font-weight="900" text-anchor="middle" letter-spacing="1.25" font-family="Arial,sans-serif" fill="#ecd18b">CHAMPION</text>
+<text x="129" y="113" font-size="37" font-weight="1000" text-anchor="middle" letter-spacing="-1.5" font-family="Georgia,serif" fill="#0f2130" stroke="#f8e1a3" stroke-width="1.7" paint-order="stroke">LFA</text>
+<path d="M104 119H155" stroke="#e4b65e" stroke-width="1.9"/>
+<text x="129" y="132" font-size="7.6" font-weight="800" text-anchor="middle" letter-spacing="1.2" font-family="Arial,sans-serif" fill="#efdaa3">FANTASY FOOTBALL</text>
+<!-- Reflejos grabados del metal -->
+<path d="M48 63L81 33H175L203 58M216 113L191 151L131 171" stroke="#fffde1" stroke-width="2.2" fill="none" opacity=".77"/>
+<path d="M67 170L80 194M190 190L200 164" stroke="#fff2c6" stroke-width="2.2" opacity=".45"/>
+</svg>
