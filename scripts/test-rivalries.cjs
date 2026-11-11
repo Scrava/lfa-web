@@ -54,7 +54,7 @@ const values={
 const windowMock={LFA_RIVALRY_CORE:core,renderStandings:()=>true};
 const ctx={
  window:windowMock,document:{getElementById:id=>values[id]||null},
- D:{franchises:teams,legacy_h2h_review:hist},ACTIVE_SEASON:Number(data.window.LFA_DATA.league.current_season),
+ D:{franchises:teams,legacy_h2h_review:hist,h2h_baseline:data.window.LFA_DATA.h2h_baseline},ACTIVE_SEASON:Number(data.window.LFA_DATA.league.current_season),
  live:{rosters:fixture,ready:true},
  completedGames:()=>games,
  assigned:r=>({id:r.franchise_id}),
@@ -80,4 +80,10 @@ listeners.get('rivalryMatrix:click')({target:{closest:()=>({dataset:{rivalA:'boo
 assert.equal(values.h2hA.value,'boom-or-bust','El clic en el cuadro no actualizó equipo');
 assert.equal(values.h2hB.value,'tiburoncin','El clic en el cuadro no actualizó rival');
 assert.ok(values.h2hResult.innerHTML.includes('0–2 (1 E)'),'La comparación invertida no coincide');
+// El historial confirmado incluye todo hasta semana 9; solo sumar cruces posteriores.
+values.matrixScope.value='historico';
+games.push({a:11,b:12,pa:151,pb:132,type:'regular',week:10});
+windowMock.LFA_RIVALRIES.renderAll();
+assert.ok(values.rivalryMatrix.innerHTML.includes('11–6 (0–0)'),'Semana 10 debe sumarse al histórico solo una vez');
+assert.ok(values.h2hResult.innerHTML.includes('11–6 (0–0)'),'Cuadro y buscador deben coincidir tras la semana 10');
 console.log('OK: '+expectedPairs+' cruces históricos, '+sum.length+' perspectivas, balance y buscador consistentes.');
