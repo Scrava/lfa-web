@@ -93,14 +93,27 @@
   }catch(e){console.warn('[LFA] Consulta de mercado pendiente:',e.message)}
   finally{state.marketBusy=false}
  }
+ async function advanceCalendarWeek(){
+  const expected=window.LFA_WEEK_CORE?.resolveWeek({
+   season:D.league.current_season,status:live.league?.status,
+   seasonType:live.nfl?.season_type,nflWeek:live.nfl?.week
+  });
+  if(expected&&expected>validWeek()&&typeof connect==='function'){
+   // No pisar las semanas históricas elegidas por el usuario excepto al pasar de fecha.
+   await connect(true);
+   return true;
+  }
+  return false;
+ }
  async function tick(){
   if(!active())return;
+  await advanceCalendarWeek();
   await inspectScoreboard();
   await updateScores();
  }
  document.addEventListener('visibilitychange',()=>{
   if(!document.hidden){
-   inspectScoreboard(true).then(()=>updateScores(true)).catch(()=>{});
+   advanceCalendarWeek().then(()=>inspectScoreboard(true)).then(()=>updateScores(true)).catch(()=>{});
    updateMarket(true).catch(()=>{});
   }
  });

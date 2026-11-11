@@ -135,7 +135,7 @@
  }
  const oldStandings=window.renderStandings;
  window.renderStandings=function(...args){const result=oldStandings(...args);marks();return result};
- function nextWeek(){return Math.min(18,Number(live.currentWeek||1)+1)}
+ function nextWeek(){return Math.min(18,Number(live.selectedWeek||live.currentWeek||1)+1)}
  $('goNextWeek')?.addEventListener('click',()=>{
   const w=nextWeek();$('weekSelect').value=String(w);
   $('weekSelect').dispatchEvent(new Event('change',{bubbles:true}));

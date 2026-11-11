@@ -14,6 +14,10 @@ const logo=id=>franchise(id)?.logo||'';
 const logoImg=(id,cls='')=>logo(id)?`<img class="${cls}" src="${esc(logo(id))}" alt="Escudo ${esc(teamName(id))}" loading="lazy">`:'';
 const table=(head,rows)=>`<table><thead><tr>${head.map(h=>`<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(cell=>`<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 const LIVE_ID=String(D.league.sleeper_league_id);
+const computedWeek=(league,nfl)=>window.LFA_WEEK_CORE.resolveWeek({
+ season:ACTIVE_SEASON,status:league?.status,
+ seasonType:nfl?.season_type,nflWeek:nfl?.week
+});
 const API_ROOT='https://api.sleeper.app/v1/';
 let live={ready:false,league:null,users:[],rosters:[],nfl:null,currentWeek:1,selectedWeek:1,bracket:[],draft:null,picks:[],matchups:{},transactions:{},players:{},news:[],syncedAt:null,snapshot:false,mappings:{}};
 try{live.mappings=JSON.parse(localStorage.getItem('lfa_roster_map_'+ACTIVE_SEASON)||'{}')||{}}catch{live.mappings={}}
@@ -210,7 +214,7 @@ function useSnapshot(snap){
  if(!snapshotIsValid(snap))return false;
  live={...live,ready:true,snapshot:true,syncedAt:snap.generated_at,league:snap.league,
  users:snap.users||[],rosters:snap.rosters||[],nfl:snap.nfl||null,
- currentWeek:Math.max(1,Math.min(18,Number(snap.week||1))),
+ currentWeek:computedWeek(snap.league,snap.nfl),
  matchups:snap.matchups||{},transactions:snap.transactions||{},bracket:snap.bracket||[],
  draft:snap.draft||null,picks:snap.picks||[],
  players:{...live.players,...(snap.players||{})},news:live.news||[]};
@@ -265,14 +269,15 @@ async function connect(force=false){
   ]);
   if(!league?.league_id||String(league.season)!==String(ACTIVE_SEASON)||!Array.isArray(users)||!Array.isArray(rosters))
    throw Error('Sleeper no confirmó la temporada '+ACTIVE_SEASON);
-  const week=String(nfl.season)===String(ACTIVE_SEASON)&&!['pre_draft','drafting'].includes(league.status)?Math.max(1,Math.min(18,Number(nfl.week||1))):1;
+  const week=computedWeek(league,nfl);
   const old=live;
+  const wasViewingCurrent=!old.ready||Number(old.selectedWeek)===Number(old.currentWeek);
   live={...old,ready:true,league,users,rosters,nfl,currentWeek:week,
    snapshot:false,syncedAt:new Date().toISOString(),
    matchups:{...old.matchups},transactions:{...old.transactions},news:[],bracket:old.bracket||[]};
   live.selectedWeek=Number($('weekSelect').value)||week;
   // No reiniciar la selección de semana que hizo el usuario.
-  if(!old.ready||force){
+  if(!old.ready||force||(wasViewingCurrent&&week!==old.currentWeek)){
    live.selectedWeek=week;$('weekSelect').value=String(week);
    if($('transactionWeek').value!=='all')$('transactionWeek').value=String(week);
   }

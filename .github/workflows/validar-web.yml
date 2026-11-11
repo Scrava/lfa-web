@@ -11,6 +11,9 @@ on:
       - 'rivalry-core.js'
       - 'lfa-stats-core.js'
       - 'lfa-v6.js'
+      - 'lfa-week-core.js'
+      - 'scripts/test-week-core.cjs'
+      - 'scripts/test-week-core.py'
       - 'lfa-live-refresh.js'
       - 'lfa-season-ui.js'
       - 'scripts/season_manager.py'
@@ -47,6 +50,8 @@ jobs:
           node --check rivalry-core.js
           node --check lfa-stats-core.js
           node --check lfa-v6.js
+          node --check lfa-week-core.js
+          node --check scripts/test-week-core.cjs
           node --check lfa-live-refresh.js
           node --check lfa-season-ui.js
           node --check scripts/test-v6.cjs
@@ -101,8 +106,11 @@ jobs:
       - name: Verificar continuidad entre temporadas
         run: |
           python -m py_compile scripts/season_manager.py scripts/sync_sleeper.py
+          python scripts/test-week-core.py -v
           python scripts/test-season-manager.py -v
           python scripts/test-ten-teams.py -v
+      - name: Probar calendario NFL y cambio de semana de los martes
+        run: node scripts/test-week-core.cjs
       - name: Comprobar escenarios de 8 y 10 franquicias
         run: node scripts/test-ten-teams.cjs
       - name: Probar refresco en vivo sin publicar en Netlify

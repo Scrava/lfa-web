@@ -7,7 +7,8 @@ La API de Sleeper es de solo lectura y el catálogo de jugadores se renueva máx
 """
 from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date, timedelta
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from urllib.request import Request, urlopen
 import json
@@ -112,6 +113,20 @@ def build_news(now,league,users,rosters,matchups,transactions,players,week):
         add('PLANTELES',f'{player_name(pid,players)}: estado a seguir',f'{name_of_roster(rid,league,users,rosters)} tiene a {player_name(pid,players)} con etiqueta “{status}” en Sleeper. Es una clasificación de esa plataforma, no un parte médico independiente.',f'Estado del roster consultado {now.strftime("%d/%m/%Y %H:%M UTC")}',f'status-{pid}-{week}')
     return news
 
+def current_league_week(now, league, nfl):
+    if league.get('status') in ('pre_draft','drafting'):
+        return 1
+    if league.get('status') == 'complete':
+        return 18
+    if str(nfl.get('season_type') or '').lower() == 'post':
+        return max(1,min(18,int(nfl.get('week') or 18)))
+    year=int(SEASON)
+    sept_first=date(year,9,1)
+    first_monday=sept_first + timedelta(days=(0-sept_first.weekday())%7)
+    week_one_tuesday=first_monday + timedelta(days=1)
+    today_argentina=now.astimezone(ZoneInfo('America/Argentina/Buenos_Aires')).date()
+    return max(1,min(18,(today_argentina-week_one_tuesday).days//7+1))
+
 def main():
     now=datetime.now(timezone.utc)
     # La validación de temporada va antes de escribir cualquier archivo.
@@ -130,7 +145,7 @@ def main():
         or len({str(r.get('owner_id') or '') for r in rosters})!=count
         or any(not r.get('owner_id') for r in rosters)):
         raise RuntimeError('Sleeper todavía no confirmó los '+str(count)+' participantes; no actualizar.')
-    week=max(1,min(18,int(nfl.get('week') or 1))) if str(nfl.get('season'))==SEASON and league.get('status') not in ('pre_draft','drafting') else 1
+    week=current_league_week(now,league,nfl)
     # Antes del Draft no hay partidos; no bloquear la transición por endpoints inexistentes.
     pre_draft=league.get('status') in ('pre_draft','drafting')
     paths=[] if pre_draft else [(i,f'league/{LEAGUE_ID}/{kind}/{i}') for i in range(1,week+1) for kind in ('matchups','transactions')]
