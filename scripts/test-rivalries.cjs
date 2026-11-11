@@ -63,9 +63,11 @@ const ctx={
 };
 vm.runInNewContext(fs.readFileSync('rivalries.js','utf8'),ctx);
 const match=core.history(hist,'tiburoncin','boom-or-bust');
-const expected=match.wins+'–'+match.losses;
+const expected=match.regular.wins+'–'+match.regular.losses+
+ ' ('+match.playoffs.wins+'–'+match.playoffs.losses+')';
 assert.ok(values.rivalryMatrix.innerHTML.includes(expected),'La matriz no refleja el balance histórico');
 assert.ok(values.h2hResult.innerHTML.includes(expected),'El buscador no refleja el mismo balance histórico');
+assert.equal(expected,'10–6 (0–0)','El formato debe coincidir con la imagen confirmada');
 values.h2hMode.value='all';
 windowMock.LFA_RIVALRIES.renderLookup();
 assert.equal((values.h2hResult.innerHTML.match(/data-focus-a=/g)||[]).length,teams.length-1,'La consulta contra todos los rivales falla');

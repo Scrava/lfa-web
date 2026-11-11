@@ -11,13 +11,38 @@
  const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const teamName=id=>teams.find(x=>x.id===id)?.name||id;
  const teamLogo=id=>{try{return logoImg(id)}catch{return ''}};
+ const historicalHistory=(a,b)=>{
+   const saved=core.history(D.legacy_h2h_review,a,b);
+   if(!saved)return null;
+   const season=Number(ACTIVE_SEASON);
+   if(!live.ready||D.archived_seasons?.[String(season)]?.status==='verified_final')return saved;
+   const freeze=D.h2h_baseline||{};
+   const through=Number(freeze.season)===season?Number(freeze.through_week||0):0;
+   const rosterA=live.rosters.find(r=>assigned(r)?.id===a)?.roster_id;
+   const rosterB=live.rosters.find(r=>assigned(r)?.id===b)?.roster_id;
+   if(rosterA==null||rosterB==null)return saved;
+   const regular={...saved.regular},playoffs={...saved.playoffs};
+   for(const g of completedGames()){
+    if(g.week<=through||
+       ![String(g.a),String(g.b)].includes(String(rosterA))||
+       ![String(g.a),String(g.b)].includes(String(rosterB)))continue;
+    const fromA=String(g.a)===String(rosterA);
+    const pa=fromA?Number(g.pa):Number(g.pb);
+    const pb=fromA?Number(g.pb):Number(g.pa);
+    const bucket=g.type==='playoffs'?playoffs:regular;
+    if(pa>pb)bucket.wins++;else if(pb>pa)bucket.losses++;
+   }
+   return {...saved,regular,playoffs,
+    wins:regular.wins+playoffs.wins,losses:regular.losses+playoffs.losses};
+ };
  const pair=(a,b)=>({
-   old:core.history(D.legacy_h2h_review,a,b),
+   old:historicalHistory(a,b),
    year:core.season(live.rosters,live.ready?completedGames():[],r=>assigned(r)?.id,a,b)
  });
  const fmt=(v,withTies=false)=>!v||!v.count?'—':v.wins+'–'+v.losses+(withTies&&v.ties?' ('+v.ties+' E)':'');
  // Mostramos 0–0 cuando hay un registro histórico formal de 0 encuentros.
- const formatArchive=v=>v?v.wins+'–'+v.losses:'—';
+ const formatArchive=v=>v?v.regular.wins+'–'+v.regular.losses+
+   ' ('+v.playoffs.wins+'–'+v.playoffs.losses+')':'—';
  const formatSeason=v=>v&&v.count?v.wins+'–'+v.losses+(v.ties?' ('+v.ties+' E)':''):'—';
  const tableView=()=>scope.value===String(ACTIVE_SEASON)?'year':'old';
  function ensureOptions(){

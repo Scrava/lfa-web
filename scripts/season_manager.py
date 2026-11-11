@@ -351,7 +351,13 @@ def update_archive_files(year, archive, D):
     write_json(DATA / "seasons.json", seasons)
     D["seasons"] = seasons
     old_entries = read_json(DATA / "legacy_h2h_review.json")
-    updated = combine_head_to_head(old_entries, archive["games"])
+    freeze = D.get("h2h_baseline") or {}
+    games_to_add = [
+        g for g in archive["games"]
+        if not (int(freeze.get("season") or 0) == int(year)
+                and int(g["week"]) <= int(freeze.get("through_week") or 0))
+    ]
+    updated = combine_head_to_head(old_entries, games_to_add)
     write_json(DATA / "legacy_h2h_review.json", updated)
     D["legacy_h2h_review"] = updated
     D.setdefault("archived_seasons", {})[str(year)] = {
