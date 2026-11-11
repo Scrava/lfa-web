@@ -56,7 +56,8 @@ const ctx={
  window:windowMock,document:{getElementById:id=>values[id]||null},
  D:{franchises:teams,legacy_h2h_review:hist,h2h_baseline:data.window.LFA_DATA.h2h_baseline},ACTIVE_SEASON:Number(data.window.LFA_DATA.league.current_season),
  live:{rosters:fixture,ready:true},
- completedGames:()=>games,
+ // En el presente de la prueba solo están terminadas fechas <=9; el playoff 16 se prueba por separado en core.
+ completedGames:()=>games.filter(g=>g.week<=10),
  assigned:r=>({id:r.franchise_id}),
  logoImg:id=>'<img alt="'+id+'">',
  console
