@@ -84,9 +84,8 @@
 <g fill="#f4d899"><path d="M83 91l3-7 3 7 7 2-7 3-3 7-3-7-7-3Z"/>
 <path d="M168 91l3-7 3 7 7 2-7 3-3 7-3-7-7-3Z"/></g>
 <text x="129" y="75" font-size="10.5" font-weight="900" text-anchor="middle" letter-spacing="1.25" font-family="Arial,sans-serif" fill="#ecd18b">CHAMPION</text>
-<text x="129" y="113" font-size="37" font-weight="1000" text-anchor="middle" letter-spacing="-1.5" font-family="Georgia,serif" fill="#0f2130" stroke="#f8e1a3" stroke-width="1.7" paint-order="stroke">LFA</text>
-<path d="M104 119H155" stroke="#e4b65e" stroke-width="1.9"/>
-<text x="129" y="132" font-size="7.6" font-weight="800" text-anchor="middle" letter-spacing="1.2" font-family="Arial,sans-serif" fill="#efdaa3">FANTASY FOOTBALL</text>
+<!-- El escudo oficial de LFA se superpone desde el sitio; sin marcas NFL. -->
+<path d="M95 78H166V132L130 141L94 130Z" fill="#0c1b31" opacity=".54"/>
 <!-- Reflejos grabados del metal -->
 <path d="M48 63L81 33H175L203 58M216 113L191 151L131 171" stroke="#fffde1" stroke-width="2.2" fill="none" opacity=".77"/>
 <path d="M67 170L80 194M190 190L200 164" stroke="#fff2c6" stroke-width="2.2" opacity=".45"/>

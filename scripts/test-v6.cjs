@@ -111,6 +111,10 @@ assert.ok(transaction.includes('Jugador de prueba (DET)'),'El mercado no identif
 windowObj.renderStandings();
 assert.ok(el('titleChart').innerHTML.includes('lfa-ring-icon'),'Historia no utiliza anillos');
 assert.ok(el('titleChart').innerHTML.includes('lfa-championship-ring.svg'),'Historia debe usar el anillo de campeonato detallado');
+assert.ok(el('titleChart').innerHTML.includes('assets/lfa.webp'),'Historia debe incluir el escudo oficial de LFA');
+assert.ok(el('playoffView').innerHTML.includes('assets/lfa.webp'),'Rumbo a playoffs debe incluir el escudo oficial de LFA');
+assert.ok(!el('titleChart').innerHTML.includes('seahawks'),'Anillo no debe utilizar logos de NFL');
+assert.ok(!el('titleChart').innerHTML.includes('sea.png'),'Anillo no debe utilizar logos de Seahawks');
 assert.ok(el('playoffView').innerHTML.includes('lfa-championship-ring.svg'),'Rumbo a playoffs comparte el anillo premium');
 const order=Object.entries(snapshot.draft.draft_order);
 assert.equal(order.length,8,'Deben mapearse ocho turnos');

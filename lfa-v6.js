@@ -238,7 +238,7 @@
   const homePairs=matchupPairs(live.currentWeek);
   $('homeGames').innerHTML=homePairs.length?homePairs.map(([a,b])=>`<div class="matchbox"><button class="match-open" type="button" data-home-match="${esc(a.matchup_id)}"><div class="matchline">${rchip(a.roster_id)}<b>${a.points==null?'—':numeric(Number(a.points))}</b></div><div class="divider"></div><div class="matchline">${rchip(b.roster_id)}<b>${b.points==null?'—':numeric(Number(b.points))}</b></div><span class="open-indicator">Abrir partido ↗</span></button></div>`).join(''):'<div class="empty">Sin enfrentamientos publicados.</div>';
  };
- function ringSvg(){return `<img src="assets/lfa-championship-ring.svg" class="lfa-ring-icon" alt="" aria-hidden="true" loading="lazy">`}
+ function ringSvg(){return `<span class="lfa-ring-lockup" role="img" aria-label="Anillo de campeón con escudo oficial LFA"><img src="assets/lfa-championship-ring.svg" class="lfa-ring-icon" alt="" aria-hidden="true" loading="lazy"><span class="lfa-ring-crest-window" aria-hidden="true"><img src="assets/lfa.webp" class="lfa-ring-official-crest" alt="" loading="lazy"></span></span>`}
 
  window.v4RenderBracket=function(){
   // La temporada 2026 conserva EXACTAMENTE el diseño vigente de cuatro clasificados.
