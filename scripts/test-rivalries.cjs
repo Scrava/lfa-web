@@ -83,6 +83,8 @@ assert.equal(values.h2hB.value,'tiburoncin','El clic en el cuadro no actualizó 
 assert.ok(values.h2hResult.innerHTML.includes('0–2 (1 E)'),'La comparación invertida no coincide');
 // El historial confirmado incluye todo hasta semana 9; solo sumar cruces posteriores.
 values.matrixScope.value='historico';
+values.h2hA.value='tiburoncin';
+values.h2hB.value='boom-or-bust';
 games.push({a:11,b:12,pa:151,pb:132,type:'regular',week:10});
 windowMock.LFA_RIVALRIES.renderAll();
 assert.ok(values.rivalryMatrix.innerHTML.includes('11–6 (0–0)'),'Semana 10 debe sumarse al histórico solo una vez');
